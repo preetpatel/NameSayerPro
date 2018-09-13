@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.NewCreationViewController">
+    <children>
+        <AnchorPane prefHeight="143.0" prefWidth="1200.0" style="-fx-background-color: #037971;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Text fx:id="text" fill="WHITE" layoutX="17.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="1.0" text="NAMESAYER" textAlignment="CENTER" wrappingWidth="1165.7578125" AnchorPane.leftAnchor="16.7578125" AnchorPane.rightAnchor="17.2421875" AnchorPane.topAnchor="13.248001098632812">
+                    <font>
+                        <Font name="Lato Heavy" size="96.0" />
+                    </font>
+                </Text>
+            </children>
+        </AnchorPane>
+        <JFXButton fx:id="close" alignment="CENTER" buttonType="RAISED" layoutX="19.0" layoutY="710.0" onAction="#handleCloseButton" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="CANCEL" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="22.0" AnchorPane.leftAnchor="19.0">
+            <font>
+                <Font name="Lato Medium" size="25.0" />
+            </font>
+        </JFXButton>
+      <Text fx:id="loaderText" fill="WHITE" layoutX="26.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textAlignment="CENTER" wrappingWidth="1148.7294921875" AnchorPane.leftAnchor="25.7294921875" AnchorPane.rightAnchor="25.2705078125">
+         <font>
+            <Font name="Lato Heavy" size="51.0" />
+         </font>
+      </Text>
+      <JFXButton fx:id="record" alignment="CENTER" buttonType="RAISED" layoutX="389.0" layoutY="451.0" onAction="#startRecord" prefHeight="104.0" prefWidth="423.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="RECORD" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Lato Medium" size="25.0" />
+         </font>
+      </JFXButton>
+      <Text fx:id="loaderText1" fill="WHITE" layoutX="26.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You will have exactly 5 seconds to record the name once you press the button" textAlignment="CENTER" wrappingWidth="1148.7294921875">
+         <font>
+            <Font name="Lato Heavy" size="30.0" />
+         </font>
+      </Text>
+      <JFXButton fx:id="listenAudio" alignment="CENTER" buttonType="RAISED" layoutX="241.0" layoutY="487.0" onAction="#playAudio" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="LISTEN" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Lato Medium" size="25.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="keepAudio" alignment="CENTER" buttonType="RAISED" layoutX="526.0" layoutY="497.0" onAction="#keepButtonHandler" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="KEEP" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Lato Medium" size="25.0" />
+         </font>
+      </JFXButton>
+      <JFXButton fx:id="redoAudio" alignment="CENTER" buttonType="RAISED" layoutX="804.0" layoutY="497.0" onAction="#redoButtonHandler" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="REDO" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Lato Medium" size="25.0" />
+         </font>
+      </JFXButton>
+    </children>
+</AnchorPane>
