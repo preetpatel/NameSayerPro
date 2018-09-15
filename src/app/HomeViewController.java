@@ -301,11 +301,11 @@ public class HomeViewController {
 
             //Load in the creations
             if (searchedItem.equals("")) {
-                command = "ls " + NameSayer.creationsPath + "/ -1 | sed -e 's/\\..*$//'";
+                command = "ls " + NameSayer.creationsPath + "/ -1 |  sed -e 's/\\..*$//'";
             }
             //If search button has text in it only load in creations matching the text in the search bar
             else {
-                command = "ls " + NameSayer.creationsPath + "/ -1 | grep " + searchedItem + " | sed -e 's/\\..*$//'";
+                command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -i " + searchedItem ;
             }
 
             builder = new ProcessBuilder("/bin/bash", "-c", command);
@@ -364,7 +364,7 @@ public class HomeViewController {
      */
     @FXML
     private void searchForCreation(){
-        String searchedItem = searchField.getText();
+        String searchedItem = searchField.getText().toLowerCase();
         loadCreationsOntoPane(searchedItem);
     }
 
