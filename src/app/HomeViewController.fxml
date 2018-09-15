@@ -17,7 +17,7 @@
             <Font name="Lato Heavy" size="96.0" />
          </font>
       </Text>
-      <JFXTextField fx:id="searchButton" focusColor="#023436" layoutX="902.0" layoutY="37.0" prefHeight="68.0" prefWidth="263.0" promptText="Search" style="-fx-background-color: #023436; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" unFocusColor="#074446">
+      <JFXTextField fx:id="searchField" focusColor="#023436" layoutX="902.0" layoutY="37.0" prefHeight="68.0" prefWidth="263.0" promptText="Search" style="-fx-background-color: #023436; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" unFocusColor="#074446">
          <font>
             <Font name="Lato Heavy" size="30.0" />
          </font>
