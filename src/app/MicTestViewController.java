@@ -39,31 +39,11 @@ public class MicTestViewController {
     private JFXSlider soundBar;
 
     @FXML
-    private MediaView view;
+    private AnchorPane anchorPane;
 
-    @FXML
-    private JFXSlider videoslider;
-
-    @FXML
-    private Text durationText;
-
-    @FXML
-    private JFXButton playButton;
-
-    private static String mediaToPlay;
-
-    private MediaPlayer mediaPlayer;
-
-    private Duration duration = Duration.seconds(0);
+    private Thread monitorThread;
 
 
-
-    /**
-     * Initializes the Play Creation scene
-     * Sets buttons for controlling the video
-     * Loads the creation onto a media player and starts playing the video
-     * The mediaToPlay variable must be set before loading playCreation
-     */
     @FXML
     public void initialize() {
 
@@ -74,11 +54,11 @@ public class MicTestViewController {
             TargetDataLine targetLine = (TargetDataLine) AudioSystem.getLine(info);
             targetLine.open();
 
-            Thread monitorThread = new Thread() {
+            monitorThread = new Thread() {
                 @Override
                 public void run() {
                     targetLine.start();
-
+                    soundBar.setValue(0);
                     byte[] data = new byte[targetLine.getBufferSize() / 5];
                     int readBytes = 1;
                     while(readBytes != 0) {
@@ -98,17 +78,34 @@ public class MicTestViewController {
 
     }
 
+    @FXML
+    private void backButtonHandler() {
+        monitorThread.interrupt();
+        System.out.println("made it");
+        Pane newLoadedPane = null;
+        try {
+            newLoadedPane = FXMLLoader.load(getClass().getResource("HomeViewController.fxml"));
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+        anchorPane.getChildren().add(newLoadedPane);
+    }
+
     private static int calculateRMSLevel(byte[] audioData)
     { // audioData might be buffered data read from a data line
         long lSum = 0;
-        for(int i=0; i<audioData.length; i++)
+        for (int i=0; i<audioData.length; i++) {
             lSum = lSum + audioData[i];
+        }
 
         double dAvg = lSum / audioData.length;
 
         double sumMeanSquare = 0d;
-        for(int j=0; j<audioData.length; j++)
+
+        for (int j=0; j<audioData.length; j++) {
             sumMeanSquare = sumMeanSquare + (Math.pow(audioData[j] - dAvg, 2d));
+        }
 
         double averageMeanSquare = sumMeanSquare / audioData.length;
         return (int)(Math.pow(averageMeanSquare,0.5d) + 0.5);

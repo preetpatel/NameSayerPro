@@ -255,6 +255,7 @@ public class HomeViewController {
 
     @FXML
     private void MicTestButtonHandler(ActionEvent event) {
+
         Pane newLoadedPane = null;
         try {
             newLoadedPane = FXMLLoader.load(getClass().getResource("MicTestViewController.fxml"));
