@@ -246,6 +246,18 @@ public class HomeViewController {
         introText.setText(selectedCreation);
     }
 
+    @FXML
+    private void MicTestButtonHandler(ActionEvent event) {
+        Pane newLoadedPane = null;
+        try {
+            newLoadedPane = FXMLLoader.load(getClass().getResource("MicTestViewController.fxml"));
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
+        }
+        anchorPane.getChildren().add(newLoadedPane);
+    }
+
     /**
      * Sets elements onto stage and loads creations from the creations folder defined in Namesayer.creationsPath
      * If the folder does not exist, creates a new folder for storing creations

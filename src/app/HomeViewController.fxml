@@ -11,8 +11,13 @@
 
 <AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.HomeViewController">
    <children>
+      <JFXButton fx:id="newCreationButton" alignment="CENTER" buttonType="RAISED" layoutX="972.0" layoutY="717.0" onAction="#createButtonHandler" prefHeight="68.0" prefWidth="212.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="New Creation" textAlignment="CENTER" textFill="WHITE">
+         <font>
+            <Font name="Lato Medium" size="25.0" />
+         </font>
+      </JFXButton>
       <AnchorPane prefHeight="143.0" prefWidth="1200.0" style="-fx-background-color: #037971;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-      <Text fx:id="text" fill="WHITE" layoutX="17.0" layoutY="107.75199890136719" strokeType="OUTSIDE" strokeWidth="1.0" text="NAMESAYER" textAlignment="CENTER" wrappingWidth="870.7578125" AnchorPane.leftAnchor="17.0" AnchorPane.rightAnchor="312.0" AnchorPane.topAnchor="13.0">
+      <Text fx:id="text" fill="WHITE" layoutX="125.0" layoutY="107.75199890136719" strokeType="OUTSIDE" strokeWidth="1.0" text="NAMESAYER" textAlignment="CENTER" wrappingWidth="762.7578125" AnchorPane.leftAnchor="125.0" AnchorPane.rightAnchor="312.0" AnchorPane.topAnchor="13.0">
          <font>
             <Font name="Lato Heavy" size="96.0" />
          </font>
@@ -22,7 +27,7 @@
             <Font name="Lato Heavy" size="30.0" />
          </font>
       </JFXTextField>
-      <JFXButton fx:id="newCreationButton" alignment="CENTER" buttonType="RAISED" layoutX="962.0" layoutY="707.0" prefHeight="68.0" prefWidth="212.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="New Creation" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="25.0" AnchorPane.rightAnchor="35.0">
+      <JFXButton fx:id="micCheckButton" alignment="CENTER" buttonType="RAISED" layoutX="39.0" layoutY="37.0" onAction="#MicTestButtonHandler" prefHeight="68.0" prefWidth="77.0" ripplerFill="#023436" style="-fx-background-color: #023436;" text="M" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="695.0" AnchorPane.rightAnchor="1084.0">
          <font>
             <Font name="Lato Medium" size="25.0" />
          </font></JFXButton>
@@ -46,6 +51,6 @@
             <Font name="Lato Medium" size="25.0" />
          </font>
       </JFXButton>
-      <StackPane fx:id="stackPane" layoutY="-6.0" prefHeight="806.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-6.0" />
+      <StackPane fx:id="stackPane" prefHeight="800.0" prefWidth="1200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
    </children>
 </AnchorPane>
