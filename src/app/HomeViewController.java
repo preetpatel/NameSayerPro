@@ -11,13 +11,17 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
@@ -55,6 +59,9 @@ public class HomeViewController {
     @FXML
     private ScrollPane scrollPane;
 
+    @FXML
+    private TextField searchField;
+
     private String selectedCreation;
 
     /**
@@ -85,7 +92,7 @@ public class HomeViewController {
         try {
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.creationsPath +"/'" + creationToDelete + "'.*");
             Process process = builder.start();
-            loadCreationsOntoPane();
+            loadCreationsOntoPane("");
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null,"An error occurred: "+e.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
@@ -249,8 +256,9 @@ public class HomeViewController {
     /**
      * Sets elements onto stage and loads creations from the creations folder defined in Namesayer.creationsPath
      * If the folder does not exist, creates a new folder for storing creations
+     * @param searchedItem -> The creations containing this string are to be loaded onto the GUI
      */
-    private void loadCreationsOntoPane() {
+    private void loadCreationsOntoPane(String searchedItem){
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
         playButton.setVisible(false);
@@ -276,10 +284,30 @@ public class HomeViewController {
         //Loads all creations onto view
         ObservableList<JFXButton> creationsList = FXCollections.<JFXButton>observableArrayList();
         try {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ls " + NameSayer.creationsPath +"/ -1 | sed -e 's/\\..*$//'");
+            ProcessBuilder builder;
+            String command;
+
+            //Load in the creations
+            if (searchedItem.equals("")) {
+                command = "ls " + NameSayer.creationsPath + "/ -1 | sed -e 's/\\..*$//'";
+            }
+            //If search button has text in it only load in creations matching the text in the search bar
+            else {
+                command = "ls " + NameSayer.creationsPath + "/ -1 | grep " + searchedItem + " | sed -e 's/\\..*$//'";
+            }
+
+            builder = new ProcessBuilder("/bin/bash", "-c", command);
             Process process = builder.start();
+
+            try {
+                process.waitFor();
+            }catch(InterruptedException e){
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
             InputStream stdout = process.getInputStream();
             BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+
             String line;
             while ((line = stdoutBuffered.readLine()) != null )
             {
@@ -317,13 +345,24 @@ public class HomeViewController {
         });
     }
 
+
+    /**
+     * Provides functionality for the search bar, refreshes the list of creations every time a key is typed into the search
+     * bar.
+     */
+    @FXML
+    private void searchForCreation(){
+        String searchedItem = searchField.getText();
+        loadCreationsOntoPane(searchedItem);
+    }
+
     /**
      * Method that calls loadCreationsOntoPane() method.
      * This method exists due to being required by JavaFX
      */
     @FXML
     private void initialize() {
-        loadCreationsOntoPane();
+        loadCreationsOntoPane("");
     }
 
 }
