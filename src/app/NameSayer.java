@@ -22,7 +22,7 @@ public class NameSayer extends Application {
     }
 
     /** Path for storing universal creations */
-    public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer";
+    public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer/Database";
 
     @Override
     public void start(Stage primaryStage) throws Exception {
