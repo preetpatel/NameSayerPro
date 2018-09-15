@@ -141,7 +141,7 @@ public class HomeViewController {
      * Creates a modal dialog for generating a new creation.
      * Modal checks for valid file names and existing file names
      * If an invalid string is entered, the modal text field turns red
-     * If a creation exists with that name, an override button appears
+     * If a creation exists with that name, an override button is shown
      */
     @FXML
     private void createButtonHandler(ActionEvent e) {
