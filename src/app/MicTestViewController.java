@@ -81,10 +81,9 @@ public class MicTestViewController {
 
                     byte[] data = new byte[targetLine.getBufferSize() / 5];
                     int readBytes = 1;
-
                     while(readBytes != 0) {
                         readBytes = targetLine.read(data, 0, data.length);
-                        System.out.println("RMS Level: " + calculateRMSLevel(data));
+                        soundBar.setValue(calculateRMSLevel(data));
                     }
                     targetLine.stop();
                     targetLine.close();
