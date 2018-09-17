@@ -35,11 +35,11 @@
             <JFXMasonryPane fx:id="creationsPane" prefHeight="321.0" prefWidth="1188.0" />
          </content>
       </ScrollPane>
-      <JFXButton fx:id="addButton1" layoutX="938.0" layoutY="730.0" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #037971;" text="Start Practice" textFill="WHITE">
+      <JFXButton fx:id="addButton" layoutX="938.0" layoutY="730.0" onAction="#addButtonHandler" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #037971;" text="Start Practice" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <StackPane fx:id="stackPane" layoutX="-1.0" layoutY="-1.0" prefHeight="800.0" prefWidth="1200.0" />
+      <StackPane fx:id="stackPane" layoutX="-1.0" layoutY="476.0" prefHeight="323.0" prefWidth="1200.0" />
     </children>
 </AnchorPane>

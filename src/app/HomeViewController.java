@@ -312,6 +312,7 @@ public class HomeViewController {
             builder = new ProcessBuilder("/bin/bash", "-c", command);
             Process process = builder.start();
 
+
             try {
                 process.waitFor();
             }catch(InterruptedException e){
