@@ -58,7 +58,8 @@ public class SearchNamesViewController {
         Process process;
 
         try {
-            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -i " + searchedItem;
+            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iw " + searchedItem;
+
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
             process = builder.start();
             process.waitFor();
