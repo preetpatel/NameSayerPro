@@ -26,7 +26,7 @@ public class NameSayer extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        loadScene("HomeViewController.fxml", primaryStage);
+        loadScene("SearchNamesViewController.fxml", primaryStage);
     }
 
     /** Loads FXML onto the scene and renders the first scene: HomeViewController.java */
