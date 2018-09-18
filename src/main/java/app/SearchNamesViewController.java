@@ -55,80 +55,56 @@ public class SearchNamesViewController {
         stackPane.setVisible(false);
 
         String searchedItems = searchField.getText().trim();
-        String[] searchedItemsArray = searchedItems.split(" ");
+        if (searchedItems.equals("")) {
 
-        Process process;
-        Boolean allCreationsExist = true;
-        List<String> creationsNamesList = new ArrayList<String>();
-        //search for the item to put into list of searched items
-        try {
+            showErrorDialog("Please enter a valid name", "Ok");
+
+        } else {
+
+            String[] searchedItemsArray = searchedItems.split(" ");
+            Creation creation = new Creation();
+
             for (String currentSearchedItem : searchedItemsArray) {
-                String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iow \"" + currentSearchedItem + "\"";
+                File folder = new File(NameSayer.creationsPath);
+                File[] files = folder.listFiles();
+                boolean fileFound = false;
 
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
-                process = builder.start();
-                process.waitFor();
+                for (File file : files) {
 
-                InputStream stdout = process.getInputStream();
-                BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+                    fileFound = false;
+                    Creation tempName = new Creation();
+                    tempName.addName(file);
 
-                String line = stdoutBuffered.readLine();
+                    if (currentSearchedItem.toLowerCase().equals(tempName.getCreationName().toLowerCase())) {
+                        creation.addName(file);
+                        fileFound = true;
+                        break;
+                    }
+                }
 
-                if (line != null) {
-                    creationsNamesList.add(line);
-                } else {
-                    allCreationsExist = false;
-                    //if no name is found
+                if (!fileFound) {
 
-                    stackPane.setVisible(true);
-                    JFXDialogLayout dialogContent = new JFXDialogLayout();
-                    JFXDialog notFoundDialog = new JFXDialog(stackPane,dialogContent,JFXDialog.DialogTransition.CENTER);
-
-                    Text header = new Text("This name could not be found on the database");
-                    header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
-                    dialogContent.setHeading(header);
-
-                    JFXButton confirmDelete = new JFXButton();
-                    confirmDelete.setText("Ok");
-                    confirmDelete.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-                    confirmDelete.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            notFoundDialog.close();
-                            stackPane.setVisible(false);
-                        }
-                    });
-
-                    notFoundDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
-                        @Override
-                        public void handle(JFXDialogEvent event) {
-                            stackPane.setVisible(false);
-                        }
-                    });
-
-                    dialogContent.setActions(confirmDelete);
-                    notFoundDialog.show();
-
+                    // If no name is found
+                    showErrorDialog("This name could not be found on the database", "Ok");
+                    creation.destroy();
                     break;
                 }
             }
 
-            if (allCreationsExist){
-                //join the items into one string
-                String fusedCreationsName = String.join(" ",creationsNamesList);
+            if (creation.getCreationName() != null) {
 
                 //create a new button to represent the item
                 JFXButton button = new JFXButton();
                 button.setMnemonicParsing(false);
-                button.setText(fusedCreationsName);
-                button.setId(fusedCreationsName);
+                button.setText(creation.getCreationName());
+                button.setId(creation.getCreationName());
                 button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
 
                 boolean buttonExists = false;
 
-                    //see if that item has already been added to the list
+                //see if that item has already been added to the list
                 for (JFXButton currentButton : creationsButtonList) {
-                    if (fusedCreationsName.equals(currentButton.getId())) {
+                    if (creation.getCreationName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
                         buttonExists = true;
                     }
                 }
@@ -137,45 +113,13 @@ public class SearchNamesViewController {
                     creationsButtonList.add(button);
                 } else {
 
-                    stackPane.setVisible(true);
-                    JFXDialogLayout dialogContent = new JFXDialogLayout();
-                    JFXDialog deleteDialog = new JFXDialog(stackPane,dialogContent,JFXDialog.DialogTransition.CENTER);
-
-                    Text header = new Text("This name has already been selected");
-                    header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
-                    dialogContent.setHeading(header);
-
-                    JFXButton confirmDelete = new JFXButton();
-                    confirmDelete.setText("Ok");
-                    confirmDelete.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-                    confirmDelete.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
-                            deleteDialog.close();
-                            stackPane.setVisible(false);
-
-                        }
-                    });
-
-                    deleteDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
-                        @Override
-                        public void handle(JFXDialogEvent event) {
-                            stackPane.setVisible(false);
-                        }
-                    });
-
-                    dialogContent.setActions(confirmDelete);
-                    deleteDialog.show();
+                    showErrorDialog("This name has already been added", "Ok");
                 }
-
             }
 
             creationsPane.getChildren().addAll(creationsButtonList);
 
-        } catch (IOException | InterruptedException e2) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
 
     }
 
@@ -206,5 +150,37 @@ public class SearchNamesViewController {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    public void showErrorDialog(String headerText, String buttonText) {
+        stackPane.setVisible(true);
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+
+        Text header = new Text(headerText);
+        header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+        dialogContent.setHeading(header);
+
+        JFXButton confirmDelete = new JFXButton();
+        confirmDelete.setText(buttonText);
+        confirmDelete.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+        confirmDelete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                deleteDialog.close();
+                stackPane.setVisible(false);
+
+            }
+        });
+
+        deleteDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+            @Override
+            public void handle(JFXDialogEvent event) {
+                stackPane.setVisible(false);
+            }
+        });
+
+        dialogContent.setActions(confirmDelete);
+        deleteDialog.show();
     }
 }
