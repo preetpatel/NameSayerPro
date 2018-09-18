@@ -65,7 +65,7 @@ public class SearchNamesViewController {
 
         //search for the item to put into list
         try {
-            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iw \"" + searchedItem +"\"";
+            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iow \"" + searchedItem +"\"";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
             process = builder.start();
