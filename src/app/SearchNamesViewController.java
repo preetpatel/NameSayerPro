@@ -52,7 +52,8 @@ public class SearchNamesViewController {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
 
-        String searchedItem = searchField.getText();
+        String searchedItems = searchField.getText();
+        String[] searchedItemsArray = searchedItems.split(" ");
 
         File storage = new File(NameSayer.creationsPath);
         if (!storage.exists()) {
@@ -65,44 +66,47 @@ public class SearchNamesViewController {
 
         //search for the item to put into list
         try {
-            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iow \"" + searchedItem +"\"";
+            for (String currentSearchedItem : searchedItemsArray) {
+                String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iow \"" + currentSearchedItem + "\"";
 
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
-            process = builder.start();
-            process.waitFor();
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
+                process = builder.start();
+                process.waitFor();
 
-            InputStream stdout = process.getInputStream();
-            BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+                InputStream stdout = process.getInputStream();
+                BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
 
-            String line = stdoutBuffered.readLine();
+                String line = stdoutBuffered.readLine();
 
-            //create a new button to represent the item
-            if (line != null){
+                //create a new button to represent the item
+                if (line != null) {
 
-                JFXButton button = new JFXButton();
-                button.setMnemonicParsing(false);
-                button.setText(line);
-                button.setId(line);
-                button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+                    JFXButton button = new JFXButton();
+                    button.setMnemonicParsing(false);
+                    button.setText(line);
+                    button.setId(line);
+                    button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
 
-                boolean buttonExists = false;
+                    boolean buttonExists = false;
 
-                //see if that item has already been added to the list
-                for (JFXButton currentButton:creationsButtonList){
-                    if (line.equals(currentButton.getId())){
-                        buttonExists = true;
+                    //see if that item has already been added to the list
+                    for (JFXButton currentButton : creationsButtonList) {
+                        if (line.equals(currentButton.getId())) {
+                            buttonExists = true;
+                        }
                     }
-                }
 
-                if (!buttonExists) {
-                    creationsButtonList.add(button);
+                    if (!buttonExists) {
+                        creationsButtonList.add(button);
+                    } else {
+                        System.out.println("That has already been added");
+                    }
+
                 } else {
-                    System.out.println("That has already been added");
+                    //if no name is found
+                    System.out.println(currentSearchedItem + "Name Not Found");
                 }
 
-            } else {
-                //if no name is found
-                System.out.println("Name Not Found");
             }
 
             creationsPane.getChildren().addAll(creationsButtonList);
