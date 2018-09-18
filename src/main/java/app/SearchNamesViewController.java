@@ -1,15 +1,17 @@
 package app;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXMasonryPane;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 
 import javax.swing.*;
 import java.io.*;
@@ -42,7 +44,7 @@ public class SearchNamesViewController {
     @FXML
     private JFXButton addButton;
 
-    ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
+    private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
 
     @FXML
     /**
@@ -52,15 +54,8 @@ public class SearchNamesViewController {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
 
-        String searchedItems = searchField.getText();
+        String searchedItems = searchField.getText().trim();
         String[] searchedItemsArray = searchedItems.split(" ");
-
-        File storage = new File(NameSayer.creationsPath);
-        if (!storage.exists()) {
-            if (!storage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
 
         Process process;
         Boolean allCreationsExist = true;
@@ -84,7 +79,36 @@ public class SearchNamesViewController {
                 } else {
                     allCreationsExist = false;
                     //if no name is found
-                    System.out.println(currentSearchedItem + " Not Found");
+
+                    stackPane.setVisible(true);
+                    JFXDialogLayout dialogContent = new JFXDialogLayout();
+                    JFXDialog notFoundDialog = new JFXDialog(stackPane,dialogContent,JFXDialog.DialogTransition.CENTER);
+
+                    Text header = new Text("This name could not be found on the database");
+                    header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+                    dialogContent.setHeading(header);
+
+                    JFXButton confirmDelete = new JFXButton();
+                    confirmDelete.setText("Ok");
+                    confirmDelete.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+                    confirmDelete.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            notFoundDialog.close();
+                            stackPane.setVisible(false);
+                        }
+                    });
+
+                    notFoundDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+                        @Override
+                        public void handle(JFXDialogEvent event) {
+                            stackPane.setVisible(false);
+                        }
+                    });
+
+                    dialogContent.setActions(confirmDelete);
+                    notFoundDialog.show();
+
                     break;
                 }
             }
@@ -112,17 +136,44 @@ public class SearchNamesViewController {
                 if (!buttonExists) {
                     creationsButtonList.add(button);
                 } else {
-                    System.out.println("That has already been added");
+
+                    stackPane.setVisible(true);
+                    JFXDialogLayout dialogContent = new JFXDialogLayout();
+                    JFXDialog deleteDialog = new JFXDialog(stackPane,dialogContent,JFXDialog.DialogTransition.CENTER);
+
+                    Text header = new Text("This name has already been selected");
+                    header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+                    dialogContent.setHeading(header);
+
+                    JFXButton confirmDelete = new JFXButton();
+                    confirmDelete.setText("Ok");
+                    confirmDelete.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+                    confirmDelete.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            deleteDialog.close();
+                            stackPane.setVisible(false);
+
+                        }
+                    });
+
+                    deleteDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+                        @Override
+                        public void handle(JFXDialogEvent event) {
+                            stackPane.setVisible(false);
+                        }
+                    });
+
+                    dialogContent.setActions(confirmDelete);
+                    deleteDialog.show();
                 }
 
             }
 
             creationsPane.getChildren().addAll(creationsButtonList);
 
-        } catch (IOException e2) {
+        } catch (IOException | InterruptedException e2) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (InterruptedException e3) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e3.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
 
@@ -134,6 +185,26 @@ public class SearchNamesViewController {
      */
     @FXML
     private void initialize() {
+
+        // Sets scroll pane to match the style of the app by disabling visible scroll bars
         stackPane.setVisible(false);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaX() != 0) {
+                    event.consume();
+                }
+            }
+        });
+
+        // Checks for if the database folder exists or not
+        File storage = new File(NameSayer.creationsPath);
+        if (!storage.exists()) {
+            if (!storage.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
