@@ -30,14 +30,9 @@
             <Font size="34.0" />
          </font>
       </JFXTextField>
-      <ScrollPane fx:id="scrollPane" layoutX="6.0" layoutY="400.0" prefHeight="323.0" prefWidth="576.0" style="-fx-background-color: #023436;">
+      <ScrollPane fx:id="scrollPane" layoutX="6.0" layoutY="400.0" prefHeight="323.0" prefWidth="1187.0" style="-fx-background-color: #023436;">
          <content>
-            <JFXMasonryPane fx:id="creationsPane" prefHeight="321.0" prefWidth="574.0" />
-         </content>
-      </ScrollPane>
-      <ScrollPane layoutX="616.0" layoutY="400.0" prefHeight="323.0" prefWidth="576.0">
-         <content>
-            <JFXMasonryPane prefHeight="320.0" prefWidth="574.0" />
+            <JFXMasonryPane fx:id="creationsPane" prefHeight="321.0" prefWidth="1184.0" />
          </content>
       </ScrollPane>
       <JFXButton fx:id="addButton" layoutX="938.0" layoutY="730.0" onAction="#addButtonHandler" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #037971;" text="Start Practice" textFill="WHITE">
