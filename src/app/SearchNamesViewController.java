@@ -7,14 +7,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SearchNamesViewController {
 
@@ -28,7 +28,13 @@ public class SearchNamesViewController {
     private JFXMasonryPane creationsPane;
 
     @FXML
+    private JFXMasonryPane addedCreationsPane;
+
+    @FXML
     private ScrollPane scrollPane;
+
+    @FXML
+    private ScrollPane addedScrollPane;
 
     @FXML
     private JFXTextField searchField;
@@ -36,7 +42,7 @@ public class SearchNamesViewController {
     @FXML
     private JFXButton addButton;
 
-    ObservableList<JFXButton> creationsList = FXCollections.<JFXButton>observableArrayList();
+    ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
 
     @FXML
     /**
@@ -57,8 +63,9 @@ public class SearchNamesViewController {
 
         Process process;
 
+        //search for the item to put into list
         try {
-            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iw " + searchedItem;
+            String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iw \"" + searchedItem +"\"";
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
             process = builder.start();
@@ -69,7 +76,8 @@ public class SearchNamesViewController {
 
             String line = stdoutBuffered.readLine();
 
-            if (line != null ){
+            //create a new button to represent the item
+            if (line != null){
 
                 JFXButton button = new JFXButton();
                 button.setMnemonicParsing(false);
@@ -77,14 +85,27 @@ public class SearchNamesViewController {
                 button.setId(line);
                 button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
 
-                //button.setOnAction(this::existingCreationButtonHandler); //make it so when clicked it is removed
-                creationsList.add(button);
+                boolean buttonExists = false;
+
+                //see if that item has already been added to the list
+                for (JFXButton currentButton:creationsButtonList){
+                    if (line.equals(currentButton.getId())){
+                        buttonExists = true;
+                    }
+                }
+
+                if (!buttonExists) {
+                    creationsButtonList.add(button);
+                } else {
+                    System.out.println("That has already been added");
+                }
 
             } else {
+                //if no name is found
                 System.out.println("Name Not Found");
             }
 
-            creationsPane.getChildren().addAll(creationsList);
+            creationsPane.getChildren().addAll(creationsButtonList);
 
         } catch (IOException e2) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -96,7 +117,7 @@ public class SearchNamesViewController {
     }
 
     /**
-     * Method that calls nothing.
+     * Method that makes stack pane invisible on startup.
      * This method exists due to being required by JavaFX
      */
     @FXML
