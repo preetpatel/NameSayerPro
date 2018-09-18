@@ -63,8 +63,9 @@ public class SearchNamesViewController {
         }
 
         Process process;
-
-        //search for the item to put into list
+        Boolean allCreationsExist = true;
+        List<String> creationsNamesList = new ArrayList<String>();
+        //search for the item to put into list of searched items
         try {
             for (String currentSearchedItem : searchedItemsArray) {
                 String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iow \"" + currentSearchedItem + "\"";
@@ -78,33 +79,40 @@ public class SearchNamesViewController {
 
                 String line = stdoutBuffered.readLine();
 
-                //create a new button to represent the item
                 if (line != null) {
+                    creationsNamesList.add(line);
+                } else {
+                    allCreationsExist = false;
+                    //if no name is found
+                    System.out.println(currentSearchedItem + " Not Found");
+                    break;
+                }
+            }
 
-                    JFXButton button = new JFXButton();
-                    button.setMnemonicParsing(false);
-                    button.setText(line);
-                    button.setId(line);
-                    button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+            if (allCreationsExist){
+                //join the items into one string
+                String fusedCreationsName = String.join(" ",creationsNamesList);
 
-                    boolean buttonExists = false;
+                //create a new button to represent the item
+                JFXButton button = new JFXButton();
+                button.setMnemonicParsing(false);
+                button.setText(fusedCreationsName);
+                button.setId(fusedCreationsName);
+                button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+
+                boolean buttonExists = false;
 
                     //see if that item has already been added to the list
-                    for (JFXButton currentButton : creationsButtonList) {
-                        if (line.equals(currentButton.getId())) {
-                            buttonExists = true;
-                        }
+                for (JFXButton currentButton : creationsButtonList) {
+                    if (fusedCreationsName.equals(currentButton.getId())) {
+                        buttonExists = true;
                     }
+                }
 
-                    if (!buttonExists) {
-                        creationsButtonList.add(button);
-                    } else {
-                        System.out.println("That has already been added");
-                    }
-
+                if (!buttonExists) {
+                    creationsButtonList.add(button);
                 } else {
-                    //if no name is found
-                    System.out.println(currentSearchedItem + "Name Not Found");
+                    System.out.println("That has already been added");
                 }
 
             }
