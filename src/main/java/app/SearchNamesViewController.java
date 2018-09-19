@@ -75,7 +75,7 @@ public class SearchNamesViewController {
                     Creation tempName = new Creation();
                     tempName.addName(file);
 
-                    if (currentSearchedItem.toLowerCase().equals(tempName.getCreationName().toLowerCase())) {
+                    if (currentSearchedItem.toLowerCase().equals(tempName.getCreationName().toLowerCase()) && tempName.isValid()) {
                         creation.addName(file);
                         fileFound = true;
                         break;

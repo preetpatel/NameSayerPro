@@ -1,9 +1,12 @@
 package app;
 
 
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class Creation {
 
@@ -33,6 +36,15 @@ public class Creation {
         }
 
         return String.join(" ", names);
+    }
+
+    public boolean isValid() {
+        for (File file : files) {
+            if (!FilenameUtils.getExtension(file.getName()).equals("wav")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void destroy() {
