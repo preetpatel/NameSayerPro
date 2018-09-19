@@ -2,19 +2,20 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
-import com.jfoenix.transitions.JFXKeyValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
 import java.io.*;
 import java.util.*;
 
@@ -54,6 +55,52 @@ public class SearchNamesViewController {
     private List<JFXButton> selectedButtonsList = new ArrayList<>();
 
     private List<Creation> creationsList = new ArrayList<>();
+
+    /**
+     * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
+     * Initialises properties of the scroll view
+     */
+    @FXML
+    private void initialize() {
+        selectedButtonsList = new ArrayList<>();
+        creationsList = new ArrayList<>();
+        startPracticeButton.setVisible(false);
+        removeButton.setVisible(false);
+
+        // Add Enter key listener on search field
+        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.ENTER) {
+                    addButtonHandler(new ActionEvent());
+                }
+            }
+        });
+
+
+        // Sets scroll pane to match the style of the app by disabling visible scroll bars
+        stackPane.setVisible(false);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaX() != 0) {
+                    event.consume();
+                }
+            }
+        });
+
+        // Checks for if the database folder exists or not
+        File storage = new File(NameSayer.creationsPath);
+        if (!storage.exists()) {
+            if (!storage.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }
 
     @FXML
     private void removeButtonHandler(ActionEvent e){
@@ -210,40 +257,6 @@ public class SearchNamesViewController {
         dialogContent.setActions(confirmRandomise);
         dialogContent.setActions(confirmPlay);
         randomiseDialog.show();
-    }
-
-    /**
-     * Method that makes stack pane invisible on startup.
-     * This method exists due to being required by JavaFX
-     */
-    @FXML
-    private void initialize() {
-        selectedButtonsList = new ArrayList<>();
-        creationsList = new ArrayList<>();
-        startPracticeButton.setVisible(false);
-        removeButton.setVisible(false);
-
-
-        // Sets scroll pane to match the style of the app by disabling visible scroll bars
-        stackPane.setVisible(false);
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
-        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                if (event.getDeltaX() != 0) {
-                    event.consume();
-                }
-            }
-        });
-
-        // Checks for if the database folder exists or not
-        File storage = new File(NameSayer.creationsPath);
-        if (!storage.exists()) {
-            if (!storage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
     }
 
     public void showErrorDialog(String headerText, String buttonText) {
