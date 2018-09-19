@@ -2,6 +2,7 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
+import com.jfoenix.transitions.JFXKeyValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -15,8 +16,7 @@ import javafx.scene.text.Text;
 
 import javax.swing.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SearchNamesViewController {
 
@@ -44,7 +44,47 @@ public class SearchNamesViewController {
     @FXML
     private JFXButton addButton;
 
+    @FXML
+    private JFXButton startPracticeButton;
+
+    @FXML
+    private JFXButton removeButton;
+
     private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
+    private List<JFXButton> selectedButtonsList = new ArrayList<>();
+
+    private List<Creation> creationsList = new ArrayList<>();
+
+    @FXML
+    private void removeButtonHandler(ActionEvent e){
+
+
+        for(JFXButton button : selectedButtonsList){
+            creationsButtonList.remove(button);
+
+            Iterator<Creation> creations = creationsList.iterator();
+            while (creations.hasNext()) {
+
+                JFXButton comparedButton = creations.next().getButton();
+
+                if (button.equals(comparedButton)) {
+                    creations.remove();
+                    creationsButtonList.remove(comparedButton);
+                    break;
+                }
+            }
+        }
+
+        creationsPane.getChildren().clear();
+        creationsPane.getChildren().addAll(creationsButtonList);
+
+        // Set remove button to invisible if list has no creations left
+        if (creationsList.isEmpty()) {
+            removeButton.setVisible(false);
+            startPracticeButton.setVisible(false);
+        }
+    }
+
 
     @FXML
     /**
@@ -93,12 +133,7 @@ public class SearchNamesViewController {
 
             if (creation.getCreationName() != null) {
 
-                //create a new button to represent the item
-                JFXButton button = new JFXButton();
-                button.setMnemonicParsing(false);
-                button.setText(creation.getCreationName());
-                button.setId(creation.getCreationName());
-                button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+                JFXButton button = creation.generateButton(selectedButtonsList);
 
                 boolean buttonExists = false;
 
@@ -111,6 +146,9 @@ public class SearchNamesViewController {
 
                 if (!buttonExists) {
                     creationsButtonList.add(button);
+                    creationsList.add(creation);
+                    startPracticeButton.setVisible(true);
+                    removeButton.setVisible(true);
                 } else {
 
                     showErrorDialog("This name has already been added", "Ok");
@@ -123,12 +161,68 @@ public class SearchNamesViewController {
 
     }
 
+    @FXML
+    private void startPracticeHandler(ActionEvent e) {
+        stackPane.setVisible(true);
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+
+        Text header = new Text("Do you wish to randomise the list order?");
+        header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+        dialogContent.setHeading(header);
+
+        //TODO allow both buttons to show on stack pane
+
+        JFXButton confirmRandomise = new JFXButton();
+        confirmRandomise.setText("Randomise and play");
+        confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+        confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                randomiseDialog.close();
+                stackPane.setVisible(false);
+                Collections.shuffle(creationsList);
+
+                //TODO Play files here
+            }
+        });
+
+
+        JFXButton confirmPlay = new JFXButton();
+        confirmPlay.setText("Play");
+        confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+        confirmPlay.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                randomiseDialog.close();
+                stackPane.setVisible(false);
+
+            }
+        });
+
+        randomiseDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+            @Override
+            public void handle(JFXDialogEvent event) {
+                stackPane.setVisible(false);
+            }
+        });
+
+        dialogContent.setActions(confirmRandomise);
+        dialogContent.setActions(confirmPlay);
+        randomiseDialog.show();
+    }
+
     /**
      * Method that makes stack pane invisible on startup.
      * This method exists due to being required by JavaFX
      */
     @FXML
     private void initialize() {
+        selectedButtonsList = new ArrayList<>();
+        creationsList = new ArrayList<>();
+        startPracticeButton.setVisible(false);
+        removeButton.setVisible(false);
+
 
         // Sets scroll pane to match the style of the app by disabling visible scroll bars
         stackPane.setVisible(false);
