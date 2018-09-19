@@ -145,6 +145,8 @@ public class SearchNamesViewController {
     private void addButtonHandler(ActionEvent e) {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
+	stackPane.getChildren().clear();
+	searchField.setDisable(true);
 
         String searchedItems = searchField.getText().trim();
         if (searchedItems.equals("")) {
@@ -181,6 +183,7 @@ public class SearchNamesViewController {
                     creation.destroy();
                     break;
                 }
+		searchField.setDisable(false);
             }
 
             if (creation.getCreationName() != null) {
@@ -216,6 +219,7 @@ public class SearchNamesViewController {
     @FXML
     private void startPracticeHandler(ActionEvent e) {
         stackPane.setVisible(true);
+	stackPane.getChildren().clear();
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
@@ -284,6 +288,7 @@ public class SearchNamesViewController {
             @Override
             public void handle(ActionEvent event) {
                 deleteDialog.close();
+		searchField.setDisable(false);
                 stackPane.setVisible(false);
 
             }
@@ -293,6 +298,7 @@ public class SearchNamesViewController {
             @Override
             public void handle(JFXDialogEvent event) {
                 stackPane.setVisible(false);
+		searchField.setDisable(false);
             }
         });
 
