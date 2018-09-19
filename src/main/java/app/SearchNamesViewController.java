@@ -7,6 +7,8 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -18,6 +20,9 @@ import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.io.*;
 import java.util.*;
+
+import static javafx.scene.layout.StackPane.getAlignment;
+import static javafx.scene.layout.StackPane.setAlignment;
 
 public class SearchNamesViewController {
 
@@ -218,9 +223,11 @@ public class SearchNamesViewController {
         header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
         dialogContent.setHeading(header);
 
+
         //TODO allow both buttons to show on stack pane
 
         JFXButton confirmRandomise = new JFXButton();
+
         confirmRandomise.setText("Randomise and play");
         confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
         confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
@@ -234,7 +241,6 @@ public class SearchNamesViewController {
             }
         });
 
-
         JFXButton confirmPlay = new JFXButton();
         confirmPlay.setText("Play");
         confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
@@ -247,6 +253,9 @@ public class SearchNamesViewController {
             }
         });
 
+        setAlignment(confirmRandomise, Pos.BASELINE_RIGHT);
+        setAlignment(confirmPlay, Pos.BASELINE_LEFT);
+
         randomiseDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
             @Override
             public void handle(JFXDialogEvent event) {
@@ -254,8 +263,8 @@ public class SearchNamesViewController {
             }
         });
 
-        dialogContent.setActions(confirmRandomise);
-        dialogContent.setActions(confirmPlay);
+        dialogContent.setActions(confirmRandomise, confirmPlay);
+
         randomiseDialog.show();
     }
 
