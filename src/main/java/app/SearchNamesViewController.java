@@ -1,20 +1,23 @@
 package app;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXMasonryPane;
-import com.jfoenix.controls.JFXTextField;
+import com.jfoenix.controls.*;
+import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-
+import javafx.scene.text.Text;
 import javax.swing.*;
+import java.awt.event.KeyAdapter;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class SearchNamesViewController {
 
@@ -42,7 +45,93 @@ public class SearchNamesViewController {
     @FXML
     private JFXButton addButton;
 
-    ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
+    @FXML
+    private JFXButton startPracticeButton;
+
+    @FXML
+    private JFXButton removeButton;
+
+    private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
+    private List<JFXButton> selectedButtonsList = new ArrayList<>();
+
+    private List<Creation> creationsList = new ArrayList<>();
+
+    /**
+     * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
+     * Initialises properties of the scroll view
+     */
+    @FXML
+    private void initialize() {
+        selectedButtonsList = new ArrayList<>();
+        creationsList = new ArrayList<>();
+        startPracticeButton.setVisible(false);
+        removeButton.setVisible(false);
+
+        // Add Enter key listener on search field
+        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+
+            @Override
+            public void handle(KeyEvent event) {
+                if(event.getCode() == KeyCode.ENTER) {
+                    addButtonHandler(new ActionEvent());
+                }
+            }
+        });
+
+
+        // Sets scroll pane to match the style of the app by disabling visible scroll bars
+        stackPane.setVisible(false);
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaX() != 0) {
+                    event.consume();
+                }
+            }
+        });
+
+        // Checks for if the database folder exists or not
+        File storage = new File(NameSayer.creationsPath);
+        if (!storage.exists()) {
+            if (!storage.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }
+
+    @FXML
+    private void removeButtonHandler(ActionEvent e){
+
+
+        for(JFXButton button : selectedButtonsList){
+            creationsButtonList.remove(button);
+
+            Iterator<Creation> creations = creationsList.iterator();
+            while (creations.hasNext()) {
+
+                JFXButton comparedButton = creations.next().getButton();
+
+                if (button.equals(comparedButton)) {
+                    creations.remove();
+                    creationsButtonList.remove(comparedButton);
+                    break;
+                }
+            }
+        }
+
+        creationsPane.getChildren().clear();
+        creationsPane.getChildren().addAll(creationsButtonList);
+
+        // Set remove button to invisible if list has no creations left
+        if (creationsList.isEmpty()) {
+            removeButton.setVisible(false);
+            startPracticeButton.setVisible(false);
+        }
+    }
+
 
     @FXML
     /**
@@ -52,88 +141,153 @@ public class SearchNamesViewController {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
 
-        String searchedItems = searchField.getText();
-        String[] searchedItemsArray = searchedItems.split(" ");
+        String searchedItems = searchField.getText().trim();
+        if (searchedItems.equals("")) {
 
-        File storage = new File(NameSayer.creationsPath);
-        if (!storage.exists()) {
-            if (!storage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+            showErrorDialog("Please enter a valid name", "Ok");
 
-        Process process;
-        Boolean allCreationsExist = true;
-        List<String> creationsNamesList = new ArrayList<String>();
-        //search for the item to put into list of searched items
-        try {
+        } else {
+
+            String[] searchedItemsArray = searchedItems.split(" ");
+            Creation creation = new Creation();
+
             for (String currentSearchedItem : searchedItemsArray) {
-                String command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | grep -iow \"" + currentSearchedItem + "\"";
+                File folder = new File(NameSayer.creationsPath);
+                File[] files = folder.listFiles();
+                boolean fileFound = false;
 
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
-                process = builder.start();
-                process.waitFor();
+                for (File file : files) {
 
-                InputStream stdout = process.getInputStream();
-                BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+                    fileFound = false;
+                    Creation tempName = new Creation();
+                    tempName.addName(file);
 
-                String line = stdoutBuffered.readLine();
+                    if (currentSearchedItem.toLowerCase().equals(tempName.getCreationName().toLowerCase()) && tempName.isValid()) {
+                        creation.addName(file);
+                        fileFound = true;
+                        break;
+                    }
+                }
 
-                if (line != null) {
-                    creationsNamesList.add(line);
-                } else {
-                    allCreationsExist = false;
-                    //if no name is found
-                    System.out.println(currentSearchedItem + " Not Found");
+                if (!fileFound) {
+
+                    // If no name is found
+                    showErrorDialog("This name could not be found on the database", "Ok");
+                    creation.destroy();
                     break;
                 }
             }
 
-            if (allCreationsExist){
-                //join the items into one string
-                String fusedCreationsName = String.join(" ",creationsNamesList);
+            if (creation.getCreationName() != null) {
 
-                //create a new button to represent the item
-                JFXButton button = new JFXButton();
-                button.setMnemonicParsing(false);
-                button.setText(fusedCreationsName);
-                button.setId(fusedCreationsName);
-                button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+                JFXButton button = creation.generateButton(selectedButtonsList);
 
                 boolean buttonExists = false;
 
-                    //see if that item has already been added to the list
+                //see if that item has already been added to the list
                 for (JFXButton currentButton : creationsButtonList) {
-                    if (fusedCreationsName.equals(currentButton.getId())) {
+                    if (creation.getCreationName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
                         buttonExists = true;
                     }
                 }
 
                 if (!buttonExists) {
                     creationsButtonList.add(button);
+                    creationsList.add(creation);
+                    startPracticeButton.setVisible(true);
+                    removeButton.setVisible(true);
                 } else {
-                    System.out.println("That has already been added");
-                }
 
+                    showErrorDialog("This name has already been added", "Ok");
+                }
             }
 
             creationsPane.getChildren().addAll(creationsButtonList);
 
-        } catch (IOException e2) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e2.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (InterruptedException e3) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e3.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
 
     }
 
-    /**
-     * Method that makes stack pane invisible on startup.
-     * This method exists due to being required by JavaFX
-     */
     @FXML
-    private void initialize() {
-        stackPane.setVisible(false);
+    private void startPracticeHandler(ActionEvent e) {
+        stackPane.setVisible(true);
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+
+        Text header = new Text("Do you wish to randomise the list order?");
+        header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+        dialogContent.setHeading(header);
+
+        //TODO allow both buttons to show on stack pane
+
+        JFXButton confirmRandomise = new JFXButton();
+        confirmRandomise.setText("Randomise and play");
+        confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+        confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                randomiseDialog.close();
+                stackPane.setVisible(false);
+                Collections.shuffle(creationsList);
+
+                //TODO Play files here
+            }
+        });
+
+
+        JFXButton confirmPlay = new JFXButton();
+        confirmPlay.setText("Play");
+        confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+        confirmPlay.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                randomiseDialog.close();
+                stackPane.setVisible(false);
+
+            }
+        });
+
+        randomiseDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+            @Override
+            public void handle(JFXDialogEvent event) {
+                stackPane.setVisible(false);
+            }
+        });
+
+        dialogContent.setActions(confirmRandomise);
+        dialogContent.setActions(confirmPlay);
+        randomiseDialog.show();
+    }
+
+    public void showErrorDialog(String headerText, String buttonText) {
+        stackPane.setVisible(true);
+        JFXDialogLayout dialogContent = new JFXDialogLayout();
+        JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+
+        Text header = new Text(headerText);
+        header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+        dialogContent.setHeading(header);
+
+        JFXButton confirmDelete = new JFXButton();
+        confirmDelete.setText(buttonText);
+        confirmDelete.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+        confirmDelete.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                deleteDialog.close();
+                stackPane.setVisible(false);
+
+            }
+        });
+
+        deleteDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+            @Override
+            public void handle(JFXDialogEvent event) {
+                stackPane.setVisible(false);
+            }
+        });
+
+        dialogContent.setActions(confirmDelete);
+        deleteDialog.show();
     }
 }

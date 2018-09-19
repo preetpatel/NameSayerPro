@@ -25,21 +25,30 @@
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <JFXTextField fx:id="searchField" focusColor="#023436" layoutX="275.0" layoutY="229.0" prefHeight="70.0" prefWidth="651.0" promptText=" Type a name" style="-fx-background-color: #037971; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" unFocusColor="#002f2d">
-         <font>
-            <Font size="34.0" />
-         </font>
-      </JFXTextField>
-      <ScrollPane fx:id="scrollPane" layoutX="6.0" layoutY="400.0" prefHeight="323.0" prefWidth="1187.0" style="-fx-background-color: #023436;">
+      <ScrollPane fx:id="scrollPane" layoutX="6.0" layoutY="400.0" prefHeight="323.0" prefWidth="1187.0" style="-fx-background-color: #023436; -fx-border-color: white; -fx-border-style: solid;">
          <content>
             <JFXMasonryPane fx:id="creationsPane" prefHeight="321.0" prefWidth="1184.0" />
          </content>
       </ScrollPane>
-      <JFXButton fx:id="addButton" layoutX="938.0" layoutY="730.0" onAction="#addButtonHandler" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #037971;" text="Start Practice" textFill="WHITE">
+      <JFXButton fx:id="startPracticeButton" layoutX="938.0" layoutY="730.0" onAction="#startPracticeHandler" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #037971;" text="Start Practice" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <StackPane fx:id="stackPane" layoutX="-1.0" layoutY="729.0" prefHeight="70.0" prefWidth="1200.0" />
+      <JFXButton fx:id="removeButton" layoutX="50.0" layoutY="730.0" onAction="#removeButtonHandler" prefHeight="57.0" prefWidth="168.0" style="-fx-background-color: #037971;" text="Remove" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </JFXButton>
+      <StackPane fx:id="stackPane" layoutX="-1.0" layoutY="552.0" prefHeight="247.0" prefWidth="1200.0" />
+      <AnchorPane layoutX="258.0" layoutY="180.0" prefHeight="81.0" prefWidth="631.0">
+         <children>
+            <JFXTextField fx:id="searchField" focusColor="#023436" layoutY="6.0" prefHeight="70.0" prefWidth="682.0" promptText=" Type a name" style="-fx-background-color: #037971; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" unFocusColor="#002f2d">
+               <font>
+                  <Font size="34.0" />
+               </font>
+            </JFXTextField>
+         </children>
+      </AnchorPane>
     </children>
 </AnchorPane>
