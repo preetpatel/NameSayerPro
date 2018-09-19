@@ -40,7 +40,7 @@
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <StackPane fx:id="stackPane" layoutX="-1.0" layoutY="552.0" prefHeight="247.0" prefWidth="1200.0" />
+      <StackPane fx:id="stackPane" layoutX="-1.0" layoutY="-1.0" prefHeight="800.0" prefWidth="1200.0" />
       <AnchorPane layoutX="258.0" layoutY="180.0" prefHeight="81.0" prefWidth="631.0">
          <children>
             <JFXTextField fx:id="searchField" focusColor="#023436" layoutY="6.0" prefHeight="70.0" prefWidth="682.0" promptText=" Type a name" style="-fx-background-color: #037971; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" unFocusColor="#002f2d">
