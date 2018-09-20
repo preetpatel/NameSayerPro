@@ -15,61 +15,28 @@ public class Creation {
 
     private JFXButton button;
 
-    private List<File> files;
-
+    private List<Name> names;
 
     public Creation() {
-        files = new ArrayList<>();
+        names = new ArrayList<>();
     }
 
 
     public void addName(File file) {
-        files.add(file);
+        names.add(new Name(file));
     }
 
-    /**
-     * generates a human readable date from creation title
-     * @return String representing date: d-m-y h:m:s
-     */
-    public String getCreationDate(){
-        if (files.isEmpty()) {
-            return null;
-        }
-
-        String processedDate = "date processing error";
-
-        for (File file : files) {
-            String displayDate = file.getName();
-            displayDate = displayDate.replaceAll("^[^_]*_", "");
-            displayDate = displayDate.replaceAll("[^\\d_-]", "");
-            displayDate = displayDate.replaceAll("[.][^.]+$", "");
-            displayDate = displayDate.replaceAll("_", " ");
-
-            String[] dateAndTime = displayDate.split(" ",2);
-            dateAndTime[1] = dateAndTime[1].replaceAll("-", ":");
-
-            processedDate = dateAndTime[0] + " " + dateAndTime[1];
-        }
-        return processedDate;
-    }
 
     public String getCreationName() {
-        if (files.isEmpty()) {
+        if (names.isEmpty()) {
             return null;
         }
-
-        List<String> names = new ArrayList<>();
-
-        for (File file : files) {
-            String displayName = file.getName();
-
-            displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
-            displayName = displayName.replaceAll("[.][^.]+$", "");
-            names.add(displayName);
-
+        String displayName = "";
+        for (Name name : names) {
+            displayName = displayName + " "+ name.getName();
         }
 
-        return String.join(" ", names);
+        return displayName;
     }
 
     public void setButton(JFXButton button) {
@@ -78,15 +45,6 @@ public class Creation {
 
     public JFXButton getButton() {
         return button;
-    }
-
-    public boolean isValid() {
-        for (File file : files) {
-            if (!FilenameUtils.getExtension(file.getName()).equals("wav")) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -118,7 +76,7 @@ public class Creation {
     }
 
     public void destroy() {
-        files.clear();
+        names.clear();
     }
 
 }
