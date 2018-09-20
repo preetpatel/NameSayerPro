@@ -1,5 +1,6 @@
-[![Build Status](https://semaphoreci.com/api/v1/projects/9f52727e-d998-4329-88a5-4200f76cb1d4/2221286/badge.svg)](https://semaphoreci.com/preetpatel-20/namesayerpro)  
-[![CodeFactor](https://www.codefactor.io/repository/github/preetpatel/namesayerpro/badge)](https://www.codefactor.io/repository/github/preetpatel/namesayerpro)
+| | **Build Status** | **Code Review** |
+|---|:---:|:---:|
+| **Master** | [![Build Status](https://semaphoreci.com/api/v1/projects/9f52727e-d998-4329-88a5-4200f76cb1d4/2221286/badge.svg)](https://semaphoreci.com/preetpatel-20/namesayerpro) | [![CodeFactor](https://www.codefactor.io/repository/github/preetpatel/namesayerpro/badge)](https://www.codefactor.io/repository/github/preetpatel/namesayerpro) |
 # NameSayer
 A GUI App that allows you to practice saying names
 ![Logo](https://i.imgur.com/xO7wYvc.gif)
