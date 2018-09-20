@@ -78,11 +78,8 @@ public class PlayViewController {
         //load all previous versions of the first creation
         Creation firstCreation = _creationsList.get(0);
         firstCreation.getCreationName();
-
         //String creationName = firstCreation.getCreationName();
-
     }
-
 
     @FXML
     public void loadMainMenuView(){
