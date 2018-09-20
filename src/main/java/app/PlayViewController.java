@@ -76,8 +76,9 @@ public class PlayViewController {
 
         // TODO Everything in here :)
         //load all previous versions of the first creation
-        //Creation firstCreation = _creationsList.get(0);
-       // String creationName = firstCreation.getCreationName();
+        Creation firstCreation = _creationsList.get(0);
+
+        //String creationName = firstCreation.getCreationName();
 
     }
 

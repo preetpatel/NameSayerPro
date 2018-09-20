@@ -27,25 +27,30 @@ public class Creation {
         files.add(file);
     }
 
+    /**
+     * generates a human readable date from creation title
+     * @return String representing date: d-m-y h:m:s
+     */
     public String getCreationDate(){
         if (files.isEmpty()) {
             return null;
         }
 
-        List<String> names = new ArrayList<>();
+        String processedDate = "date processing error";
 
         for (File file : files) {
-            String displayName = file.getName();
+            String displayDate = file.getName();
+            displayDate = displayDate.replaceAll("^[^_]*_", "");
+            displayDate = displayDate.replaceAll("[^\\d_-]", "");
+            displayDate = displayDate.replaceAll("[.][^.]+$", "");
+            displayDate = displayDate.replaceAll("_", " ");
 
-            displayName = displayName.replaceAll("^[^_]*_", "");
-            displayName = displayName.replaceAll("[^\\d_-]", "");
-            displayName = displayName.replaceAll("[.][^.]+$", ""); //keep
-            names.add(displayName);
+            String[] dateAndTime = displayDate.split(" ",2);
+            dateAndTime[1] = dateAndTime[1].replaceAll("-", ":");
 
+            processedDate = dateAndTime[0] + " " + dateAndTime[1];
         }
-
-        return String.join(" ", names);
-
+        return processedDate;
     }
 
     public String getCreationName() {
