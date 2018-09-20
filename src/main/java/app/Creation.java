@@ -17,16 +17,34 @@ public class Creation {
 
     private List<File> files;
 
-    private List<String> creationNames;
 
     public Creation() {
         files = new ArrayList<>();
-        creationNames = new ArrayList<String>();
     }
 
 
     public void addName(File file) {
         files.add(file);
+    }
+
+    public String getCreationDate(){
+        if (files.isEmpty()) {
+            return null;
+        }
+
+        List<String> names = new ArrayList<>();
+
+        for (File file : files) {
+            String displayName = file.getName();
+
+            displayName = displayName.replaceAll("[^\\d.]", "");
+            displayName = displayName.replaceAll("[.][^.]+$", ""); //keep
+            names.add(displayName);
+
+        }
+
+        return String.join(" ", names);
+
     }
 
     public String getCreationName() {
@@ -38,7 +56,7 @@ public class Creation {
 
         for (File file : files) {
             String displayName = file.getName();
-            creationNames.add(displayName);
+
             displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
             displayName = displayName.replaceAll("[.][^.]+$", "");
             names.add(displayName);

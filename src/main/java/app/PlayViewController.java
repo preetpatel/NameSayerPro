@@ -28,8 +28,7 @@ import javafx.scene.text.Text;
 import javafx.util.Duration;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.List;
 
 import static java.lang.Math.round;
@@ -63,7 +62,7 @@ public class PlayViewController {
     @FXML
     private JFXTreeTableView previousAttempts;
 
-    private List<Creation> _creationsList;
+    private static List<Creation> _creationsList;
     private MediaPlayer mediaPlayer;
 
     /**
@@ -76,42 +75,32 @@ public class PlayViewController {
     public void initialize() {
 
         // TODO Everything in here :)
+        //load all previous versions of the first creation
+        Creation firstCreation = _creationsList.get(0);
+        String creationName = firstCreation.getCreationName();
+        try {
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ls | grep " + creationName + "v");
+            Process process = builder.start();
+
+            InputStream stdout = process.getInputStream();
+            BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+
+            String line;
+            while ((line = stdoutBuffered.readLine()) != null )
+            {
+                System.out.println(line);
+            }
+
+        } catch (IOException e){
+            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
 
         //get the creations that are to be played and store in _creationsList
 
 
     }
 
-    /**
-     * Runs the playAudioFile thread
-     */
-    @FXML
-    private void playAudio() {
-        Thread playAudio = new Thread(new PlayViewController.playAudioFile());
-        playAudio.start();
-
-    }
-
-    /**
-     * Thread for playing an audio file in the background
-     */
-    private class playAudioFile extends Task<Void> {
-
-        @Override
-        protected Void call() {
-
-            //TODO get the voice file
-            Media media = new Media(/*TODO play the voice file here*/null);
-            mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setOnReady(new Runnable() {
-                @Override
-                public void run() {
-                    mediaPlayer.play();
-                }
-            });
-            return null;
-        }
-    }
 
     @FXML
     public void loadMainMenuView(){
@@ -124,7 +113,7 @@ public class PlayViewController {
         }
     }
 
-    public void setCreationsList(List<Creation> creationsList){
+    public static void setCreationsList(List<Creation> creationsList){
         _creationsList = creationsList;
     }
 }

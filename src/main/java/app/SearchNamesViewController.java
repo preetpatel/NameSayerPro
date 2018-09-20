@@ -197,6 +197,7 @@ public class SearchNamesViewController {
                 //see if that item has already been added to the list
                 for (JFXButton currentButton : creationsButtonList) {
                     if (creation.getCreationName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                        System.out.println(creation.getCreationDate());
                         buttonExists = true;
                     }
                 }
