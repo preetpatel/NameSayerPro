@@ -15,56 +15,28 @@ public class Creation {
 
     private JFXButton button;
 
-    private List<File> files;
-
+    private List<Name> names;
 
     public Creation() {
-        files = new ArrayList<>();
+        names = new ArrayList<>();
     }
 
 
     public void addName(File file) {
-        files.add(file);
+        names.add(new Name(file));
     }
 
-    public String getCreationDate(){
-        if (files.isEmpty()) {
-            return null;
-        }
-
-        List<String> names = new ArrayList<>();
-
-        for (File file : files) {
-            String displayName = file.getName();
-
-            displayName = displayName.replaceAll("^[^_]*_", "");
-            displayName = displayName.replaceAll("[^\\d_-]", "");
-            displayName = displayName.replaceAll("[.][^.]+$", ""); //keep
-            names.add(displayName);
-
-        }
-
-        return String.join(" ", names);
-
-    }
 
     public String getCreationName() {
-        if (files.isEmpty()) {
+        if (names.isEmpty()) {
             return null;
         }
-
-        List<String> names = new ArrayList<>();
-
-        for (File file : files) {
-            String displayName = file.getName();
-
-            displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
-            displayName = displayName.replaceAll("[.][^.]+$", "");
-            names.add(displayName);
-
+        String displayName = "";
+        for (Name name : names) {
+            displayName = displayName + " "+ name.getName();
         }
 
-        return String.join(" ", names);
+        return displayName;
     }
 
     public void setButton(JFXButton button) {
@@ -73,15 +45,6 @@ public class Creation {
 
     public JFXButton getButton() {
         return button;
-    }
-
-    public boolean isValid() {
-        for (File file : files) {
-            if (!FilenameUtils.getExtension(file.getName()).equals("wav")) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**
@@ -113,7 +76,7 @@ public class Creation {
     }
 
     public void destroy() {
-        files.clear();
+        names.clear();
     }
 
 }

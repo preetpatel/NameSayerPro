@@ -84,6 +84,8 @@ public class SearchNamesViewController {
                 }
             }
         });
+
+
         // Sets scroll pane to match the style of the app by disabling visible scroll bars
         stackPane.setVisible(false);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -139,14 +141,14 @@ public class SearchNamesViewController {
 
 
     @FXML
-    /*
+    /**
      * Allows adding creations to the list of creations to be played
      */
     private void addButtonHandler(ActionEvent e) {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
-	    stackPane.getChildren().clear();
-	    searchField.setDisable(true);
+	stackPane.getChildren().clear();
+	searchField.setDisable(true);
 
         String searchedItems = searchField.getText().trim();
         if (searchedItems.equals("")) {
@@ -164,10 +166,11 @@ public class SearchNamesViewController {
                 boolean fileFound = false;
 
                 for (File file : files) {
-                    Creation tempName = new Creation();
-                    tempName.addName(file);
 
-                    if (currentSearchedItem.toLowerCase().equals(tempName.getCreationName().toLowerCase()) && tempName.isValid()) {
+                    fileFound = false;
+                    Name tempName = new Name(file);
+
+                    if (currentSearchedItem.toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
                         creation.addName(file);
                         fileFound = true;
                         break;
@@ -181,7 +184,7 @@ public class SearchNamesViewController {
                     creation.destroy();
                     break;
                 }
-		        searchField.setDisable(false);
+		searchField.setDisable(false);
             }
 
             if (creation.getCreationName() != null) {
@@ -193,7 +196,6 @@ public class SearchNamesViewController {
                 //see if that item has already been added to the list
                 for (JFXButton currentButton : creationsButtonList) {
                     if (creation.getCreationName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                        System.out.println(creation.getCreationDate());
                         buttonExists = true;
                     }
                 }
