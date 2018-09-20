@@ -78,26 +78,6 @@ public class PlayViewController {
         //load all previous versions of the first creation
         Creation firstCreation = _creationsList.get(0);
         String creationName = firstCreation.getCreationName();
-        try {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ls | grep " + creationName + "v");
-            Process process = builder.start();
-
-            InputStream stdout = process.getInputStream();
-            BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-
-            String line;
-            while ((line = stdoutBuffered.readLine()) != null )
-            {
-                System.out.println(line);
-            }
-
-        } catch (IOException e){
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
-
-
-        //get the creations that are to be played and store in _creationsList
-
 
     }
 

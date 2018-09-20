@@ -37,7 +37,8 @@ public class Creation {
         for (File file : files) {
             String displayName = file.getName();
 
-            displayName = displayName.replaceAll("[^\\d.]", "");
+            displayName = displayName.replaceAll("^[^_]*_", "");
+            displayName = displayName.replaceAll("[^\\d_-]", "");
             displayName = displayName.replaceAll("[.][^.]+$", ""); //keep
             names.add(displayName);
 

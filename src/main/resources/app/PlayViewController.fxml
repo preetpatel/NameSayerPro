@@ -46,7 +46,7 @@
                   <Font name="Lato Medium" size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="demoButton" alignment="CENTER" buttonType="RAISED" layoutX="43.0" layoutY="392.0" onAction="#playAudio" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Demo" textAlignment="CENTER" textFill="WHITE">
+            <JFXButton fx:id="demoButton" alignment="CENTER" buttonType="RAISED" layoutX="43.0" layoutY="392.0" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Demo" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Lato Medium" size="25.0" />
                </font>
