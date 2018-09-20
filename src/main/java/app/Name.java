@@ -17,25 +17,21 @@ public class Name {
     private String _name;
 
     public Name(File file){
-        getFileName(file);
-        getAllFilesOfName();
+        _name = getFileName(file);
+        _files = getAllFilesOfName();
     }
 
-    private void getFileName(File file) {
-
+    private String getFileName(File file) {
         String displayName = file.getName();
-
         _fullName = displayName;
-
         displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
         displayName = displayName.replaceAll("[.][^.]+$", "");
-
-        _name = displayName;
+        return displayName;
     }
 
     /**
      * checks if the file provided for the name is a valid .wav file
-     * @return true if te file is valid
+     * @return true if the file is valid
      */
     public boolean isValid() {
 
@@ -46,12 +42,11 @@ public class Name {
         return true;
     }
 
-    private void getAllFilesOfName(){
-        //TODO get all files that include that name
+    private List<File> getAllFilesOfName(){
         File dir = new File(NameSayer.creationsPath);
-        FileFilter filter = new WildcardFileFilter("*"+_name+".wav");
+        FileFilter filter = new WildcardFileFilter("*_"+_name+".wav");
         File[] files = dir.listFiles(filter);
-        _files = Arrays.asList(files);
+        return Arrays.asList(files);
 
     }
 

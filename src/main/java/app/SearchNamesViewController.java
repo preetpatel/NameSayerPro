@@ -238,8 +238,8 @@ public class SearchNamesViewController {
                 randomiseDialog.close();
                 stackPane.setVisible(false);
                 Collections.shuffle(creationsList);
-                loadPracticeView();
                 PlayViewController.setCreationsList(creationsList);
+                loadPracticeView();
             }
         });
 
@@ -251,8 +251,8 @@ public class SearchNamesViewController {
             public void handle(ActionEvent event) {
                 randomiseDialog.close();
                 stackPane.setVisible(false);
-                loadPracticeView();
                 PlayViewController.setCreationsList(creationsList);
+                loadPracticeView();
             }
         });
 
