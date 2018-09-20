@@ -84,8 +84,6 @@ public class SearchNamesViewController {
                 }
             }
         });
-
-
         // Sets scroll pane to match the style of the app by disabling visible scroll bars
         stackPane.setVisible(false);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
@@ -141,14 +139,14 @@ public class SearchNamesViewController {
 
 
     @FXML
-    /**
+    /*
      * Allows adding creations to the list of creations to be played
      */
     private void addButtonHandler(ActionEvent e) {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
-	stackPane.getChildren().clear();
-	searchField.setDisable(true);
+	    stackPane.getChildren().clear();
+	    searchField.setDisable(true);
 
         String searchedItems = searchField.getText().trim();
         if (searchedItems.equals("")) {
@@ -166,8 +164,6 @@ public class SearchNamesViewController {
                 boolean fileFound = false;
 
                 for (File file : files) {
-
-                    fileFound = false;
                     Creation tempName = new Creation();
                     tempName.addName(file);
 
@@ -185,7 +181,7 @@ public class SearchNamesViewController {
                     creation.destroy();
                     break;
                 }
-		searchField.setDisable(false);
+		        searchField.setDisable(false);
             }
 
             if (creation.getCreationName() != null) {
