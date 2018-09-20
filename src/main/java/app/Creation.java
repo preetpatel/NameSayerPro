@@ -17,8 +17,11 @@ public class Creation {
 
     private List<File> files;
 
+    private List<String> creationNames;
+
     public Creation() {
         files = new ArrayList<>();
+        creationNames = new ArrayList<String>();
     }
 
 
@@ -35,6 +38,7 @@ public class Creation {
 
         for (File file : files) {
             String displayName = file.getName();
+            creationNames.add(displayName);
             displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
             displayName = displayName.replaceAll("[.][^.]+$", "");
             names.add(displayName);

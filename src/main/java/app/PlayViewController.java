@@ -14,6 +14,7 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTreeTableView;
 import javafx.beans.InvalidationListener;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -29,6 +30,7 @@ import javafx.util.Duration;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import static java.lang.Math.round;
 
@@ -61,6 +63,8 @@ public class PlayViewController {
     @FXML
     private JFXTreeTableView previousAttempts;
 
+    private List<Creation> _creationsList;
+    private MediaPlayer mediaPlayer;
 
     /**
      * Initializes the Play Creation scene
@@ -73,5 +77,54 @@ public class PlayViewController {
 
         // TODO Everything in here :)
 
+        //get the creations that are to be played and store in _creationsList
+
+
+    }
+
+    /**
+     * Runs the playAudioFile thread
+     */
+    @FXML
+    private void playAudio() {
+        Thread playAudio = new Thread(new PlayViewController.playAudioFile());
+        playAudio.start();
+
+    }
+
+    /**
+     * Thread for playing an audio file in the background
+     */
+    private class playAudioFile extends Task<Void> {
+
+        @Override
+        protected Void call() {
+
+            //TODO get the voice file
+            Media media = new Media(/*TODO play the voice file here*/null);
+            mediaPlayer = new MediaPlayer(media);
+            mediaPlayer.setOnReady(new Runnable() {
+                @Override
+                public void run() {
+                    mediaPlayer.play();
+                }
+            });
+            return null;
+        }
+    }
+
+    @FXML
+    public void loadMainMenuView(){
+        try {
+            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
+            anchorPane.getChildren().clear();
+            anchorPane.getChildren().add(newLoadedPane);
+        } catch (IOException err) {
+            JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void setCreationsList(List<Creation> creationsList){
+        _creationsList = creationsList;
     }
 }

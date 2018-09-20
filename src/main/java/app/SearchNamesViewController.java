@@ -229,9 +229,6 @@ public class SearchNamesViewController {
         header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
         dialogContent.setHeading(header);
 
-
-        //TODO allow both buttons to show on stack pane
-
         JFXButton confirmRandomise = new JFXButton();
 
         confirmRandomise.setText("Randomise and play");
@@ -242,8 +239,8 @@ public class SearchNamesViewController {
                 randomiseDialog.close();
                 stackPane.setVisible(false);
                 Collections.shuffle(creationsList);
-
                 loadPracticeView();
+                PlayViewController.setCreationsList(creationsList);
             }
         });
 
@@ -256,6 +253,7 @@ public class SearchNamesViewController {
                 randomiseDialog.close();
                 stackPane.setVisible(false);
                 loadPracticeView();
+                PlayViewController.setCreationsList(creationsList);
             }
         });
 
@@ -316,5 +314,10 @@ public class SearchNamesViewController {
 
         dialogContent.setActions(confirmDelete);
         deleteDialog.show();
+    }
+
+    //gets the list of creations
+    public List<Creation> getCreationsList(){
+        return creationsList;
     }
 }
