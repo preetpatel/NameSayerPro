@@ -72,7 +72,7 @@ public class HomeViewController {
     @FXML
     private void playButtonHandler(ActionEvent e) {
 
-        PlayViewController.setMediaToPlay(selectedCreation);
+       // PlayViewController.setMediaToPlay(selectedCreation);
         try {
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
             anchorPane.getChildren().add(newLoadedPane);

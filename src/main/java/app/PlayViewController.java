@@ -10,7 +10,9 @@
 package app;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.JFXTreeTableView;
 import javafx.beans.InvalidationListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -36,80 +38,29 @@ public class PlayViewController {
     private AnchorPane anchorPane;
 
     @FXML
-    private MediaView view;
+    private Text currentName;
 
     @FXML
-    private JFXSlider videoslider;
+    private JFXButton demoButton;
 
     @FXML
-    private Text durationText;
+    private JFXButton recordButton;
 
     @FXML
-    private JFXButton playButton;
+    private JFXButton saveButton;
 
-    private static String mediaToPlay;
+    @FXML
+    private JFXButton previousButton;
 
-    private MediaPlayer mediaPlayer;
+    @FXML
+    private  JFXButton nextButton;
 
-    private Duration duration = Duration.seconds(0);
+    @FXML
+    private JFXComboBox<String> versions; // Not sure about what type goes inside
 
-    public static void setMediaToPlay(String media) {
-        mediaToPlay = media;
-    }
+    @FXML
+    private JFXTreeTableView previousAttempts;
 
-    /**
-     * Button handler for the play button
-     * Pauses the video and sets button text to pause
-     * Set event handler to pauseHandler()
-     */
-    public void playHandler() {
-        mediaPlayer.setStartTime(duration);
-        videoslider.valueProperty().setValue(duration.toSeconds());
-        mediaPlayer.play();
-        mediaPlayer.getStatus();
-        playButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                pauseHandler();
-            }
-        });
-        playButton.setText("PAUSE");
-    }
-
-    /**
-     * Button handler for pause button
-     * Plays video and sets button to play
-     * Set event handler to playHandler()
-     */
-    public void pauseHandler() {
-        duration = mediaPlayer.getCurrentTime();
-        mediaPlayer.pause();
-        playButton.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                playHandler();
-            }
-        });
-        playButton.setText("PLAY");
-    }
-
-    /**
-     * Button handler for back button.
-     * Stops media playback and changes scene to the Main Menu
-     */
-    public void backHandler() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-        }
-        Pane newLoadedPane = null;
-        try {
-            newLoadedPane = FXMLLoader.load(getClass().getResource("HomeViewController.fxml"));
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-        }
-        anchorPane.getChildren().add(newLoadedPane);
-    }
 
     /**
      * Initializes the Play Creation scene
@@ -120,51 +71,7 @@ public class PlayViewController {
     @FXML
     public void initialize() {
 
-        String path = NameSayer.creationsPath +"/" + mediaToPlay + ".mp4";
-        File file = new File(path);
-
-        /** Try and see if the file exists. Throw and error and refresh the page if there is an error */
-        if (mediaToPlay.isEmpty() || !file.exists()) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to play this file.", "Error", JOptionPane.ERROR_MESSAGE);
-            backHandler();
-        } else {
-
-            try {
-                Media media = new Media(file.toURI().toString());
-                mediaPlayer = new MediaPlayer(media);
-                view.setMediaPlayer(mediaPlayer);
-                mediaPlayer.setOnReady(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        videoslider.setMax(media.getDuration().toSeconds());
-                        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-                        mediaPlayer.play();
-
-                        InvalidationListener sliderChangeListener = o -> {
-                            Duration seekTo = Duration.seconds(videoslider.getValue());
-                            mediaPlayer.seek(seekTo);
-                        };
-
-                        videoslider.valueProperty().addListener(sliderChangeListener);
-
-                        mediaPlayer.currentTimeProperty().addListener(i -> {
-                            videoslider.valueProperty().removeListener(sliderChangeListener);
-                            Duration currentTime = mediaPlayer.getCurrentTime();
-                            int value = (int) currentTime.toSeconds();
-                            videoslider.setValue(value);
-                            durationText.setText(Double.toString(round(currentTime.toSeconds())));
-
-                            videoslider.valueProperty().addListener(sliderChangeListener);
-
-                        });
-                    }
-                });
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to play this file.", "Error", JOptionPane.ERROR_MESSAGE);
-                backHandler();
-            }
-        }
+        // TODO Everything in here :)
 
     }
 }

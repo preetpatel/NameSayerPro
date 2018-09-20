@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ScrollPane;
@@ -14,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javax.swing.*;
@@ -241,7 +243,7 @@ public class SearchNamesViewController {
                 stackPane.setVisible(false);
                 Collections.shuffle(creationsList);
 
-                //TODO Play files here
+                loadPracticeView();
             }
         });
 
@@ -253,7 +255,7 @@ public class SearchNamesViewController {
             public void handle(ActionEvent event) {
                 randomiseDialog.close();
                 stackPane.setVisible(false);
-
+                loadPracticeView();
             }
         });
 
@@ -270,6 +272,16 @@ public class SearchNamesViewController {
         dialogContent.setActions(confirmRandomise, confirmPlay);
 
         randomiseDialog.show();
+    }
+
+    private void loadPracticeView() {
+        try {
+            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
+            anchorPane.getChildren().clear();
+            anchorPane.getChildren().add(newLoadedPane);
+        } catch (IOException err) {
+            JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     public void showErrorDialog(String headerText, String buttonText) {
