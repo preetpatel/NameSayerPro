@@ -28,6 +28,9 @@ import javafx.util.StringConverter;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
@@ -205,17 +208,29 @@ public class PlayViewController {
     }
     @FXML
     public void demoButtonHandler() {
-        try {
-            InputStream in = new FileInputStream(_fileToPlay.getAbsolutePath());
-            AudioStream audioStream = new AudioStream(in);
-            AudioPlayer.player.start(audioStream);
-        } catch (FileNotFoundException e) {
-            // TODO Add a proper handler for this
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            // TODO Add a proper handler for this
-            throw new RuntimeException(e);
-        }
+
+        Thread monitorThread = new Thread() {
+            @Override
+            public void run() {
+                try{
+                    AudioInputStream ais = AudioSystem.getAudioInputStream(_fileToPlay);
+                    Clip test = AudioSystem.getClip();
+
+                    test.open(ais);
+                    test.start();
+
+                    while (!test.isRunning())
+                        Thread.sleep(10);
+                    while (test.isRunning())
+                        Thread.sleep(10);
+
+                    test.close();
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        };
+        monitorThread.start();
     }
 
     // Sets the correct file to play when combo box selection is changed
