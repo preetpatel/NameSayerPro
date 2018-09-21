@@ -25,6 +25,8 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.swing.*;
 import java.io.*;
@@ -102,7 +104,6 @@ public class PlayViewController {
 
         versions.getItems().clear();
 
-        HashMap<String, File> versionPerms = creation.getVersions();
         versionPerms = creation.getVersions();
         _fileToPlay = versionPerms.get("Version 1");
 
@@ -163,5 +164,25 @@ public class PlayViewController {
 
     public static void setCreationsList(List<Name> creationsList){
         _creationsList = creationsList;
+    }
+    @FXML
+    public void demoButtonHandler() {
+        try {
+            InputStream in = new FileInputStream(_fileToPlay.getAbsolutePath());
+            AudioStream audioStream = new AudioStream(in);
+            AudioPlayer.player.start(audioStream);
+        } catch (FileNotFoundException e) {
+            // TODO Add a proper handler for this
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            // TODO Add a proper handler for this
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Sets the correct file to play when combo box selection is changed
+    @FXML
+    public void versionSelectionHandler() {
+        _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
     }
 }
