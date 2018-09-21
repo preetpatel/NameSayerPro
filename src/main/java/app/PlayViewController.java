@@ -160,8 +160,7 @@ public class PlayViewController {
             nextButton.setText("FINISH >");
         }
         if (currentSelection == _creationsList.size()){
-            _creationsList.clear();
-            currentSelection=0;
+
             loadMainMenuView();
         }
     }
@@ -177,8 +176,7 @@ public class PlayViewController {
             previousButton.setText("< MENU");
         }
         if (currentSelection < 0){
-            _creationsList.clear();
-            currentSelection=0;
+
             loadMainMenuView();
         }
     }
@@ -186,6 +184,8 @@ public class PlayViewController {
 
     @FXML
     public void loadMainMenuView(){
+        _creationsList.clear();
+        currentSelection=0;
         try {
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
             anchorPane.getChildren().clear();
