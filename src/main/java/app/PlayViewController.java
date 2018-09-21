@@ -25,6 +25,8 @@ import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.swing.*;
 import java.io.*;
@@ -65,7 +67,9 @@ public class PlayViewController {
     private static List<Name> _creationsList;
     private MediaPlayer mediaPlayer;
     private Name currentLoadedCreation;
-    private int currentSelection = 0;
+    private static int currentSelection = 0;
+    private HashMap<String, File> versionPerms;
+    private File _fileToPlay;
 
     /**
      * Initializes the Play Creation scene
@@ -97,7 +101,8 @@ public class PlayViewController {
 
         //TODO load all different permutations possible of the creation from different name versions
 
-        HashMap<String, File> versionPerms = creation.getVersions();
+        versionPerms = creation.getVersions();
+        _fileToPlay = versionPerms.get("Version 1");
 
         for (int i = 0; i< versionPerms.size(); i++){
             versions.getItems().add(new Label("Version " + (i+1)));
@@ -156,5 +161,26 @@ public class PlayViewController {
 
     public static void setCreationsList(List<Name> creationsList){
         _creationsList = creationsList;
+    }
+
+    @FXML
+    public void demoButtonHandler() {
+        try {
+            InputStream in = new FileInputStream(_fileToPlay.getAbsolutePath());
+            AudioStream audioStream = new AudioStream(in);
+            AudioPlayer.player.start(audioStream);
+        } catch (FileNotFoundException e) {
+            // TODO Add a proper handler for this
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            // TODO Add a proper handler for this
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Sets the correct file to play when combo box selection is changed
+    @FXML
+    public void versionSelectionHandler() {
+        _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
     }
 }
