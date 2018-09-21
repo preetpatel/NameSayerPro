@@ -78,6 +78,9 @@ public class PlayViewController {
         currentLoadedCreation = _creationsList.get(currentSelection);
         loadCreation(currentLoadedCreation);
         previousButton.setText("< MENU");
+        if (_creationsList.size()==1) {
+            nextButton.setText("FINISH >");
+        }
     }
 
     private void loadCreation(Name creation){
@@ -157,6 +160,8 @@ public class PlayViewController {
             nextButton.setText("FINISH >");
         }
         if (currentSelection == _creationsList.size()){
+            _creationsList.clear();
+            currentSelection=0;
             loadMainMenuView();
         }
     }
@@ -172,6 +177,8 @@ public class PlayViewController {
             previousButton.setText("< MENU");
         }
         if (currentSelection < 0){
+            _creationsList.clear();
+            currentSelection=0;
             loadMainMenuView();
         }
     }
