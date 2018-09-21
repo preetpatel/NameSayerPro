@@ -90,9 +90,11 @@ public class SearchNamesViewController {
 
         // Sets scroll pane to match the style of the app by disabling visible scroll bars
         stackPane.setVisible(false);
+        /* Sets properties for the scrollview within which the creationsPane sits */
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
-        scrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
+        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
                 if (event.getDeltaX() != 0) {
@@ -100,8 +102,8 @@ public class SearchNamesViewController {
                 }
             }
         });
-
         addedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addedScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         addedScrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
         addedScrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
             @Override
@@ -201,17 +203,6 @@ public class SearchNamesViewController {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        /* Sets properties for the scrollview within which the creationsPane sits */
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
-        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
-        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                if (event.getDeltaX() != 0) {
-                    event.consume();
-                }
-            }
-        });
     }
 
     @FXML
