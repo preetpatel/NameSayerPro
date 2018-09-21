@@ -61,18 +61,18 @@ public class Creation {
         button.setId(this.getCreationName());
         button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
 
-        button.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if(!selectedButtonsList.contains(button)) {
-                    button.setStyle("-fx-background-color: #256961; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-                    selectedButtonsList.add(button);
-                } else {
-                    button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-                    selectedButtonsList.remove(button);
-                }
-            }
-        });
+//        button.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                if(!selectedButtonsList.contains(button)) {
+//                    button.setStyle("-fx-background-color: #256961; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+//                    selectedButtonsList.add(button);
+//                } else {
+//                    button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+//                    selectedButtonsList.remove(button);
+//                }
+//            }
+//        });
 
         this.button = button;
         return button;
@@ -89,41 +89,26 @@ public class Creation {
         // this goes on until every layer has been explored
 
 
-        int versionsNumber = 1;
-
-        for (int j = 0; j < names.size(); j++){
-            versionsNumber = versionsNumber*names.get(j).getNameVersionsNumber();
-
-        }
-
-        List<CreationFile> versionCreationFileList = new ArrayList<>();
-        List<String> versionNameList = new ArrayList<>();
-
-        //create the version names and the version objects
-        for (int j = 0; j < versionsNumber; j++){
-            String versionName = getCreationName()+ " V" + Integer.toString(j);
-            versionNameList.add(versionName);
-
-            CreationFile creationFile = new CreationFile(versionName);
-
-            versionCreationFileList.add(creationFile);
-        }
-
-        for (int i = 0; i < names.size()-1; i++){
-
-
-
-            List<File> upperLayer = names.get(i).getFiles();
-            List<File> lowerLayer = names.get(i+1).getFiles();
-
-            int creationVersionNumber = 0;
-
-
+            List<CreationFile> result = new ArrayList<>();
+            GeneratePermutations(names,result,0,new CreationFile("1"));
 
             //TODO fuse the files here
-        }
 
         return null;
+    }
+
+    void GeneratePermutations(List<Name> Lists, List<CreationFile> result, int depth, CreationFile current)
+    {
+        if(depth == Lists.size())
+        {
+            result.add(current);
+            return;
+        }
+
+        for(int i = 0; i < Lists.get(depth).size(); ++i)
+        {
+            GeneratePermutations(Lists, result, depth + 1, current.addFile(Lists.get(depth).get(i)));
+        }
     }
 
     private void permutate(){

@@ -28,6 +28,7 @@ import javafx.util.StringConverter;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.HashMap;
 import java.util.List;
 
 import static java.lang.Math.round;
@@ -61,10 +62,10 @@ public class PlayViewController {
     @FXML
     private JFXListView<String> previousAttempts;
 
-    private static List<Creation> _creationsList;
+    private static List<Name> _creationsList;
     private MediaPlayer mediaPlayer;
-
-    private Creation currentLoadedCreation;
+    private Name currentLoadedCreation;
+    private int currentSelection = 0;
 
     /**
      * Initializes the Play Creation scene
@@ -74,12 +75,12 @@ public class PlayViewController {
      */
     @FXML
     public void initialize() {
-        currentLoadedCreation = _creationsList.get(0);
+        currentLoadedCreation = _creationsList.get(currentSelection);
         loadCreation(currentLoadedCreation);
     }
 
-    private void loadCreation(Creation creation){
-        currentName.setText(creation.getCreationName());
+    private void loadCreation(Name creation){
+        currentName.setText(creation.getName());
 
         //TODO version loading thing
         loadVersionsOfCreation(creation);
@@ -90,16 +91,16 @@ public class PlayViewController {
 
     }
 
-    private void loadVersionsOfCreation(Creation creation){
+    private void loadVersionsOfCreation(Name creation){
 
-        currentName.setText(creation.getCreationName());
+        currentName.setText(creation.getName());
 
         //TODO load all different permutations possible of the creation from different name versions
 
-        String[] versionPerms = creation.getPermutations();
+        HashMap<String, File> versionPerms = creation.getVersions();
 
-        for (String str : versionPerms){
-            versions.getItems().add(new Label(str));
+        for (int i = 0; i< versionPerms.size(); i++){
+            versions.getItems().add(new Label("Version " + i));
         }
 
         versions.setConverter(new StringConverter<Label>() {
@@ -113,6 +114,7 @@ public class PlayViewController {
                 return new Label(string);
             }
         });
+        versions.setEditable(false);
 
         //pane.getChildren().add(versions);
 
@@ -128,7 +130,7 @@ public class PlayViewController {
 
         for (File file : files) {
             Name tempName = new Name(file);
-            if (currentLoadedCreation.getCreationName().toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
+            if (currentLoadedCreation.getName().toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
                 for (File eachFile : tempName.getAllFilesOfName(new File(NameSayer.userRecordingsPath))) {
                     previousAttempts.getItems().add(eachFile.getName());
                 }
@@ -152,7 +154,7 @@ public class PlayViewController {
         }
     }
 
-    public static void setCreationsList(List<Creation> creationsList){
+    public static void setCreationsList(List<Name> creationsList){
         _creationsList = creationsList;
     }
 }

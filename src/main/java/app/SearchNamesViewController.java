@@ -18,6 +18,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
+
 import javax.swing.*;
 import java.awt.event.KeyAdapter;
 import java.io.*;
@@ -61,7 +62,7 @@ public class SearchNamesViewController {
     private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
     private List<JFXButton> selectedButtonsList = new ArrayList<>();
 
-    private List<Creation> creationsList = new ArrayList<>();
+    private List<Name> creationsList = new ArrayList<>();
 
     /**
      * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
@@ -79,7 +80,7 @@ public class SearchNamesViewController {
 
             @Override
             public void handle(KeyEvent event) {
-                if(event.getCode() == KeyCode.ENTER) {
+                if (event.getCode() == KeyCode.ENTER) {
                     addButtonHandler(new ActionEvent());
                 }
             }
@@ -90,7 +91,7 @@ public class SearchNamesViewController {
         stackPane.setVisible(false);
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
-        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+        scrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
                 if (event.getDeltaX() != 0) {
@@ -106,13 +107,13 @@ public class SearchNamesViewController {
     }
 
     @FXML
-    private void removeButtonHandler(ActionEvent e){
+    private void removeButtonHandler(ActionEvent e) {
 
 
-        for(JFXButton button : selectedButtonsList){
+        for (JFXButton button : selectedButtonsList) {
             creationsButtonList.remove(button);
 
-            Iterator<Creation> creations = creationsList.iterator();
+            Iterator<Name> creations = creationsList.iterator();
             while (creations.hasNext()) {
 
                 JFXButton comparedButton = creations.next().getButton();
@@ -143,8 +144,8 @@ public class SearchNamesViewController {
     private void addButtonHandler(ActionEvent e) {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
-	stackPane.getChildren().clear();
-	searchField.setDisable(true);
+        stackPane.getChildren().clear();
+        searchField.setDisable(true);
 
         String searchedItems = searchField.getText().trim();
         if (searchedItems.equals("")) {
@@ -153,59 +154,49 @@ public class SearchNamesViewController {
 
         } else {
 
-            String[] searchedItemsArray = searchedItems.split(" ");
-            Creation creation = new Creation();
+            Name creation;
 
-            for (String currentSearchedItem : searchedItemsArray) {
-                File folder = new File(NameSayer.creationsPath);
-                File[] files = folder.listFiles();
-                boolean fileFound = false;
+            File folder = new File(NameSayer.creationsPath);
+            File[] files = folder.listFiles();
+            boolean fileFound = false;
 
-                for (File file : files) {
+            for (File file : files) {
 
-                    fileFound = false;
-                    Name tempName = new Name(file);
-                    if (currentSearchedItem.toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
-                        creation.addName(file);
-                        fileFound = true;
-                        break;
+                fileFound = false;
+                Name tempName = new Name(file);
+                if (searchedItems.toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
+                    creation = new Name(file);
+                    fileFound = true;
+                    if (creation.getName() != null) {
+
+                        JFXButton button = creation.generateButton(selectedButtonsList);
+
+                        boolean buttonExists = false;
+
+                        //see if that item has already been added to the list
+                        for (JFXButton currentButton : creationsButtonList) {
+                            if (creation.getName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                                buttonExists = true;
+                            }
+                        }
+
+                        if (!buttonExists) {
+                            creationsButtonList.add(button);
+                            creationsList.add(creation);
+                            startPracticeButton.setVisible(true);
+                            removeButton.setVisible(true);
+                        } else {
+                            showErrorDialog("This name has already been added", "Ok");
+                        }
                     }
-                }
-
-                if (!fileFound) {
-
-                    // If no name is found
-                    showErrorDialog("This name could not be found on the database", "Ok");
-                    creation.destroy();
+                    searchField.setDisable(false);
                     break;
                 }
-		searchField.setDisable(false);
             }
-
-            if (creation.getCreationName() != null) {
-
-                JFXButton button = creation.generateButton(selectedButtonsList);
-
-                boolean buttonExists = false;
-
-                //see if that item has already been added to the list
-                for (JFXButton currentButton : creationsButtonList) {
-                    if (creation.getCreationName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                        buttonExists = true;
-                    }
-                }
-
-                if (!buttonExists) {
-                    creationsButtonList.add(button);
-                    creationsList.add(creation);
-                    startPracticeButton.setVisible(true);
-                    removeButton.setVisible(true);
-                } else {
-
-                    showErrorDialog("This name has already been added", "Ok");
-                }
+            if (!fileFound) {
+                // If no name is found
+                showErrorDialog("This name could not be found on the database", "Ok");
             }
-
             creationsPane.getChildren().addAll(creationsButtonList);
 
         }
@@ -215,7 +206,7 @@ public class SearchNamesViewController {
     @FXML
     private void startPracticeHandler(ActionEvent e) {
         stackPane.setVisible(true);
-	stackPane.getChildren().clear();
+        stackPane.getChildren().clear();
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
@@ -272,7 +263,7 @@ public class SearchNamesViewController {
             anchorPane.getChildren().clear();
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException err) {
-            JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -292,7 +283,7 @@ public class SearchNamesViewController {
             @Override
             public void handle(ActionEvent event) {
                 deleteDialog.close();
-		searchField.setDisable(false);
+                searchField.setDisable(false);
                 stackPane.setVisible(false);
 
             }
@@ -302,7 +293,7 @@ public class SearchNamesViewController {
             @Override
             public void handle(JFXDialogEvent event) {
                 stackPane.setVisible(false);
-		searchField.setDisable(false);
+                searchField.setDisable(false);
             }
         });
 
@@ -311,7 +302,7 @@ public class SearchNamesViewController {
     }
 
     //gets the list of creations
-    public List<Creation> getCreationsList(){
+    public List<Name> getCreationsList() {
         return creationsList;
     }
 }

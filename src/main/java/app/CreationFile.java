@@ -15,8 +15,9 @@ public class CreationFile {
         _creationVersion = creationVersion;
     }
 
-    public void addFile(File file){
+    public CreationFile addFile(File file){
         _files.add(file);
+        return this;
     }
 
 }
