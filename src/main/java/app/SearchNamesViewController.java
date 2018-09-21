@@ -259,6 +259,7 @@ public class SearchNamesViewController {
         if (searchedItems.equals("")) {
 
             showErrorDialog("Please enter a valid name", "Ok");
+            addedCreationsPane.getChildren().addAll(creationsButtonList);
 
         } else {
 
@@ -306,6 +307,7 @@ public class SearchNamesViewController {
                 showErrorDialog("This name could not be found on the database", "Ok");
             }
             addedCreationsPane.getChildren().addAll(creationsButtonList);
+            searchField.setText("");
 
         }
 
