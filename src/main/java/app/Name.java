@@ -50,12 +50,15 @@ public class Name {
 
     }
 
+    public int getNameVersionsNumber(){
+        return _files.size();
+    }
+
     public String getName(){
         return _name;
     }
 
-    public int getPermutations() {
-        return _files.size();
+    public List<File> getFiles() {
+        return _files;
     }
-
 }

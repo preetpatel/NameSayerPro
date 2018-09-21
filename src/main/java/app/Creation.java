@@ -21,7 +21,6 @@ public class Creation {
         names = new ArrayList<>();
     }
 
-
     public void addName(File file) {
         names.add(new Name(file));
     }
@@ -83,12 +82,53 @@ public class Creation {
         names.clear();
     }
 
-    public int getPermutations() {
-        int size = 0;
-        for (Name name : names) {
-            size += name.getPermutations();
+    public String[] getPermutations(){
+
+        // each name is a 'layer'
+        // each layer must have every element in that layer link to every element in the next layer
+        // this goes on until every layer has been explored
+
+
+        int versionsNumber = 1;
+
+        for (int j = 0; j < names.size(); j++){
+            versionsNumber = versionsNumber*names.get(j).getNameVersionsNumber();
+
         }
-        return size;
+
+        List<CreationFile> versionCreationFileList = new ArrayList<>();
+        List<String> versionNameList = new ArrayList<>();
+
+        //create the version names and the version objects
+        for (int j = 0; j < versionsNumber; j++){
+            String versionName = getCreationName()+ " V" + Integer.toString(j);
+            versionNameList.add(versionName);
+
+            CreationFile creationFile = new CreationFile(versionName);
+
+            versionCreationFileList.add(creationFile);
+        }
+
+        for (int i = 0; i < names.size()-1; i++){
+
+
+
+            List<File> upperLayer = names.get(i).getFiles();
+            List<File> lowerLayer = names.get(i+1).getFiles();
+
+            int creationVersionNumber = 0;
+
+
+
+            //TODO fuse the files here
+        }
+
+        return null;
     }
+
+    private void permutate(){
+
+    }
+
 
 }

@@ -16,6 +16,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -23,6 +24,7 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 import javax.swing.*;
 import java.io.*;
@@ -54,7 +56,7 @@ public class PlayViewController {
     private  JFXButton nextButton;
 
     @FXML
-    private JFXComboBox<String> versions; // Not sure about what type goes inside
+    private JFXComboBox<Label> versions; // Not sure about what type goes inside
 
     @FXML
     private JFXListView<String> previousAttempts;
@@ -80,7 +82,7 @@ public class PlayViewController {
         currentName.setText(creation.getCreationName());
 
         //TODO version loading thing
-        loadVersionsOfCreation();
+        loadVersionsOfCreation(creation);
         //TODO load previous recordings from user
         loadPreviousUserRecordings();
         //TODO fuse the voice files together
@@ -88,7 +90,35 @@ public class PlayViewController {
 
     }
 
-    private void loadVersionsOfCreation(){
+    private void loadVersionsOfCreation(Creation creation){
+
+        currentName.setText(creation.getCreationName());
+
+        //TODO load all different permutations possible of the creation from different name versions
+
+        String[] versionPerms = creation.getPermutations();
+
+        for (String str : versionPerms){
+            versions.getItems().add(new Label(str));
+        }
+
+        versions.setConverter(new StringConverter<Label>() {
+            @Override
+            public String toString(Label object) {
+                return object==null? "" : object.getText();
+            }
+
+            @Override
+            public Label fromString(String string) {
+                return new Label(string);
+            }
+        });
+
+        //pane.getChildren().add(versions);
+
+        //TODO add handler to allow user to choose which version they want
+
+        //TODO fuse voice files together
 
     }
 
