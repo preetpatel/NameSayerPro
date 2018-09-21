@@ -54,4 +54,8 @@ public class Name {
         return _name;
     }
 
+    public int getNameVersionsNumber(){
+        return _files.size();
+    }
+
 }

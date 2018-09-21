@@ -8,6 +8,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -17,8 +18,11 @@ public class Creation {
 
     private List<Name> names;
 
+    private List<CreationFile> creationFiles;
+
     public Creation() {
         names = new ArrayList<>();
+        creationFiles = new ArrayList<>();
     }
 
 
@@ -77,6 +81,51 @@ public class Creation {
 
     public void destroy() {
         names.clear();
+    }
+
+    public String[] getPermutations(){
+
+        int numberOfVersions = 1;
+
+        for (Name currentName : names){
+            numberOfVersions = numberOfVersions*currentName.getNameVersionsNumber();
+        }
+
+        String[] versionStrings = new String[numberOfVersions];
+
+        //set the whole array to empty strings
+        for (int k = 0; k < versionStrings.length; k++) {
+            versionStrings[k] = "";
+        }
+
+        //go through all the names and create an array to match the number of permutations of all names
+        for (int j =0; j < names.size(); j++) {
+
+            for (int i = 0; i < numberOfVersions; i++) {
+
+                if (!versionStrings[i].equals("")) {
+                    versionStrings[i] = versionStrings[i] + " " + names.get(j).getName();
+                } else {
+                    versionStrings[i] = versionStrings[i] + names.get(j).getName();
+                }
+
+
+            }
+        }
+
+        for (Name name : names){
+            //TODO fuse the files here
+
+
+        }
+
+        for (int l = 0; l < versionStrings.length; l++) {
+            versionStrings[l] = versionStrings[l] + " V" + Integer.toString(l+1);
+
+        }
+        //TODO fuse the files here
+
+        return versionStrings;
     }
 
 }

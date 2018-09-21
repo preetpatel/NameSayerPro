@@ -23,7 +23,7 @@
                 <Font name="Lato Medium" size="25.0" />
             </font>
       </JFXButton>
-      <AnchorPane layoutY="143.0" prefHeight="550.0" prefWidth="1200.0" AnchorPane.bottomAnchor="107.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="143.0">
+      <AnchorPane fx:id="pane" layoutY="143.0" prefHeight="550.0" prefWidth="1200.0" AnchorPane.bottomAnchor="107.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="143.0">
          <children>
             <Text fx:id="text1" fill="WHITE" layoutX="20.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="1.0" text="You Are Practicing:" textAlignment="CENTER" wrappingWidth="589.7578125">
                <font>

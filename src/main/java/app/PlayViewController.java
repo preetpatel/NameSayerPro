@@ -14,11 +14,14 @@ import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXTreeTableView;
 import javafx.beans.InvalidationListener;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -26,9 +29,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import javafx.util.StringConverter;
 
 import javax.swing.*;
 import java.io.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.lang.Math.round;
@@ -57,10 +63,13 @@ public class PlayViewController {
     private  JFXButton nextButton;
 
     @FXML
-    private JFXComboBox<String> versions; // Not sure about what type goes inside
+    private JFXComboBox<Label> versions = new JFXComboBox<>(); // Not sure about what type goes inside
 
     @FXML
     private JFXTreeTableView previousAttempts;
+
+    @FXML
+    private AnchorPane pane;
 
     private static List<Creation> _creationsList;
     private MediaPlayer mediaPlayer;
@@ -73,17 +82,22 @@ public class PlayViewController {
      */
     @FXML
     public void initialize() {
+
+
         Creation firstCreation = _creationsList.get(0);
         loadCreation(firstCreation);
+
+
 
 
     }
 
     private void loadCreation(Creation creation){
-        currentName.setText(creation.getCreationName());
+
+
 
         //TODO version loading thing
-        loadVersionsOfCreation();
+        loadVersionsOfCreation(creation);
         //TODO load previous recordings from user
         loadPreviousUserRecordings();
         //TODO fuse the voice files together
@@ -91,7 +105,35 @@ public class PlayViewController {
 
     }
 
-    private void loadVersionsOfCreation(){
+    private void loadVersionsOfCreation(Creation creation){
+
+        currentName.setText(creation.getCreationName());
+
+        //TODO load all different permutations possible of the creation from different name versions
+
+        String[] versionPerms = creation.getPermutations();
+
+        for (String str : versionPerms){
+            versions.getItems().add(new Label(str));
+        }
+
+        versions.setConverter(new StringConverter<Label>() {
+            @Override
+            public String toString(Label object) {
+                return object==null? "" : object.getText();
+            }
+
+            @Override
+            public Label fromString(String string) {
+                return new Label(string);
+            }
+        });
+
+        //pane.getChildren().add(versions);
+
+        //TODO add handler to allow user to choose which version they want
+
+        //TODO fuse voice files together
 
     }
 
