@@ -208,7 +208,7 @@ public class PlayViewController {
     }
     @FXML
     public void demoButtonHandler() {
-
+        demoButton.setDisable(true);
         Thread monitorThread = new Thread() {
             @Override
             public void run() {
@@ -228,6 +228,7 @@ public class PlayViewController {
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
+                demoButton.setDisable(false);
             }
         };
         monitorThread.start();
