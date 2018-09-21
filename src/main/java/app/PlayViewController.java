@@ -98,6 +98,8 @@ public class PlayViewController {
 
         //TODO load all different permutations possible of the creation from different name versions
 
+        versions.getItems().clear();
+
         HashMap<String, File> versionPerms = creation.getVersions();
 
         for (int i = 0; i< versionPerms.size(); i++){
