@@ -82,6 +82,9 @@ public class PlayViewController {
         currentLoadedCreation = _creationsList.get(currentSelection);
         loadCreation(currentLoadedCreation);
         previousButton.setText("< MENU");
+        if (_creationsList.size()==1) {
+            nextButton.setText("FINISH >");
+        }
     }
 
     private void loadCreation(Name creation){
@@ -152,7 +155,42 @@ public class PlayViewController {
     }
 
     @FXML
+    public void nextButtonHandler(){
+        currentSelection++;
+        if(currentSelection < _creationsList.size()) {
+            loadCreation(_creationsList.get(currentSelection));
+            previousButton.setText("< BACK");
+        }
+        if (currentSelection == _creationsList.size()-1){
+            nextButton.setText("FINISH >");
+        }
+        if (currentSelection == _creationsList.size()){
+
+            loadMainMenuView();
+        }
+    }
+
+    @FXML
+    public void backButtonHandler(){
+        currentSelection--;
+        if(currentSelection >= 0 ) {
+            loadCreation(_creationsList.get(currentSelection));
+            nextButton.setText("NEXT >");
+        }
+        if (currentSelection == 0){
+            previousButton.setText("< MENU");
+        }
+        if (currentSelection < 0){
+
+            loadMainMenuView();
+        }
+    }
+
+
+    @FXML
     public void loadMainMenuView(){
+        _creationsList.clear();
+        currentSelection=0;
         try {
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
             anchorPane.getChildren().clear();
