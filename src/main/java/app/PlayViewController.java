@@ -100,7 +100,7 @@ public class PlayViewController {
         HashMap<String, File> versionPerms = creation.getVersions();
 
         for (int i = 0; i< versionPerms.size(); i++){
-            versions.getItems().add(new Label("Version " + i));
+            versions.getItems().add(new Label("Version " + (i+1)));
         }
 
         versions.setConverter(new StringConverter<Label>() {
@@ -114,7 +114,9 @@ public class PlayViewController {
                 return new Label(string);
             }
         });
+
         versions.setEditable(false);
+        versions.getSelectionModel().selectFirst();
 
         //TODO add handler to allow user to choose which version they want
 
