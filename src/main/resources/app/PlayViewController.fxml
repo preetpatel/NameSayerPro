@@ -36,7 +36,7 @@
                   <Font size="53.0" />
                </font>
             </Text>
-            <JFXButton fx:id="saveButton" alignment="CENTER" buttonType="RAISED" layoutX="489.0" layoutY="392.0" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Save" textAlignment="CENTER" textFill="WHITE">
+            <JFXButton fx:id="micTestButton" alignment="CENTER" buttonType="RAISED" layoutX="489.0" layoutY="392.0" onAction="#micTestButtonHandler" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Test Mic" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Lato Medium" size="25.0" />
                </font>

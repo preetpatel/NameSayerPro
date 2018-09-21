@@ -84,7 +84,7 @@ public class MicTestViewController {
         System.out.println("made it");
         Pane newLoadedPane = null;
         try {
-            newLoadedPane = FXMLLoader.load(getClass().getResource("HomeViewController.fxml"));
+            newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
