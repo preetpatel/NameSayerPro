@@ -33,7 +33,11 @@ public class Creation {
         }
         String displayName = "";
         for (Name name : names) {
-            displayName = displayName + " "+ name.getName();
+            if (displayName.equals("")) {
+                displayName = name.getName();
+            } else {
+                displayName = displayName + " " + name.getName();
+            }
         }
 
         return displayName;
@@ -77,6 +81,14 @@ public class Creation {
 
     public void destroy() {
         names.clear();
+    }
+
+    public int getPermutations() {
+        int size = 0;
+        for (Name name : names) {
+            size += name.getPermutations();
+        }
+        return size;
     }
 
 }

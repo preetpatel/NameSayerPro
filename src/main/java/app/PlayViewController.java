@@ -9,10 +9,7 @@
 
 package app;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXComboBox;
-import com.jfoenix.controls.JFXSlider;
-import com.jfoenix.controls.JFXTreeTableView;
+import com.jfoenix.controls.*;
 import javafx.beans.InvalidationListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -60,10 +57,12 @@ public class PlayViewController {
     private JFXComboBox<String> versions; // Not sure about what type goes inside
 
     @FXML
-    private JFXTreeTableView previousAttempts;
+    private JFXListView<String> previousAttempts;
 
     private static List<Creation> _creationsList;
     private MediaPlayer mediaPlayer;
+
+    private Creation currentLoadedCreation;
 
     /**
      * Initializes the Play Creation scene
@@ -73,10 +72,8 @@ public class PlayViewController {
      */
     @FXML
     public void initialize() {
-        Creation firstCreation = _creationsList.get(0);
-        loadCreation(firstCreation);
-
-
+        currentLoadedCreation = _creationsList.get(0);
+        loadCreation(currentLoadedCreation);
     }
 
     private void loadCreation(Creation creation){
@@ -96,7 +93,18 @@ public class PlayViewController {
     }
 
     private void loadPreviousUserRecordings(){
+        File folder = new File(NameSayer.userRecordingsPath);
+        File[] files = folder.listFiles();
 
+        for (File file : files) {
+            Name tempName = new Name(file);
+            if (currentLoadedCreation.getCreationName().toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
+                for (File eachFile : tempName.getAllFilesOfName(new File(NameSayer.userRecordingsPath))) {
+                    previousAttempts.getItems().add(eachFile.getName());
+                }
+                break;
+            }
+        }
     }
 
     private void fuseNameFiles(){

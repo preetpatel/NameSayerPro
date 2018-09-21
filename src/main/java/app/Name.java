@@ -18,7 +18,7 @@ public class Name {
 
     public Name(File file){
         _name = getFileName(file);
-        _files = getAllFilesOfName();
+        _files = getAllFilesOfName(new File(NameSayer.creationsPath));
     }
 
     private String getFileName(File file) {
@@ -42,8 +42,8 @@ public class Name {
         return true;
     }
 
-    private List<File> getAllFilesOfName(){
-        File dir = new File(NameSayer.creationsPath);
+    public List<File> getAllFilesOfName(File dir){
+        //File dir = new File(NameSayer.creationsPath);
         FileFilter filter = new WildcardFileFilter("*_"+_name+".wav");
         File[] files = dir.listFiles(filter);
         return Arrays.asList(files);
@@ -52,6 +52,10 @@ public class Name {
 
     public String getName(){
         return _name;
+    }
+
+    public int getPermutations() {
+        return _files.size();
     }
 
 }

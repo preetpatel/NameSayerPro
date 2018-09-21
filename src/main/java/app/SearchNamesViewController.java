@@ -99,13 +99,9 @@ public class SearchNamesViewController {
             }
         });
 
-        // Checks for if the database folder exists or not
-        File storage = new File(NameSayer.creationsPath);
-        if (!storage.exists()) {
-            if (!storage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        // Checks for all required directories
+        DirectoryManager manager = new DirectoryManager();
+        manager.runChecks();
 
     }
 
@@ -169,7 +165,6 @@ public class SearchNamesViewController {
 
                     fileFound = false;
                     Name tempName = new Name(file);
-
                     if (currentSearchedItem.toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
                         creation.addName(file);
                         fileFound = true;
