@@ -53,7 +53,7 @@ public class PlayViewController {
     private JFXButton recordButton;
 
     @FXML
-    private JFXButton saveButton;
+    private JFXButton micTestButton;
 
     @FXML
     private JFXButton previousButton;
@@ -139,12 +139,14 @@ public class PlayViewController {
     }
 
     private void loadPreviousUserRecordings(){
+        previousAttempts.getItems().clear();
         File folder = new File(NameSayer.userRecordingsPath);
         File[] files = folder.listFiles();
 
         for (File file : files) {
             Name tempName = new Name(file);
-            if (currentLoadedCreation.getName().toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
+            Name currentFile = new Name(_fileToPlay);
+            if (currentFile.getName().toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
                 for (File eachFile : tempName.getAllFilesOfName(new File(NameSayer.userRecordingsPath))) {
                     previousAttempts.getItems().add(eachFile.getName());
                 }
@@ -168,7 +170,6 @@ public class PlayViewController {
             nextButton.setText("FINISH >");
         }
         if (currentSelection == _creationsList.size()){
-
             loadMainMenuView();
         }
     }
@@ -184,7 +185,6 @@ public class PlayViewController {
             previousButton.setText("< MENU");
         }
         if (currentSelection < 0){
-
             loadMainMenuView();
         }
     }
@@ -238,5 +238,16 @@ public class PlayViewController {
     @FXML
     public void versionSelectionHandler() {
         _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
+    }
+
+    @FXML
+    public void micTestButtonHandler() {
+        try {
+            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("MicTestViewController.fxml"));
+            anchorPane.getChildren().clear();
+            anchorPane.getChildren().add(newLoadedPane);
+        } catch (IOException err) {
+            JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
