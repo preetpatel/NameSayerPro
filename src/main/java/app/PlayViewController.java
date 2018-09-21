@@ -116,8 +116,6 @@ public class PlayViewController {
         });
         versions.setEditable(false);
 
-        //pane.getChildren().add(versions);
-
         //TODO add handler to allow user to choose which version they want
 
         //TODO fuse voice files together

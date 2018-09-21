@@ -20,4 +20,8 @@ public class CreationFile {
         return this;
     }
 
+    public int getFilesNumber(){
+        return _files.size();
+    }
+
 }

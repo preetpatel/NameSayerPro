@@ -74,6 +74,7 @@ public class SearchNamesViewController {
         creationsList = new ArrayList<>();
         startPracticeButton.setVisible(false);
         removeButton.setVisible(false);
+        loadCreationsOntoPane("");
 
         // Add Enter key listener on search field
         searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -100,10 +101,117 @@ public class SearchNamesViewController {
             }
         });
 
+        addedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        addedScrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+        addedScrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaX() != 0) {
+                    event.consume();
+                }
+            }
+        });
+
         // Checks for all required directories
         DirectoryManager manager = new DirectoryManager();
         manager.runChecks();
 
+    }
+
+    private void loadCreationsOntoPane(String searchedItem){
+        creationsPane.getChildren().clear();
+        stackPane.setVisible(false);
+
+        File storage = new File(NameSayer.creationsPath);
+        if (!storage.exists()) {
+            if (!storage.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        // Removes any temporary files left in the creations folder due to unhandled disposals or other errors
+        try {
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.creationsPath +"/*_audio.*; rm " + NameSayer.creationsPath +"/*_video.*");
+            Process process = builder.start();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        //Loads all creations onto view
+        ObservableList<JFXButton> creationsList = FXCollections.<JFXButton>observableArrayList();
+        try {
+            ProcessBuilder builder;
+            String command;
+
+            //Load in the creations
+            if (searchedItem.equals("")) {
+                command = "ls " + NameSayer.creationsPath + "/ -1 |  sed -e 's/\\..*$//' | sed 's/.*_//' ";
+            }
+            //If search button has text in it only load in creations matching the text in the search bar
+            else {
+                command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | sed 's/.*_//' | grep -i " + searchedItem ;
+            }
+
+            builder = new ProcessBuilder("/bin/bash", "-c", command);
+            Process process = builder.start();
+
+
+            try {
+                process.waitFor();
+            }catch(InterruptedException e){
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+            InputStream stdout = process.getInputStream();
+            BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
+
+            String line;
+            while ((line = stdoutBuffered.readLine()) != null )
+            {
+
+                JFXButton button = new JFXButton(line);
+                button.setId(line);
+                button.setMnemonicParsing(false);
+                button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+                boolean buttonExists = false;
+
+                //see if that item has already been added to the list
+                for (JFXButton currentButton : creationsList) {
+                    if (button.getText().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                        buttonExists = true;
+                    }
+                }
+
+                if (!buttonExists) {
+                    creationsList.add(button);
+                    button.setOnAction(new EventHandler<ActionEvent>() {
+                        @Override
+                        public void handle(ActionEvent event) {
+                            //TODO add functionality when stuff is clicked
+                        }
+                    });
+                }
+
+                //addedCreationsPane.getChildren().addAll(creationsButtonList);
+
+            }
+            creationsPane.getChildren().addAll(creationsList);
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+        /* Sets properties for the scrollview within which the creationsPane sits */
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+            @Override
+            public void handle(ScrollEvent event) {
+                if (event.getDeltaX() != 0) {
+                    event.consume();
+                }
+            }
+        });
     }
 
     @FXML
@@ -126,8 +234,8 @@ public class SearchNamesViewController {
             }
         }
 
-        creationsPane.getChildren().clear();
-        creationsPane.getChildren().addAll(creationsButtonList);
+        addedCreationsPane.getChildren().clear();
+        addedCreationsPane.getChildren().addAll(creationsButtonList);
 
         // Set remove button to invisible if list has no creations left
         if (creationsList.isEmpty()) {
@@ -142,7 +250,7 @@ public class SearchNamesViewController {
      * Allows adding creations to the list of creations to be played
      */
     private void addButtonHandler(ActionEvent e) {
-        creationsPane.getChildren().clear();
+        addedCreationsPane.getChildren().clear();
         stackPane.setVisible(false);
         stackPane.getChildren().clear();
         searchField.setDisable(true);
@@ -197,7 +305,7 @@ public class SearchNamesViewController {
                 // If no name is found
                 showErrorDialog("This name could not be found on the database", "Ok");
             }
-            creationsPane.getChildren().addAll(creationsButtonList);
+            addedCreationsPane.getChildren().addAll(creationsButtonList);
 
         }
 
