@@ -140,7 +140,7 @@ public class SearchNamesViewController {
         }
 
         //Loads all creations onto view
-        ObservableList<JFXButton> creationsList = FXCollections.<JFXButton>observableArrayList();
+        ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
         try {
             ProcessBuilder builder;
             String command;
@@ -178,26 +178,44 @@ public class SearchNamesViewController {
                 boolean buttonExists = false;
 
                 //see if that item has already been added to the list
-                for (JFXButton currentButton : creationsList) {
+                for (JFXButton currentButton : unaddedButtonsList) {
                     if (button.getText().toLowerCase().equals(currentButton.getId().toLowerCase())) {
                         buttonExists = true;
                     }
                 }
 
                 if (!buttonExists) {
-                    creationsList.add(button);
+                    unaddedButtonsList.add(button);
                     button.setOnAction(new EventHandler<ActionEvent>() {
                         @Override
                         public void handle(ActionEvent event) {
-                            //TODO add functionality when stuff is clicked
+
+                            boolean buttonExists = false;
+                            Name tempName = new Name(button.getText());
+
+                            //see if that item has already been added to the list
+                            for (JFXButton currentButton : creationsButtonList) {
+                                if (tempName.getName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                                    buttonExists = true;
+                                }
+                            }
+                            if (!buttonExists) {
+                                creationsButtonList.add(tempName.generateButton(selectedButtonsList));
+                                creationsList.add(tempName);
+                                addedCreationsPane.getChildren().clear();
+                                addedCreationsPane.getChildren().addAll(creationsButtonList);
+                                startPracticeButton.setVisible(true);
+                                removeButton.setVisible(true);
+                            } else {
+                                showErrorDialog("This name has already been added", "Ok");
+                            }
+
                         }
                     });
                 }
 
-                //addedCreationsPane.getChildren().addAll(creationsButtonList);
-
             }
-            creationsPane.getChildren().addAll(creationsList);
+            creationsPane.getChildren().addAll(unaddedButtonsList);
 
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
