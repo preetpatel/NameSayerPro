@@ -65,7 +65,7 @@ public class PlayViewController {
     private static List<Name> _creationsList;
     private MediaPlayer mediaPlayer;
     private Name currentLoadedCreation;
-    private int currentSelection = 0;
+    private static int currentSelection = 0;
 
     /**
      * Initializes the Play Creation scene
@@ -77,6 +77,7 @@ public class PlayViewController {
     public void initialize() {
         currentLoadedCreation = _creationsList.get(currentSelection);
         loadCreation(currentLoadedCreation);
+        previousButton.setText("< MENU");
     }
 
     private void loadCreation(Name creation){
@@ -142,6 +143,37 @@ public class PlayViewController {
     private void fuseNameFiles(){
 
     }
+
+    @FXML
+    public void nextButtonHandler(){
+        currentSelection++;
+        if(currentSelection < _creationsList.size()) {
+            loadCreation(_creationsList.get(currentSelection));
+            previousButton.setText("< BACK");
+        }
+        if (currentSelection == _creationsList.size()-1){
+            nextButton.setText("FINISH >");
+        }
+        if (currentSelection == _creationsList.size()){
+            loadMainMenuView();
+        }
+    }
+
+    @FXML
+    public void backButtonHandler(){
+        currentSelection--;
+        if(currentSelection >= 0 ) {
+            loadCreation(_creationsList.get(currentSelection));
+            nextButton.setText("NEXT >");
+        }
+        if (currentSelection == 0){
+            previousButton.setText("< MENU");
+        }
+        if (currentSelection < 0){
+            loadMainMenuView();
+        }
+    }
+
 
     @FXML
     public void loadMainMenuView(){
