@@ -73,12 +73,34 @@ public class PlayViewController {
      */
     @FXML
     public void initialize() {
-
-        // TODO Everything in here :)
-        //load all previous versions of the first creation
         Creation firstCreation = _creationsList.get(0);
-        firstCreation.getCreationName();
-        //String creationName = firstCreation.getCreationName();
+        loadCreation(firstCreation);
+
+
+    }
+
+    private void loadCreation(Creation creation){
+        currentName.setText(creation.getCreationName());
+
+        //TODO version loading thing
+        loadVersionsOfCreation();
+        //TODO load previous recordings from user
+        loadPreviousUserRecordings();
+        //TODO fuse the voice files together
+        fuseNameFiles();
+
+    }
+
+    private void loadVersionsOfCreation(){
+
+    }
+
+    private void loadPreviousUserRecordings(){
+
+    }
+
+    private void fuseNameFiles(){
+
     }
 
     @FXML

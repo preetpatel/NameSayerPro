@@ -2,12 +2,12 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXTreeTableView?>
+<?import com.jfoenix.controls.JFXListView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.PlayViewController">
+<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.PlayViewController">
     <children>
         <AnchorPane prefHeight="143.0" prefWidth="1200.0" style="-fx-background-color: #037971;">
             <children>
@@ -46,7 +46,7 @@
                   <Font name="Lato Medium" size="25.0" />
                </font>
             </JFXButton>
-            <JFXButton fx:id="demoButton" alignment="CENTER" buttonType="RAISED" layoutX="43.0" layoutY="392.0" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Demo" textAlignment="CENTER" textFill="WHITE">
+            <JFXButton fx:id="demoButton" alignment="CENTER" buttonType="RAISED" layoutX="43.0" layoutY="392.0" onAction="#loadMainMenuView" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Demo" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Lato Medium" size="25.0" />
                </font>
@@ -56,7 +56,7 @@
                   <Font size="31.0" />
                </font>
             </Text>
-            <JFXTreeTableView fx:id="previousAttempts" layoutX="844.0" layoutY="127.0" prefHeight="400.0" prefWidth="280.0" />
+            <JFXListView fx:id="previousAttempts" layoutX="846.0" layoutY="120.0" prefHeight="400.0" prefWidth="281.0" />
          </children>
       </AnchorPane>
       <JFXButton fx:id="nextButton" alignment="CENTER" buttonType="RAISED" layoutX="997.0" layoutY="710.0" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="NEXT &gt;" textAlignment="CENTER" textFill="WHITE">
