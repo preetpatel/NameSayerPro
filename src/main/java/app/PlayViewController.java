@@ -134,7 +134,7 @@ public class PlayViewController {
 
             if (!lineExists) {
                 writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
-                writer.write(ratingString);
+                writer.write(ratingString + "\n");
                 writer.close();
             } else {
                 //TODO replace line with new line
@@ -177,7 +177,6 @@ public class PlayViewController {
 
         versionPerms = creation.getVersions();
         _fileToPlay = versionPerms.get("Version 1");
-        versions.getItems().clear();
 
         for (int i = 0; i< versionPerms.size(); i++){
             versions.getItems().add(new Label("Version " + (i+1)));
