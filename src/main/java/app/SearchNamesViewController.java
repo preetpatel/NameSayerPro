@@ -9,7 +9,6 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
-import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
@@ -20,11 +19,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
-import java.awt.event.KeyAdapter;
 import java.io.*;
 import java.util.*;
+import java.util.List;
 
-import static javafx.scene.layout.StackPane.getAlignment;
 import static javafx.scene.layout.StackPane.setAlignment;
 
 public class SearchNamesViewController {
@@ -76,7 +74,7 @@ public class SearchNamesViewController {
         creationsList = new ArrayList<>();
         startPracticeButton.setVisible(false);
         removeButton.setVisible(false);
-        loadCreationsOntoPane("");
+        loadCreationsOntoPane();
 
         // Add Enter key listener on search field
         searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -122,7 +120,10 @@ public class SearchNamesViewController {
 
     }
 
-    private void loadCreationsOntoPane(String searchedItem){
+    /**
+     * Initialises the left pane to show every existing wav file in the directory
+     */
+    private void loadCreationsOntoPane(){
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
 
@@ -133,99 +134,57 @@ public class SearchNamesViewController {
             }
         }
 
-        // Removes any temporary files left in the creations folder due to unhandled disposals or other errors
-        try {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.creationsPath +"/*_audio.*; rm " + NameSayer.creationsPath +"/*_video.*");
-            Process process = builder.start();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        File folder = new File(NameSayer.creationsPath);
+        File[] files = folder.listFiles();
 
-        //Loads all creations onto view
-        try {
-            ProcessBuilder builder;
-            String command;
+        for (File file : files) {
+            Name tempName = new Name(file);
+            JFXButton button = tempName.generateButton(selectedButtonsList);
+            boolean buttonExists = false;
 
-            //Load in the creations
-            if (searchedItem.equals("")) {
-                command = "ls " + NameSayer.creationsPath + "/ -1 |  sed -e 's/\\..*$//' | sed 's/.*_//' ";
-            }
-            //If search button has text in it only load in creations matching the text in the search bar
-            else {
-                command = "ls " + NameSayer.creationsPath + "/ -1  | sed -e 's/\\..*$//' | sed 's/.*_//' | grep -i " + searchedItem ;
-            }
-
-            builder = new ProcessBuilder("/bin/bash", "-c", command);
-            Process process = builder.start();
-
-
-            try {
-                process.waitFor();
-            }catch(InterruptedException e){
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-
-            InputStream stdout = process.getInputStream();
-            BufferedReader stdoutBuffered = new BufferedReader(new InputStreamReader(stdout));
-
-            String line;
-            while ((line = stdoutBuffered.readLine()) != null )
-            {
-
-                JFXButton button = new JFXButton(line);
-                button.setId(line);
-                button.setMnemonicParsing(false);
-                button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-                boolean buttonExists = false;
-
-                //see if that item has already been added to the list
-                for (JFXButton currentButton : unaddedButtonsList) {
-                    if (button.getText().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                        buttonExists = true;
-                    }
+            //see if that item has already been added to the list
+            for (JFXButton currentButton : unaddedButtonsList) {
+                if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                    buttonExists = true;
                 }
+            }
 
-                if (!buttonExists) {
-                    unaddedButtonsList.add(button);
-                    button.setOnAction(new EventHandler<ActionEvent>() {
-                        @Override
-                        public void handle(ActionEvent event) {
+            if (!buttonExists) {
+                unaddedButtonsList.add(button);
+                button.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
 
-                            boolean buttonExists = false;
-                            Name tempName = new Name(button.getText());
+                        boolean buttonExists = false;
+                        Name creation = new Name(button.getText());
 
-                            //see if that item has already been added to the list
-                            for (JFXButton currentButton : creationsButtonList) {
-                                if (tempName.getName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                                    buttonExists = true;
-                                }
+                        //see if that item has already been added to the list
+                        for (JFXButton currentButton : creationsButtonList) {
+                            if (creation.getName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                                buttonExists = true;
                             }
-
-                            if (!buttonExists) {
-                                creationsButtonList.add(tempName.generateButton(selectedButtonsList));
-                                creationsList.add(tempName);
-                                addedCreationsPane.getChildren().clear();
-                                addedCreationsPane.getChildren().addAll(creationsButtonList);
-                                startPracticeButton.setVisible(true);
-                                removeButton.setVisible(true);
-                                button.setDisable(true);
-                            } else {
-                                showErrorDialog("This name has already been added", "Ok");
-                            }
-
                         }
-                    });
-                }
 
+                        if (!buttonExists) {
+                            creationsButtonList.add(creation.generateButton(selectedButtonsList));
+                            creationsList.add(creation);
+                            addedCreationsPane.getChildren().clear();
+                            addedCreationsPane.getChildren().addAll(creationsButtonList);
+                            startPracticeButton.setVisible(true);
+                            removeButton.setVisible(true);
+                            button.setDisable(true);
+                        }
+                    }
+                });
             }
-            creationsPane.getChildren().addAll(unaddedButtonsList);
-
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-
+        creationsPane.getChildren().addAll(unaddedButtonsList);
+        scrollPane.setVmax(100);
     }
 
+    /**
+     * Allows removal of all the buttons selected by the user
+     */
     @FXML
     private void removeButtonHandler(ActionEvent e) {
 
@@ -338,10 +297,14 @@ public class SearchNamesViewController {
 
     }
 
+    /**
+     * Allows the user to pick between starting their practice with a randomised list or a non randomised list
+     */
     @FXML
     private void startPracticeHandler(ActionEvent e) {
         stackPane.setVisible(true);
         stackPane.getChildren().clear();
+        //create popup
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
@@ -392,6 +355,9 @@ public class SearchNamesViewController {
         randomiseDialog.show();
     }
 
+    /**
+     * loads the PlayViewController gui
+     */
     private void loadPracticeView() {
         try {
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
@@ -402,6 +368,11 @@ public class SearchNamesViewController {
         }
     }
 
+    /**
+     * makes an error popup on the window
+     * @param headerText
+     * @param buttonText
+     */
     public void showErrorDialog(String headerText, String buttonText) {
         stackPane.setVisible(true);
         JFXDialogLayout dialogContent = new JFXDialogLayout();
@@ -436,7 +407,7 @@ public class SearchNamesViewController {
         deleteDialog.show();
     }
 
-    //gets the list of creations
+
     public List<Name> getCreationsList() {
         return creationsList;
     }

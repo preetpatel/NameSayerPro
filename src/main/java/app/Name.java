@@ -27,6 +27,11 @@ public class Name {
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
     }
 
+    /**
+     * processes a file name to become human readable; so removes all of the dates from the wav file
+     * @param file file to be processed
+     * @return A string which is the simplified name
+     */
     private String getFileName(File file) {
         String displayName = file.getName();
         _fullName = displayName;
@@ -47,6 +52,10 @@ public class Name {
         return true;
     }
 
+    /**
+     * creates a hashmap representing the different versions of a particular name, the key being their full file name
+     * @return
+     */
     public HashMap<String, File> getVersions() {
         HashMap<String, File> returnVersions= new HashMap<>();
         int i = 1;
@@ -58,6 +67,11 @@ public class Name {
     }
 
 
+    /**
+     *
+     * @param dir directory in which the names are located
+     * @return  a list of all files which include the name object
+     */
     public List<File> getAllFilesOfName(File dir){
         FileFilter filter = new WildcardFileFilter("*_"+_name+".wav");
         File[] files = dir.listFiles(filter);

@@ -2,14 +2,6 @@ package app;
 
 import javax.swing.*;
 import java.io.File;
-import java.io.PrintWriter;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class DirectoryManager {
     private File databaseStorage;
@@ -23,6 +15,10 @@ public class DirectoryManager {
         ratings = new File(NameSayer.directoryPath +"/ratings.txt");
 
     }
+
+    /**
+     * Checks that the directories and files which are to be used exist
+     */
     public void runChecks() {
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {
