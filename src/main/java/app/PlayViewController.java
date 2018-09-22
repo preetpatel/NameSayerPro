@@ -17,6 +17,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
@@ -69,6 +70,7 @@ public class PlayViewController {
     private Name currentLoadedCreation;
     private static int currentSelection = 0;
     private HashMap<String, File> versionPerms;
+    private HashMap<String, File> userFiles;
     private File _fileToPlay;
 
     /**
@@ -224,15 +226,16 @@ public class PlayViewController {
         previousAttempts.getItems().clear();
         File folder = new File(NameSayer.userRecordingsPath);
         File[] files = folder.listFiles();
-
+        userFiles = new HashMap<>();
         for (File file : files) {
             Name tempName = new Name(file);
             Name currentFile = new Name(_fileToPlay);
-            if (currentFile.getName().toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
-                for (File eachFile : tempName.getAllFilesOfName(new File(NameSayer.userRecordingsPath))) {
-                    previousAttempts.getItems().add(eachFile.getName());
-                }
-                break;
+
+            String compareString = currentFile.getName() + "_V";
+            compareString = compareString.toLowerCase();
+            if (tempName.getName().toLowerCase().contains(compareString) && tempName.isValid()) {
+                    previousAttempts.getItems().add(tempName.getName());
+                    userFiles.put(tempName.getName(), file);
             }
         }
     }
@@ -298,18 +301,14 @@ public class PlayViewController {
             @Override
             public void run() {
                 try{
-                    AudioInputStream ais = AudioSystem.getAudioInputStream(_fileToPlay);
-                    Clip test = AudioSystem.getClip();
-
-                    test.open(ais);
-                    test.start();
-
-                    while (!test.isRunning())
-                        Thread.sleep(10);
-                    while (test.isRunning())
-                        Thread.sleep(10);
-
-                    test.close();
+                    Media media = new Media(_fileToPlay.toURI().toString());
+                    mediaPlayer = new MediaPlayer(media);
+                    mediaPlayer.setOnReady(new Runnable() {
+                        @Override
+                        public void run() {
+                            mediaPlayer.play();
+                        }
+                    });
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }

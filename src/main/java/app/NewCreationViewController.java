@@ -160,7 +160,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() {
-            String path =  NameSayer.userRecordingsPath +"/" + _nameOfCreation + "_audio.mp3";
+            String path =  NameSayer.userRecordingsPath +"/" + _nameOfCreation + "_audio.wav";
             File file = new File(path);
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
@@ -182,7 +182,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.mp3'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.wav'");
             builder.start();
             return null;
         }
@@ -215,7 +215,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.mp3'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.wav'");
             Process process = builder.start();
             return null;
         }
@@ -257,7 +257,7 @@ public class NewCreationViewController {
         }
 
         if (tempAudiofile != null) {
-            File destinationFile = new File(NameSayer.userRecordingsPath + "/namesayer_" + dateFormat.format(date) + "_" + _nameOfCreation + "_V" + counter);
+            File destinationFile = new File(NameSayer.userRecordingsPath + "/namesayer_" + dateFormat.format(date) + "_" + _nameOfCreation + "_V" + counter + ".wav");
             tempAudiofile.renameTo(destinationFile);
         }
         goBack();
