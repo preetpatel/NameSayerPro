@@ -9,29 +9,17 @@
 
 package app;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXProgressBar;
+
 import com.jfoenix.controls.JFXSlider;
-import javafx.beans.InvalidationListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
-import java.io.DataInput;
-import java.io.File;
 import java.io.IOException;
 
-import static java.lang.Math.round;
 
 public class MicTestViewController {
 
@@ -78,6 +66,9 @@ public class MicTestViewController {
 
     }
 
+    /**
+     * allows the user to go back to the PlayViewController GUI
+     */
     @FXML
     private void backButtonHandler() {
         monitorThread.interrupt();
@@ -91,6 +82,11 @@ public class MicTestViewController {
         anchorPane.getChildren().add(newLoadedPane);
     }
 
+    /**
+     * converts the audio data into a number
+     * @param audioData
+     * @return a number representing the audio level
+     */
     private static int calculateRMSLevel(byte[] audioData)
     { // audioData might be buffered data read from a data line
         long lSum = 0;

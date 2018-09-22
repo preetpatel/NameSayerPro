@@ -90,6 +90,9 @@ public class PlayViewController {
                 change.getControlNewText().length() <= 1 ? change : null));
     }
 
+    /**
+     *  Allows the user to set a rating onto different versions of different names
+     */
     @FXML
     private void ratingButtonHandler(){
         String userRating = ratingText.getText();
@@ -115,13 +118,30 @@ public class PlayViewController {
                     }
             }
 
+            //if a rating does not exist, add a new rating
             if (!lineExists) {
                 writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
                 writer.write(ratingString + "\n");
                 writer.close();
-            } else {
-                //TODO replace line with new line
 
+            //if a rating does exist, replace the old rating
+            } else {
+                String old = "";
+                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                String line2 = reader.readLine();
+
+                while (line2 != null)
+                {
+                    old = old + line2 + System.lineSeparator();
+                    line2 = reader.readLine();
+
+
+                }
+                String newContent = old.replaceAll(_fileToPlay.getName() + " [12345]", ratingString);
+                FileWriter writer2 = new FileWriter(DirectoryManager.getRatings());
+                writer2.write(newContent);
+                reader.close();
+                writer2.close();
             }
 
         } catch (NumberFormatException e) {
@@ -133,6 +153,9 @@ public class PlayViewController {
 
     }
 
+    /**
+     * reads the text file in which ratings are stored, which is then displayed onto the GUI
+     */
     private void updateRating(){
         try {
             BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
@@ -152,6 +175,10 @@ public class PlayViewController {
         }
     }
 
+    /**
+     * changes the creations
+     * @param creation
+     */
     private void loadCreation(Name creation){
         currentName.setText(creation.getName());
 
