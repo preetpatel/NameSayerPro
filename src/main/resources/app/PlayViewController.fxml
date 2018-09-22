@@ -31,7 +31,7 @@
                   <Font size="53.0" />
                </font>
             </Text>
-            <JFXComboBox fx:id="versions" layoutX="154.0" layoutY="275.0" onMouseClicked="#versionSelectionHandler" prefHeight="27.0" prefWidth="321.0" promptText="Select a version" />
+            <JFXComboBox fx:id="versions" layoutX="154.0" layoutY="275.0" onAction="#versionSelectionHandler" prefHeight="27.0" prefWidth="321.0" promptText="Select a version" />
             <Text fx:id="currentName" fill="WHITE" layoutX="20.0" layoutY="192.0" strokeType="OUTSIDE" strokeWidth="1.0" text="{ NAME }" textAlignment="CENTER" wrappingWidth="589.7578125">
                <font>
                   <Font size="53.0" />
