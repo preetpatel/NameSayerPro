@@ -10,6 +10,7 @@
 package app;
 
 import com.jfoenix.controls.*;
+import com.sun.deploy.util.StringUtils;
 import javafx.beans.InvalidationListener;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -17,6 +18,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.media.Media;
@@ -33,6 +35,10 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 
@@ -67,6 +73,12 @@ public class PlayViewController {
     @FXML
     private JFXListView<String> previousAttempts;
 
+    @FXML
+    private javafx.scene.control.TextField ratingText;
+
+    @FXML
+    private JFXButton confirmRatingButton;
+
     private static List<Name> _creationsList;
     private MediaPlayer mediaPlayer;
     private Name currentLoadedCreation;
@@ -88,26 +100,79 @@ public class PlayViewController {
         if (_creationsList.size()==1) {
             nextButton.setText("FINISH >");
         }
+
+        ratingText.setTextFormatter(new TextFormatter<String>(change ->
+                change.getControlNewText().length() <= 1 ? change : null));
+    }
+
+    @FXML
+    private void ratingButtonHandler(){
+        String userRating = ratingText.getText();
+        File ratingsFile = DirectoryManager.getRatings();
+
+        BufferedWriter writer;
+        try {
+
+            int ratingNumber = Integer.parseInt(userRating);
+            if (ratingNumber > 5 | ratingNumber < 1){
+                throw new NumberFormatException();
+            }
+
+            String ratingString = _fileToPlay.getName() + " " + Integer.toString(ratingNumber);
+
+            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+            String line;
+
+            //check if file is already given a rating
+            boolean lineExists = false;
+            while ((line = br.readLine()) != null) {
+                    if (line.contains(_fileToPlay.getName())){
+                        lineExists = true;
+                        break;
+                    }
+            }
+
+            if (!lineExists) {
+                writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
+                writer.write(ratingString);
+                writer.close();
+            } else {
+                //TODO replace line with new line
+
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Please Enter a number from 1-5", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (IOException e2){
+            JOptionPane.showMessageDialog(null, "An error occurred printing rating", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+
+
+        //TODO get the version which is to be rated
+
+
+        //TODO write the ratings in the file
+
+    }
+
+    private void updateRating(){
+        //TODO scan the ratings file for a rating
+
+        //TODO update the GUI to show that rating
     }
 
     private void loadCreation(Name creation){
         currentName.setText(creation.getName());
 
-        //TODO version loading thing
         loadVersionsOfCreation(creation);
-        //TODO load previous recordings from user
+
         loadPreviousUserRecordings();
-        //TODO fuse the voice files together
-        fuseNameFiles();
 
     }
 
     private void loadVersionsOfCreation(Name creation){
 
         currentName.setText(creation.getName());
-
-        //TODO load all different permutations possible of the creation from different name versions
-
         versions.getItems().clear();
 
         versionPerms = creation.getVersions();
@@ -132,9 +197,6 @@ public class PlayViewController {
         versions.setEditable(false);
         versions.getSelectionModel().selectFirst();
 
-        //TODO add handler to allow user to choose which version they want
-
-        //TODO fuse voice files together
 
     }
 
@@ -153,10 +215,6 @@ public class PlayViewController {
                 break;
             }
         }
-    }
-
-    private void fuseNameFiles(){
-
     }
 
     @FXML
@@ -209,6 +267,11 @@ public class PlayViewController {
     @FXML
     public void demoButtonHandler() {
         demoButton.setDisable(true);
+        recordButton.setDisable(true);
+        micTestButton.setDisable(true);
+        nextButton.setDisable(true);
+        previousButton.setDisable(true);
+
         Thread monitorThread = new Thread() {
             @Override
             public void run() {
@@ -229,6 +292,10 @@ public class PlayViewController {
                     ex.printStackTrace();
                 }
                 demoButton.setDisable(false);
+                recordButton.setDisable(false);
+                micTestButton.setDisable(false);
+                nextButton.setDisable(false);
+                previousButton.setDisable(false);
             }
         };
         monitorThread.start();
@@ -263,3 +330,5 @@ public class PlayViewController {
 
     }
 }
+//TODO sometimes file doesnt play fully
+//TODO versions are bad

@@ -24,6 +24,7 @@ public class NameSayer extends Application {
     /** Path for storing universal creations */
     public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer/Database";
     public static final String userRecordingsPath = System.getProperty("user.home") + "/Documents/NameSayer/UserRecordings";
+    public static final String directoryPath = System.getProperty("user.home") + "/Documents/NameSayer";
 
     @Override
     public void start(Stage primaryStage) throws Exception {

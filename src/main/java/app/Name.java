@@ -57,8 +57,8 @@ public class Name {
         return returnVersions;
     }
 
+
     public List<File> getAllFilesOfName(File dir){
-        //File dir = new File(NameSayer.creationsPath);
         FileFilter filter = new WildcardFileFilter("*_"+_name+".wav");
         File[] files = dir.listFiles(filter);
         return Arrays.asList(files);
@@ -81,6 +81,12 @@ public class Name {
         return _files;
     }
 
+
+    /**
+     * Creates a button for a given name
+     * @param selectedButtonsList the list which allows selections of buttons to delete
+     * @return The button which is created
+     */
     public JFXButton generateButton(List<JFXButton> selectedButtonsList){
         //create a new button to represent the item
         JFXButton button = new JFXButton();
