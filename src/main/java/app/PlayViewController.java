@@ -108,10 +108,9 @@ public class PlayViewController {
 
         //TODO load all different permutations possible of the creation from different name versions
 
-        versions.getItems().clear();
-
         versionPerms = creation.getVersions();
         _fileToPlay = versionPerms.get("Version 1");
+        versions.getItems().clear();
 
         for (int i = 0; i< versionPerms.size(); i++){
             versions.getItems().add(new Label("Version " + (i+1)));
@@ -236,8 +235,10 @@ public class PlayViewController {
 
     // Sets the correct file to play when combo box selection is changed
     @FXML
-    public void versionSelectionHandler() {
-        _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
+    public void versionSelectionHandler(ActionEvent e) {
+        if (versions.getSelectionModel().getSelectedItem() != null) {
+            _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
+        }
     }
 
     @FXML
@@ -250,6 +251,7 @@ public class PlayViewController {
             JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
+
     @FXML
     public void recordButtonHandler() {
         try {
@@ -260,6 +262,5 @@ public class PlayViewController {
         } catch (IOException err) {
             JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
-
     }
 }
