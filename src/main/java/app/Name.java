@@ -22,6 +22,11 @@ public class Name {
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
     }
 
+    public Name(String name){
+        _name = name;
+        _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+    }
+
     private String getFileName(File file) {
         String displayName = file.getName();
         _fullName = displayName;
