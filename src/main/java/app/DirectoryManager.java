@@ -1,3 +1,13 @@
+/**
+ * DirectoryManager.java
+ * Processes directories and files necessary for the program to run properly
+ *
+ * Copyright Preet Patel, 2018
+ * @Author Preet Patel
+ * @Auther Chuyang Chen
+ * Date Created: 13 August, 2018
+ */
+
 package app;
 
 import javax.swing.*;

@@ -1,3 +1,13 @@
+/**
+ * SearchNamesViewController.java
+ * Scene for selecting creations
+ *
+ * Copyright Preet Patel, 2018
+ * @Author Preet Patel
+ * @Auther Chuyang Chen
+ * Date Created: 13 August, 2018
+ */
+
 package app;
 
 import com.jfoenix.controls.*;
