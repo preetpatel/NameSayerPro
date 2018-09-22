@@ -178,7 +178,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.creationsPath +"/'"+ _nameOfCreation + "_audio.mp3'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.mp3'");
             builder.start();
             return null;
         }
@@ -237,11 +237,11 @@ public class NewCreationViewController {
         @Override
         public Void call() throws Exception {
             String command = "ffmpeg -f lavfi -i color=c=white:s=1920x1080:d=5 -vf \"drawtext=fontsize=60: " +
-                    "fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _nameOfCreation +"'\" " + NameSayer.creationsPath +"/'"+ _nameOfCreation +"_video.mp4' 2>/dev/null && " +
-                    "ffmpeg -i " + NameSayer.creationsPath +"/'"+ _nameOfCreation +"_video.mp4' -i " + NameSayer.creationsPath +"/'"+ _nameOfCreation +"_audio.mp3' -codec copy -shortest " +
-                    "" + NameSayer.creationsPath +"/'"+ _nameOfCreation +".mp4' 2> /dev/null && " +
-                    "rm " + NameSayer.creationsPath +"/'"+ _nameOfCreation +"_video.mp4' 2>/dev/null && " +
-                    "rm " + NameSayer.creationsPath +"/'"+ _nameOfCreation +"_audio.mp3' 2>/dev/null";
+                    "fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _nameOfCreation +"'\" " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_video.mp4' 2>/dev/null && " +
+                    "ffmpeg -i " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_video.mp4' -i " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_audio.mp3' -codec copy -shortest " +
+                    "" + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +".mp4' 2> /dev/null && " +
+                    "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_video.mp4' 2>/dev/null && " +
+                    "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_audio.mp3' 2>/dev/null";
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
             Process process = builder.start();
             process.waitFor();
