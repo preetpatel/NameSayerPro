@@ -134,9 +134,22 @@ public class PlayViewController {
     }
 
     private void updateRating(){
-        //TODO scan the ratings file for a rating
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+            String line;
 
-        //TODO update the GUI to show that rating
+            while ((line = br.readLine()) != null) {
+                if (line.contains(_fileToPlay.getName())) {
+                    String[] nameCreation = line.split("\\s+");
+                    ratingText.setText(nameCreation[1]);
+                    break;
+                } else {
+                    ratingText.setText("");
+                }
+            }
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An error occurred printing rating", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void loadCreation(Name creation){
@@ -145,6 +158,8 @@ public class PlayViewController {
         loadVersionsOfCreation(creation);
 
         loadPreviousUserRecordings();
+
+        updateRating();
 
     }
 
@@ -285,6 +300,7 @@ public class PlayViewController {
         if (versions.getSelectionModel().getSelectedItem() != null) {
             _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
         }
+        updateRating();
     }
 
     @FXML
