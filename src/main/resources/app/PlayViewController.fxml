@@ -57,7 +57,7 @@
                   <Font size="31.0" />
                </font>
             </Text>
-            <JFXListView fx:id="previousAttempts" layoutX="846.0" layoutY="120.0" prefHeight="400.0" prefWidth="281.0" />
+            <JFXListView fx:id="previousAttempts" layoutX="846.0" layoutY="120.0" onMouseClicked="#playUserCreatedFile" prefHeight="400.0" prefWidth="281.0" />
             <JFXButton fx:id="confirmRatingButton" alignment="CENTER" buttonType="RAISED" layoutX="613.0" layoutY="264.0" onAction="#ratingButtonHandler" prefHeight="46.0" prefWidth="98.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Confirm" textAlignment="CENTER" textFill="WHITE">
                <font>
                   <Font name="Lato Medium" size="14.0" />

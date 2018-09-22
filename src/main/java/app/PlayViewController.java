@@ -4,7 +4,6 @@
  *
  * Copyright Preet Patel, 2018
  * @Author Preet Patel
- * @Auther Chuyang Chen
  * Date Created: 13 August, 2018
  */
 
@@ -23,6 +22,9 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.*;
 import java.util.HashMap;
@@ -52,7 +54,7 @@ public class PlayViewController {
     private  JFXButton nextButton;
 
     @FXML
-    private JFXComboBox<Label> versions;
+    private JFXComboBox<Label> versions; // Not sure about what type goes inside
 
     @FXML
     private JFXListView<String> previousAttempts;
@@ -190,10 +192,6 @@ public class PlayViewController {
 
     }
 
-    /**
-     * Processes the different version files of the given name to allow it to be loaded
-     * @param creation the name to be loaded and processed
-     */
     private void loadVersionsOfCreation(Name creation){
 
         currentName.setText(creation.getName());
@@ -224,9 +222,6 @@ public class PlayViewController {
 
     }
 
-    /**
-     * Causes the user's recordings of the name to be loaded onto the list
-     */
     private void loadPreviousUserRecordings(){
         previousAttempts.getItems().clear();
         File folder = new File(NameSayer.userRecordingsPath);
@@ -245,9 +240,6 @@ public class PlayViewController {
         }
     }
 
-    /**
-     * Allows the nextButton to take the user to the next name to practice
-     */
     @FXML
     public void nextButtonHandler(){
         currentSelection++;
@@ -264,12 +256,8 @@ public class PlayViewController {
         }
     }
 
-    /**
-     * Allows the backButton to take the user to the previous name to practice
-     */
     @FXML
     public void backButtonHandler(){
-        //change the current selection index
         currentSelection--;
         if(currentSelection >= 0 ) {
             currentLoadedCreation = _creationsList.get(currentSelection);
@@ -284,9 +272,7 @@ public class PlayViewController {
         }
     }
 
-    /**
-     * Returns to the main menu
-     */
+
     @FXML
     public void loadMainMenuView(){
         _creationsList.clear();
@@ -300,20 +286,15 @@ public class PlayViewController {
         }
     }
 
-    /**
-     * sets the list of names that are to be practiced
-     * @param creationsList
-     */
     public static void setCreationsList(List<Name> creationsList){
         _creationsList = creationsList;
     }
-
-    /**
-     * Allows the demo button to play the current version of the name that is chosen by the user
-     */
     @FXML
     public void demoButtonHandler() {
-        //change buttons so user cannot perform unexpected behaviour
+        playFile(_fileToPlay);
+    }
+
+    public void playFile(File fileToPlay) {
         demoButton.setDisable(true);
         recordButton.setDisable(true);
         micTestButton.setDisable(true);
@@ -324,7 +305,7 @@ public class PlayViewController {
             @Override
             public void run() {
                 try{
-                    Media media = new Media(_fileToPlay.toURI().toString());
+                    Media media = new Media(fileToPlay.toURI().toString());
                     mediaPlayer = new MediaPlayer(media);
                     mediaPlayer.setOnReady(new Runnable() {
                         @Override
@@ -335,7 +316,6 @@ public class PlayViewController {
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
-                //reenable buttons once playing is done
                 demoButton.setDisable(false);
                 recordButton.setDisable(false);
                 micTestButton.setDisable(false);
@@ -346,10 +326,7 @@ public class PlayViewController {
         monitorThread.start();
     }
 
-    /**
-     *    Sets the correct file to play when combo box selection is changed
-     */
-
+    // Sets the correct file to play when combo box selection is changed
     @FXML
     public void versionSelectionHandler(ActionEvent e) {
         if (versions.getSelectionModel().getSelectedItem() != null) {
@@ -358,9 +335,6 @@ public class PlayViewController {
         updateRating();
     }
 
-    /**
-     * Functionality for the button which switches the scene to the microphone testing GUI
-     */
     @FXML
     public void micTestButtonHandler() {
         try {
@@ -372,9 +346,6 @@ public class PlayViewController {
         }
     }
 
-    /**
-     * Functionality for the button which switches the scene to the recording GUI
-     */
     @FXML
     public void recordButtonHandler() {
         try {
@@ -384,6 +355,17 @@ public class PlayViewController {
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException err) {
             JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    @FXML
+    public void playUserCreatedFile() {
+
+        String file = previousAttempts.getSelectionModel().getSelectedItems().toString();
+        file = file.replace("[", "");
+        file = file.replace("]","");
+        if (!file.equals("")) {
+            playFile(userFiles.get(file));
         }
     }
 }
