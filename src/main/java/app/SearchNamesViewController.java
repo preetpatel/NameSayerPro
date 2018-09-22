@@ -60,6 +60,8 @@ public class SearchNamesViewController {
     private JFXButton removeButton;
 
     private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
+    ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
+
     private List<JFXButton> selectedButtonsList = new ArrayList<>();
 
     private List<Name> creationsList = new ArrayList<>();
@@ -140,7 +142,6 @@ public class SearchNamesViewController {
         }
 
         //Loads all creations onto view
-        ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
         try {
             ProcessBuilder builder;
             String command;
@@ -199,6 +200,7 @@ public class SearchNamesViewController {
                                     buttonExists = true;
                                 }
                             }
+
                             if (!buttonExists) {
                                 creationsButtonList.add(tempName.generateButton(selectedButtonsList));
                                 creationsList.add(tempName);
@@ -206,6 +208,7 @@ public class SearchNamesViewController {
                                 addedCreationsPane.getChildren().addAll(creationsButtonList);
                                 startPracticeButton.setVisible(true);
                                 removeButton.setVisible(true);
+                                button.setDisable(true);
                             } else {
                                 showErrorDialog("This name has already been added", "Ok");
                             }
@@ -238,6 +241,12 @@ public class SearchNamesViewController {
                 if (button.equals(comparedButton)) {
                     creations.remove();
                     creationsButtonList.remove(comparedButton);
+
+                    for (JFXButton currentButton : unaddedButtonsList) {
+                        if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                            currentButton.setDisable(false);
+                        }
+                    }
                     break;
                 }
             }
@@ -303,6 +312,13 @@ public class SearchNamesViewController {
                             creationsList.add(creation);
                             startPracticeButton.setVisible(true);
                             removeButton.setVisible(true);
+
+                            for (JFXButton currentButton : unaddedButtonsList) {
+                                if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                                    currentButton.setDisable(true);
+                                }
+                            }
+
                         } else {
                             showErrorDialog("This name has already been added", "Ok");
                         }
