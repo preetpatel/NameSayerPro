@@ -291,6 +291,10 @@ public class PlayViewController {
     }
     @FXML
     public void demoButtonHandler() {
+        playFile(_fileToPlay);
+    }
+
+    public void playFile(File fileToPlay) {
         demoButton.setDisable(true);
         recordButton.setDisable(true);
         micTestButton.setDisable(true);
@@ -301,7 +305,7 @@ public class PlayViewController {
             @Override
             public void run() {
                 try{
-                    Media media = new Media(_fileToPlay.toURI().toString());
+                    Media media = new Media(fileToPlay.toURI().toString());
                     mediaPlayer = new MediaPlayer(media);
                     mediaPlayer.setOnReady(new Runnable() {
                         @Override
@@ -351,6 +355,17 @@ public class PlayViewController {
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException err) {
             JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    @FXML
+    public void playUserCreatedFile() {
+
+        String file = previousAttempts.getSelectionModel().getSelectedItems().toString();
+        file = file.replace("[", "");
+        file = file.replace("]","");
+        if (!file.equals("")) {
+            playFile(userFiles.get(file));
         }
     }
 }
