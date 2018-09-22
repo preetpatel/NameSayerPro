@@ -23,8 +23,12 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
+import javax.xml.stream.events.Namespace;
 import java.io.File;
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class NewCreationViewController {
 
@@ -156,7 +160,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() {
-            String path =  NameSayer.creationsPath +"/" + _nameOfCreation + "_audio.mp3";
+            String path =  NameSayer.userRecordingsPath +"/" + _nameOfCreation + "_audio.mp3";
             File file = new File(path);
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
@@ -211,7 +215,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.creationsPath +"/'"+ _nameOfCreation + "_audio.mp3'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.mp3'");
             Process process = builder.start();
             return null;
         }
@@ -229,33 +233,35 @@ public class NewCreationViewController {
         }
         loaderText.setText("Saving your creation...");
 
-        Thread thread = new Thread(task);
-        thread.start();
-    }
+        File[] userCreations = new File(NameSayer.userRecordingsPath).listFiles();
+        int counter = 1;
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
+        Date date = new Date();
 
-    Task<Void> task = new Task<Void>() {
-        @Override
-        public Void call() throws Exception {
-            String command = "ffmpeg -f lavfi -i color=c=white:s=1920x1080:d=5 -vf \"drawtext=fontsize=60: " +
-                    "fontcolor=black:x=(w-text_w)/2:y=(h-text_h)/2:text='" + _nameOfCreation +"'\" " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_video.mp4' 2>/dev/null && " +
-                    "ffmpeg -i " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_video.mp4' -i " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_audio.mp3' -codec copy -shortest " +
-                    "" + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +".mp4' 2> /dev/null && " +
-                    "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_video.mp4' 2>/dev/null && " +
-                    "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation +"_audio.mp3' 2>/dev/null";
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", command);
-            Process process = builder.start();
-            process.waitFor();
+        File tempAudiofile = null;
 
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    goBack();
+        for (File file : userCreations) {
+            String displayName = file.getName();
+            displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
+            displayName = displayName.replaceAll("[.][^.]+$", "");
+            if (displayName.contains(_nameOfCreation + "_V")) {
+                displayName = displayName.replace(_nameOfCreation + "_V", "");
+                int compare = Integer.parseInt(displayName);
+                if (compare >= counter) {
+                    counter = compare + 1;
                 }
-            });
-
-            return null;
+            }
+            if (displayName.contains("_audio")) {
+                tempAudiofile = file;
+            }
         }
-    };
+
+        if (tempAudiofile != null) {
+            File destinationFile = new File(NameSayer.userRecordingsPath + "/namesayer_" + dateFormat.format(date) + "_" + _nameOfCreation + "_V" + counter);
+            tempAudiofile.renameTo(destinationFile);
+        }
+        goBack();
+    }
 
     /**
      * Loads the HomeViewController scene

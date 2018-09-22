@@ -214,6 +214,7 @@ public class PlayViewController {
     public void nextButtonHandler(){
         currentSelection++;
         if(currentSelection < _creationsList.size()) {
+            currentLoadedCreation = _creationsList.get(currentSelection);
             loadCreation(_creationsList.get(currentSelection));
             previousButton.setText("< BACK");
         }
@@ -229,6 +230,7 @@ public class PlayViewController {
     public void backButtonHandler(){
         currentSelection--;
         if(currentSelection >= 0 ) {
+            currentLoadedCreation = _creationsList.get(currentSelection);
             loadCreation(_creationsList.get(currentSelection));
             nextButton.setText("NEXT >");
         }
