@@ -10,39 +10,24 @@
 package app;
 
 import com.jfoenix.controls.*;
-import com.sun.deploy.util.StringUtils;
-import javafx.beans.InvalidationListener;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.text.Text;
-import javafx.util.Duration;
 import javafx.util.StringConverter;
-import sun.audio.AudioPlayer;
-import sun.audio.AudioStream;
 
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
-
-import static java.lang.Math.round;
 
 public class PlayViewController {
 
@@ -108,8 +93,6 @@ public class PlayViewController {
     @FXML
     private void ratingButtonHandler(){
         String userRating = ratingText.getText();
-        File ratingsFile = DirectoryManager.getRatings();
-
         BufferedWriter writer;
         try {
 
@@ -147,11 +130,6 @@ public class PlayViewController {
             JOptionPane.showMessageDialog(null, "An error occurred printing rating", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-
-        //TODO get the version which is to be rated
-
-
-        //TODO write the ratings in the file
 
     }
 
