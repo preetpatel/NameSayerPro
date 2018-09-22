@@ -250,4 +250,16 @@ public class PlayViewController {
             JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
         }
     }
+    @FXML
+    public void recordButtonHandler() {
+        try {
+            NewCreationViewController.setNameOfCreation(currentLoadedCreation.getName());
+            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("NewCreationViewController.fxml"));
+            anchorPane.getChildren().clear();
+            anchorPane.getChildren().add(newLoadedPane);
+        } catch (IOException err) {
+            JOptionPane.showMessageDialog(null,"An error occurred: "+err.getMessage(),"Error",JOptionPane.ERROR_MESSAGE);
+        }
+
+    }
 }

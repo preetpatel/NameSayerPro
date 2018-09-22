@@ -81,7 +81,6 @@ public class MicTestViewController {
     @FXML
     private void backButtonHandler() {
         monitorThread.interrupt();
-        System.out.println("made it");
         Pane newLoadedPane = null;
         try {
             newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));

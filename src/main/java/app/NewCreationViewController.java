@@ -64,7 +64,7 @@ public class NewCreationViewController {
     @FXML
     private void handleCloseButton() {
         try {
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("HomeViewController.fxml"));
+            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -262,7 +262,7 @@ public class NewCreationViewController {
      */
     private void goBack() {
         try {
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("HomeViewController.fxml"));
+            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException io) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + io.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
