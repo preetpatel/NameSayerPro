@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXMasonryPane?>
 <?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -26,6 +27,9 @@
          </font>
       </JFXButton>
       <ScrollPane fx:id="scrollPane" layoutX="34.0" layoutY="308.0" prefHeight="415.0" prefWidth="540.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-style: solid;">
+        <ScrollBar style="-fx-background-color: #037971;">
+
+        </ScrollBar>
          <content>
             <JFXMasonryPane fx:id="creationsPane" prefHeight="412.0" prefWidth="520.0" />
          </content>
@@ -55,5 +59,10 @@
             </JFXTextField>
          </children>
       </AnchorPane>
+      <JFXButton fx:id="removeAllButton" layoutX="394.0" layoutY="730.0" onAction="#removeAllButtonHandler" prefHeight="57.0" prefWidth="261.0" style="-fx-background-color: #037971;" text="Remove All" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </JFXButton>
     </children>
 </AnchorPane>
