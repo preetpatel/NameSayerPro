@@ -100,9 +100,9 @@ public class PlayViewController {
     public void initialize() {
         currentLoadedCreation = _creationsList.get(currentSelection);
         loadCreation(currentLoadedCreation);
-        previousButton.setText("< MENU");
+        previousButton.setText("< Menu");
         if (_creationsList.size() == 1) {
-            nextButton.setText("FINISH >");
+            nextButton.setText("Finish >");
         }
     }
 
@@ -267,10 +267,10 @@ public class PlayViewController {
         if (currentSelection < _creationsList.size()) {
             currentLoadedCreation = _creationsList.get(currentSelection);
             loadCreation(_creationsList.get(currentSelection));
-            previousButton.setText("< BACK");
+            previousButton.setText("< Previous");
         }
         if (currentSelection == _creationsList.size() - 1) {
-            nextButton.setText("FINISH >");
+            nextButton.setText("Finish >");
         }
         if (currentSelection == _creationsList.size()) {
             loadMainMenuView();
@@ -283,10 +283,10 @@ public class PlayViewController {
         if (currentSelection >= 0) {
             currentLoadedCreation = _creationsList.get(currentSelection);
             loadCreation(_creationsList.get(currentSelection));
-            nextButton.setText("NEXT >");
+            nextButton.setText("Next >");
         }
         if (currentSelection == 0) {
-            previousButton.setText("< MENU");
+            previousButton.setText("< Menu");
         }
         if (currentSelection < 0) {
             loadMainMenuView();
