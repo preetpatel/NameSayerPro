@@ -1,11 +1,12 @@
 /**
  * NewCreationViewController.java
  * Scene for generating a new creation. Loads the initial pre-recording state
- *
+ * <p>
  * Copyright Preet Patel, 2018
+ *
  * @Author Preet Patel
  * @Auther Chuyang Chen
- * Date Created: 13 August, 2018
+ * Date Created: 19 August, 2018
  */
 
 package app;
@@ -86,10 +87,6 @@ public class NewCreationViewController {
      */
     @FXML
     private void initialize() {
-        StringValidator validate = new StringValidator(_nameOfCreation);
-        if (!validate.isValid()) {
-            validate.deleteFile();
-        }
         loaderText.setText("Press the button below and pronounce the name: \"" + _nameOfCreation + "\"");
         listenAudio.setVisible(false);
         keepAudio.setVisible(false);
@@ -125,10 +122,10 @@ public class NewCreationViewController {
         protected Void call() throws Exception {
             int i = 5;
             loaderText.setText("");
-            while (i>0) {
+            while (i > 0) {
                 loaderText.setText(loaderText.getText() + Integer.toString(i) + "...");
                 Thread.sleep(1000);
-                i-=1;
+                i -= 1;
             }
             return null;
         }
@@ -170,7 +167,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() {
-            String path =  NameSayer.userRecordingsPath +"/" + _nameOfCreation + "_audio.wav";
+            String path = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
             File file = new File(path);
             Media media = new Media(file.toURI().toString());
             mediaPlayer = new MediaPlayer(media);
@@ -192,7 +189,7 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.wav'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'");
             builder.start();
             return null;
         }
@@ -228,7 +225,7 @@ public class NewCreationViewController {
             File file = new File(NameSayer.userRecordingsPath);
             File[] files = file.listFiles();
             for (File check : files) {
-                if (check.getName().equals(_nameOfCreation+"_audio.wav")) {
+                if (check.getName().equals(_nameOfCreation + "_audio.wav")) {
                     check.delete();
                 }
             }
@@ -304,11 +301,11 @@ public class NewCreationViewController {
         Thread monitorThread = new Thread() {
             @Override
             public void run() {
-                try{
+                try {
                     ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + databaseName.toURI().toString());
                     Process process = builder.start();
                     process.waitFor();
-                }catch(Exception ex){
+                } catch (Exception ex) {
                     ex.printStackTrace();
                 }
                 listenAudio.setDisable(false);

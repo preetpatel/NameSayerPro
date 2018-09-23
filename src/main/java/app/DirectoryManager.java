@@ -1,11 +1,12 @@
 /**
  * DirectoryManager.java
  * Processes directories and files necessary for the program to run properly
- *
+ * <p>
  * Copyright Preet Patel, 2018
+ *
  * @Author Preet Patel
  * @Auther Chuyang Chen
- * Date Created: 13 August, 2018
+ * Date Created: 19 August, 2018
  */
 
 package app;
@@ -22,7 +23,7 @@ public class DirectoryManager {
         databaseStorage = new File(NameSayer.creationsPath);
         userCreationsStorage = new File(NameSayer.userRecordingsPath);
 
-        ratings = new File(NameSayer.directoryPath +"/ratings.txt");
+        ratings = new File(NameSayer.directoryPath + "/ratings.txt");
 
     }
 
@@ -33,6 +34,11 @@ public class DirectoryManager {
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            } else {
+                if (databaseStorage.listFiles().length == 0) {
+                    JOptionPane.showMessageDialog(null, "The database contains no files. Please add files as instructed via the README. NameSayer will not work correctly unless this is done.", "Error", JOptionPane.ERROR_MESSAGE);
+
+                }
             }
         }
 
@@ -42,16 +48,16 @@ public class DirectoryManager {
             }
         }
 
-        if (!ratings.exists()){
+        if (!ratings.exists()) {
             try {
                 ratings.createNewFile();
-            } catch (Exception e){
+            } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load ratings file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public static File getRatings(){
+    public static File getRatings() {
         return ratings;
     }
 }

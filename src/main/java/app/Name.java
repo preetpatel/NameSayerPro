@@ -1,11 +1,12 @@
 /**
  * Name.java
  * Represents all files of a given name
- *
+ * <p>
  * Copyright Preet Patel, 2018
+ *
  * @Author Preet Patel
  * @Auther Chuyang Chen
- * Date Created: 13 August, 2018
+ * Date Created: 19 August, 2018
  */
 
 package app;
@@ -27,12 +28,12 @@ public class Name {
     private String _name;
     private JFXButton _button;
 
-    public Name(File file){
+    public Name(File file) {
         _name = getFileName(file);
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
     }
 
-    public Name(String name){
+    public Name(String name) {
         _name = name;
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
     }
@@ -67,42 +68,29 @@ public class Name {
      * @return
      */
     public HashMap<String, File> getVersions() {
-        HashMap<String, File> returnVersions= new HashMap<>();
+        HashMap<String, File> returnVersions = new HashMap<>();
         int i = 1;
         for (File file : _files) {
-            returnVersions.put("Version "+ i, file);
+            returnVersions.put("Version " + i, file);
             i++;
         }
         return returnVersions;
     }
 
-
     /**
      *
      * @param dir directory in which the names are located
-     * @return  a list of all files which include the name object
+     * @return a list of all files which include the name object
      */
-    public List<File> getAllFilesOfName(File dir){
-        FileFilter filter = new WildcardFileFilter("*_"+_name+".wav");
+    public List<File> getAllFilesOfName(File dir) {
+        FileFilter filter = new WildcardFileFilter("*_" + _name + ".wav");
         File[] files = dir.listFiles(filter);
         return Arrays.asList(files);
 
     }
 
-    public File get(int i) {
-        return _files.get(i);
-    }
-
-    public int size(){
-        return _files.size();
-    }
-
-    public String getName(){
+    public String getName() {
         return _name;
-    }
-
-    public List<File> getFiles() {
-        return _files;
     }
 
 
@@ -111,7 +99,7 @@ public class Name {
      * @param selectedButtonsList the list which allows selections of buttons to delete
      * @return The button which is created
      */
-    public JFXButton generateButton(List<JFXButton> selectedButtonsList){
+    public JFXButton generateButton(List<JFXButton> selectedButtonsList) {
         //create a new button to represent the item
         JFXButton button = new JFXButton();
         button.setMnemonicParsing(false);
@@ -122,7 +110,7 @@ public class Name {
         button.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!selectedButtonsList.contains(button)) {
+                if (!selectedButtonsList.contains(button)) {
                     button.setStyle("-fx-background-color: #256961; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 20;");
                     selectedButtonsList.add(button);
                 } else {
@@ -138,9 +126,5 @@ public class Name {
 
     public JFXButton getButton() {
         return _button;
-    }
-
-    public void destroy() {
-        _files.clear();
     }
 }

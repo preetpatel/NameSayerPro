@@ -25,12 +25,12 @@
       </JFXButton>
       <Text fx:id="text1" fill="WHITE" layoutX="18.0" layoutY="318.0" strokeType="OUTSIDE" strokeWidth="1.0" text="Speak into your microphone..." textAlignment="CENTER" wrappingWidth="1165.7578125">
          <font>
-            <Font size="29.0" />
+            <Font size="43.0" />
          </font>
       </Text>
-      <Text fx:id="text11" fill="WHITE" layoutX="324.0" layoutY="461.0" strokeType="OUTSIDE" strokeWidth="1.0" text="If the slider is moving, then your microphone is configured correctly. If it is not moving, please check your microphone settings and try again." textAlignment="CENTER" wrappingWidth="551.7578110694885">
+      <Text fx:id="text11" fill="WHITE" layoutX="257.0" layoutY="477.0" strokeType="OUTSIDE" strokeWidth="1.0" text="If the slider is moving, then your microphone is configured correctly. If it is not moving, please check your microphone settings and try again." textAlignment="CENTER" wrappingWidth="685.7578110694885">
          <font>
-            <Font size="16.0" />
+            <Font size="27.0" />
          </font>
       </Text>
     </children>

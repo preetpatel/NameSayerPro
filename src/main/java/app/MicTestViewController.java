@@ -1,10 +1,11 @@
 /**
  * MicTestController.java
  * GUI for testing microphone input
- *
+ * <p>
  * Copyright Preet Patel, 2018
+ *
  * @Author Preet Patel
- * Date Created: 13 August, 2018
+ * Date Created: 19 August, 2018
  */
 
 package app;
@@ -49,7 +50,7 @@ public class MicTestViewController {
                     soundBar.setValue(0);
                     byte[] data = new byte[targetLine.getBufferSize() / 5];
                     int readBytes = 1;
-                    while(readBytes != 0) {
+                    while (readBytes != 0) {
                         readBytes = targetLine.read(data, 0, data.length);
                         soundBar.setValue(calculateRMSLevel(data));
                     }
@@ -60,7 +61,7 @@ public class MicTestViewController {
 
             monitorThread.start();
 
-        } catch(LineUnavailableException lue) {
+        } catch (LineUnavailableException lue) {
             lue.printStackTrace();
         }
 
@@ -87,10 +88,9 @@ public class MicTestViewController {
      * @param audioData
      * @return a number representing the audio level
      */
-    private static int calculateRMSLevel(byte[] audioData)
-    { // audioData might be buffered data read from a data line
+    private static int calculateRMSLevel(byte[] audioData) { // audioData might be buffered data read from a data line
         long lSum = 0;
-        for (int i=0; i<audioData.length; i++) {
+        for (int i = 0; i < audioData.length; i++) {
             lSum = lSum + audioData[i];
         }
 
@@ -98,11 +98,11 @@ public class MicTestViewController {
 
         double sumMeanSquare = 0d;
 
-        for (int j=0; j<audioData.length; j++) {
+        for (int j = 0; j < audioData.length; j++) {
             sumMeanSquare = sumMeanSquare + (Math.pow(audioData[j] - dAvg, 2d));
         }
 
         double averageMeanSquare = sumMeanSquare / audioData.length;
-        return (int)(Math.pow(averageMeanSquare,0.5d) + 0.5);
+        return (int) (Math.pow(averageMeanSquare, 0.5d) + 0.5);
     }
 }

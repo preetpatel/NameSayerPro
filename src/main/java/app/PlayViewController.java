@@ -5,7 +5,7 @@
  * Copyright Preet Patel, 2018
  *
  * @Author Preet Patel
- * Date Created: 13 August, 2018
+ * Date Created: 19 August, 2018
  */
 
 package app;
@@ -20,15 +20,9 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
-import jdk.nashorn.internal.runtime.ECMAException;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
 import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
@@ -81,7 +75,6 @@ public class PlayViewController {
 
 
     private static List<Name> _creationsList;
-    private MediaPlayer mediaPlayer;
     private Name currentLoadedCreation;
     private static int currentSelection = 0;
     private HashMap<String, File> versionPerms;
@@ -107,7 +100,7 @@ public class PlayViewController {
     }
 
     /**
-     *  Allows the user to set a rating onto different versions of different names
+     * Allows the user to set a rating onto different versions of different names
      */
     @FXML
     private void logRating(int rating) {
@@ -204,6 +197,7 @@ public class PlayViewController {
 
     /**
      * changes the creations
+     *
      * @param creation
      */
     private void loadCreation(Name creation) {
@@ -255,14 +249,15 @@ public class PlayViewController {
             String compareString = currentFile.getName() + "_V";
             compareString = compareString.toLowerCase();
             if (tempName.getName().toLowerCase().contains(compareString) && tempName.isValid()) {
-                previousAttempts.getItems().add(tempName.getName());
-                userFiles.put(tempName.getName(), file);
+                String fileName = tempName.getName().replace("_", " ");
+                previousAttempts.getItems().add(fileName);
+                userFiles.put(fileName, file);
             }
         }
     }
 
     @FXML
-    public void nextButtonHandler() {
+    private void nextButtonHandler() {
         currentSelection++;
         if (currentSelection < _creationsList.size()) {
             currentLoadedCreation = _creationsList.get(currentSelection);
@@ -278,7 +273,7 @@ public class PlayViewController {
     }
 
     @FXML
-    public void backButtonHandler() {
+    private void backButtonHandler() {
         currentSelection--;
         if (currentSelection >= 0) {
             currentLoadedCreation = _creationsList.get(currentSelection);
@@ -295,7 +290,7 @@ public class PlayViewController {
 
 
     @FXML
-    public void loadMainMenuView() {
+    private void loadMainMenuView() {
         _creationsList.clear();
         currentSelection = 0;
         try {
@@ -386,6 +381,10 @@ public class PlayViewController {
             playFile(userFiles.get(file));
         }
     }
+
+    /**
+     * Handlers for each of the stars in the rating system
+     */
 
     @FXML
     public void star1ButtonHandler() {

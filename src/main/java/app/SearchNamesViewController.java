@@ -1,11 +1,12 @@
 /**
  * SearchNamesViewController.java
  * Scene for selecting creations
- *
+ * <p>
  * Copyright Preet Patel, 2018
+ *
  * @Author Preet Patel
  * @Auther Chuyang Chen
- * Date Created: 13 August, 2018
+ * Date Created: 19 August, 2018
  */
 
 package app;
@@ -16,7 +17,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -69,9 +69,10 @@ public class SearchNamesViewController {
     private JFXButton removeAllButton;
 
     private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
-    ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
 
-    private List<JFXButton> selectedButtonsList = new ArrayList<>();
+    private ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
+
+    private ObservableList<JFXButton> selectedButtonsList = FXCollections.<JFXButton>observableArrayList();
 
     private List<Name> creationsList = new ArrayList<>();
 
@@ -81,11 +82,11 @@ public class SearchNamesViewController {
      */
     @FXML
     private void initialize() {
-        selectedButtonsList = new ArrayList<>();
-        creationsList = new ArrayList<>();
-        startPracticeButton.setVisible(false);
-        removeButton.setVisible(false);
-        removeAllButton.setVisible(false);
+
+        // Checks for all required directories
+        DirectoryManager manager = new DirectoryManager();
+        manager.runChecks();
+
         loadCreationsOntoPane();
 
         // Add Enter key listener on search field
@@ -99,14 +100,7 @@ public class SearchNamesViewController {
             }
         });
 
-
-        // Sets scroll pane to match the style of the app by disabling visible scroll bars
-        stackPane.setVisible(false);
-        /* Sets properties for the scrollview within which the creationsPane sits */
-        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
-        scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
+        scrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
                 if (event.getDeltaX() != 0) {
@@ -114,9 +108,7 @@ public class SearchNamesViewController {
                 }
             }
         });
-        addedScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        addedScrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-        addedScrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+
         addedScrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
@@ -125,10 +117,6 @@ public class SearchNamesViewController {
                 }
             }
         });
-
-        // Checks for all required directories
-        DirectoryManager manager = new DirectoryManager();
-        manager.runChecks();
 
         // Binds the masonry pane for creations to the scroll pane
         Platform.runLater(new Runnable() {
@@ -143,16 +131,9 @@ public class SearchNamesViewController {
     /**
      * Initialises the left pane to show every existing wav file in the directory
      */
-    private void loadCreationsOntoPane(){
+    private void loadCreationsOntoPane() {
         creationsPane.getChildren().clear();
         stackPane.setVisible(false);
-
-        File storage = new File(NameSayer.creationsPath);
-        if (!storage.exists()) {
-            if (!storage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
 
         File folder = new File(NameSayer.creationsPath);
         File[] files = folder.listFiles();
@@ -201,7 +182,6 @@ public class SearchNamesViewController {
             }
         }
         creationsPane.getChildren().addAll(unaddedButtonsList);
-        scrollPane.setVmax(1000);
     }
 
     /**
@@ -245,7 +225,7 @@ public class SearchNamesViewController {
     }
 
     @FXML
-    private void removeAllButtonHandler(ActionEvent e){
+    private void removeAllButtonHandler(ActionEvent e) {
         creationsList.clear();
         creationsButtonList.clear();
         selectedButtonsList.clear();
@@ -309,6 +289,7 @@ public class SearchNamesViewController {
                         }
 
                         if (!buttonExists) {
+
                             creationsButtonList.add(button);
                             creationsList.add(creation);
                             startPracticeButton.setVisible(true);
@@ -335,8 +316,8 @@ public class SearchNamesViewController {
             }
             addedCreationsPane.getChildren().addAll(creationsButtonList);
             searchField.setText("");
-
         }
+
 
     }
 
@@ -345,57 +326,63 @@ public class SearchNamesViewController {
      */
     @FXML
     private void startPracticeHandler(ActionEvent e) {
-        stackPane.setVisible(true);
-        stackPane.getChildren().clear();
-        //create popup
-        JFXDialogLayout dialogContent = new JFXDialogLayout();
-        JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
-        Text header = new Text("Do you wish to randomise the list order?");
-        header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
-        dialogContent.setHeading(header);
+        if (addedCreationsPane.getChildren().size() > 1) {
+            stackPane.setVisible(true);
+            stackPane.getChildren().clear();
+            //create popup
+            JFXDialogLayout dialogContent = new JFXDialogLayout();
+            JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
-        JFXButton confirmRandomise = new JFXButton();
+            Text header = new Text("Do you wish to randomise the list order?");
+            header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
+            dialogContent.setHeading(header);
 
-        confirmRandomise.setText("Randomise and play");
-        confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-        confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                randomiseDialog.close();
-                stackPane.setVisible(false);
-                Collections.shuffle(creationsList);
-                PlayViewController.setCreationsList(creationsList);
-                loadPracticeView();
-            }
-        });
+            JFXButton confirmRandomise = new JFXButton();
 
-        JFXButton confirmPlay = new JFXButton();
-        confirmPlay.setText("Play");
-        confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-        confirmPlay.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                randomiseDialog.close();
-                stackPane.setVisible(false);
-                PlayViewController.setCreationsList(creationsList);
-                loadPracticeView();
-            }
-        });
+            confirmRandomise.setText("Randomise and play");
+            confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+            confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    randomiseDialog.close();
+                    stackPane.setVisible(false);
+                    Collections.shuffle(creationsList);
+                    PlayViewController.setCreationsList(creationsList);
+                    loadPracticeView();
+                }
+            });
 
-        setAlignment(confirmRandomise, Pos.BASELINE_RIGHT);
-        setAlignment(confirmPlay, Pos.BASELINE_LEFT);
+            JFXButton confirmPlay = new JFXButton();
+            confirmPlay.setText("Play");
+            confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
+            confirmPlay.setOnAction(new EventHandler<ActionEvent>() {
+                @Override
+                public void handle(ActionEvent event) {
+                    randomiseDialog.close();
+                    stackPane.setVisible(false);
+                    PlayViewController.setCreationsList(creationsList);
+                    loadPracticeView();
+                }
+            });
 
-        randomiseDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
-            @Override
-            public void handle(JFXDialogEvent event) {
-                stackPane.setVisible(false);
-            }
-        });
+            setAlignment(confirmRandomise, Pos.BASELINE_RIGHT);
+            setAlignment(confirmPlay, Pos.BASELINE_LEFT);
 
-        dialogContent.setActions(confirmRandomise, confirmPlay);
+            randomiseDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
+                @Override
+                public void handle(JFXDialogEvent event) {
+                    stackPane.setVisible(false);
+                }
+            });
 
-        randomiseDialog.show();
+            dialogContent.setActions(confirmRandomise, confirmPlay);
+
+            randomiseDialog.show();
+        } else {
+            PlayViewController.setCreationsList(creationsList);
+            loadPracticeView();
+        }
     }
 
     /**
@@ -416,7 +403,7 @@ public class SearchNamesViewController {
      * @param headerText
      * @param buttonText
      */
-    public void showErrorDialog(String headerText, String buttonText) {
+    private void showErrorDialog(String headerText, String buttonText) {
         stackPane.setVisible(true);
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
@@ -448,10 +435,5 @@ public class SearchNamesViewController {
 
         dialogContent.setActions(confirmDelete);
         deleteDialog.show();
-    }
-
-
-    public List<Name> getCreationsList() {
-        return creationsList;
     }
 }
