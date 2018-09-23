@@ -70,6 +70,8 @@ public class NewCreationViewController {
     @FXML
     private void handleCloseButton() {
         try {
+            Thread deleteAudio = new Thread(new deleteAudioFile());
+            deleteAudio.start();
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException e) {
@@ -142,6 +144,7 @@ public class NewCreationViewController {
             listenAudio.setVisible(true);
             keepAudio.setVisible(true);
             redoAudio.setVisible(true);
+            close.setDisable(false);
             if (databaseName != null) {
                 databaseButton.setVisible(true);
             }
