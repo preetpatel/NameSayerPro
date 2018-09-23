@@ -4,16 +4,14 @@
  *
  * Copyright Preet Patel, 2018
  * @Author Preet Patel
+ * @Auther Chuyang Chen
  * Date Created: 13 August, 2018
  */
 
 package app;
 
 import com.jfoenix.controls.JFXButton;
-import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.concurrent.WorkerStateEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -23,7 +21,6 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
-import javax.xml.stream.events.Namespace;
 import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;

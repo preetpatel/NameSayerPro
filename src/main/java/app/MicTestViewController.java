@@ -1,6 +1,6 @@
 /**
- * PlayViewController.java
- * Scene for playing a selected creation
+ * MicTestController.java
+ * GUI for testing microphone input
  *
  * Copyright Preet Patel, 2018
  * @Author Preet Patel
