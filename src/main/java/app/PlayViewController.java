@@ -345,6 +345,7 @@ public class PlayViewController {
     @FXML
     public void recordButtonHandler() {
         try {
+            NewCreationViewController.setDatabaseName(_fileToPlay);
             NewCreationViewController.setNameOfCreation(currentLoadedCreation.getName());
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("NewCreationViewController.fxml"));
             anchorPane.getChildren().clear();

@@ -50,9 +50,13 @@ public class NewCreationViewController {
     @FXML
     private JFXButton redoAudio;
 
+    @FXML
+    private JFXButton databaseButton;
+
 
     private static String _nameOfCreation;
     private MediaPlayer mediaPlayer;
+    private static File databaseName;
 
     public static void setNameOfCreation(String nameOfCreation) {
         _nameOfCreation = nameOfCreation;
@@ -73,6 +77,10 @@ public class NewCreationViewController {
         }
     }
 
+    public static void setDatabaseName(File file) {
+        databaseName = file;
+    }
+
     /**
      * Initialises the scene by setting buttons visible status and loading the stage
      */
@@ -86,6 +94,7 @@ public class NewCreationViewController {
         listenAudio.setVisible(false);
         keepAudio.setVisible(false);
         redoAudio.setVisible(false);
+        databaseButton.setVisible(false);
     }
 
     /**
@@ -136,6 +145,9 @@ public class NewCreationViewController {
             listenAudio.setVisible(true);
             keepAudio.setVisible(true);
             redoAudio.setVisible(true);
+            if (databaseName != null) {
+                databaseButton.setVisible(true);
+            }
             return null;
         }
     }
@@ -147,6 +159,7 @@ public class NewCreationViewController {
     private void playAudio() {
         Thread playAudio = new Thread(new playAudioFile());
         playAudio.start();
+
 
     }
 
@@ -262,6 +275,9 @@ public class NewCreationViewController {
             File destinationFile = new File(NameSayer.userRecordingsPath + "/namesayer_" + dateFormat.format(date) + "_" + _nameOfCreation + "_V" + counter + ".wav");
             tempAudiofile.renameTo(destinationFile);
         }
+
+        // Set database name to null to prevent unauthorised playback
+        databaseName = null;
         goBack();
     }
 
@@ -270,10 +286,38 @@ public class NewCreationViewController {
      */
     private void goBack() {
         try {
+            databaseName = null;
             Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
             anchorPane.getChildren().add(newLoadedPane);
         } catch (IOException io) {
             JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + io.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    @FXML
+    private void playDatabaseName() {
+        listenAudio.setDisable(true);
+        keepAudio.setDisable(true);
+        redoAudio.setDisable(true);
+        databaseButton.setDisable(true);
+        record.setDisable(true);
+        Thread monitorThread = new Thread() {
+            @Override
+            public void run() {
+                try{
+                    ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + databaseName.toURI().toString());
+                    Process process = builder.start();
+                    process.waitFor();
+                }catch(Exception ex){
+                    ex.printStackTrace();
+                }
+                listenAudio.setDisable(false);
+                keepAudio.setDisable(false);
+                redoAudio.setDisable(false);
+                databaseButton.setDisable(false);
+                record.setDisable(true);
+            }
+        };
+        monitorThread.start();
     }
 }
