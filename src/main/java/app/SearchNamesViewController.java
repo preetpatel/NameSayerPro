@@ -68,11 +68,11 @@ public class SearchNamesViewController {
     @FXML
     private JFXButton removeAllButton;
 
-    private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
+    private ObservableList<JFXButton> creationsButtonList = FXCollections.observableArrayList();
 
-    private ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
+    private ObservableList<JFXButton> unaddedButtonsList = FXCollections.observableArrayList();
 
-    private ObservableList<JFXButton> selectedButtonsList = FXCollections.<JFXButton>observableArrayList();
+    private ObservableList<JFXButton> selectedButtonsList = FXCollections.observableArrayList();
 
     private List<Name> creationsList = new ArrayList<>();
 

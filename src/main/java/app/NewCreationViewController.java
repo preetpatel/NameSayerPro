@@ -224,7 +224,7 @@ public class NewCreationViewController {
     private class deleteAudioFile extends Task<Void> {
 
         @Override
-        protected Void call() throws Exception {
+        protected Void call() {
             File file = new File(NameSayer.userRecordingsPath);
             File[] files = file.listFiles();
             for (File check : files) {

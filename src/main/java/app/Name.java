@@ -57,10 +57,7 @@ public class Name {
      */
     public boolean isValid() {
 
-        if (!FilenameUtils.getExtension(_fullName).equals("wav")) {
-            return false;
-        }
-        return true;
+        return FilenameUtils.getExtension(_fullName).equals("wav");
     }
 
     /**
