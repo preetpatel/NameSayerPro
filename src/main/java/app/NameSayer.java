@@ -38,6 +38,7 @@ public class NameSayer extends Application {
         loader.setLocation(this.getClass().getResource(source));
         Parent layout = loader.load();
         Scene scene = new Scene(layout);
+        scene.getStylesheets().add("/css/bar.css");
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("NameSayer");
