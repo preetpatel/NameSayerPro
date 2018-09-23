@@ -22,6 +22,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -127,7 +128,6 @@ public class SearchNamesViewController {
                 }
             }
         });
-
         // Checks for all required directories
         DirectoryManager manager = new DirectoryManager();
         manager.runChecks();
@@ -188,13 +188,15 @@ public class SearchNamesViewController {
                             removeButton.setVisible(true);
                             button.setDisable(true);
                             removeAllButton.setVisible(true);
+                            button.setFocusTraversable(false);
                         }
                     }
                 });
             }
         }
         creationsPane.getChildren().addAll(unaddedButtonsList);
-        scrollPane.setVmax(100);
+        scrollPane.setVmax(1000);
+        scrollPane.setVvalue(1);
     }
 
     /**
