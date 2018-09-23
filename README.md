@@ -7,6 +7,8 @@
 A GUI App that allows you to practice saying names
 ![Logo](https://i.imgur.com/xO7wYvc.gif)
 
+Note that the names database is in Documents/NameSayerPro/Database
+
 ## To launch the program
 	1. In the terminal, change directory to where the NameSayer.jar and run.sh files are located
 	
