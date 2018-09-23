@@ -25,7 +25,7 @@
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <ScrollPane fx:id="scrollPane" layoutX="34.0" layoutY="308.0" prefHeight="415.0" prefWidth="540.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-style: solid;" vvalue="0.08">
+      <ScrollPane fx:id="scrollPane" layoutX="34.0" layoutY="308.0" prefHeight="415.0" prefWidth="540.0" style="-fx-background-color: white; -fx-border-color: white; -fx-border-style: solid;">
          <content>
             <JFXMasonryPane fx:id="creationsPane" prefHeight="412.0" prefWidth="520.0" />
          </content>

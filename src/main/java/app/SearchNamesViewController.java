@@ -15,18 +15,14 @@ import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.ScrollEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.input.*;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
@@ -109,6 +105,8 @@ public class SearchNamesViewController {
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
         scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
         scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
+        scrollPane.autosize();
+        JFXScrollPane.smoothScrolling(scrollPane);
         scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
@@ -128,6 +126,7 @@ public class SearchNamesViewController {
                 }
             }
         });
+
         // Checks for all required directories
         DirectoryManager manager = new DirectoryManager();
         manager.runChecks();
@@ -196,7 +195,6 @@ public class SearchNamesViewController {
         }
         creationsPane.getChildren().addAll(unaddedButtonsList);
         scrollPane.setVmax(1000);
-        scrollPane.setVvalue(1);
     }
 
     /**
