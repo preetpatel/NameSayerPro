@@ -14,5 +14,5 @@
 }
 
 .scroll-bar:vertical .thumb {
-    -fx-background-color: white;
+    -fx-background-color: #03b5aa;
 }
