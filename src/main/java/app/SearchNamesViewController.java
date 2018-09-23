@@ -12,6 +12,7 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -103,10 +104,8 @@ public class SearchNamesViewController {
         stackPane.setVisible(false);
         /* Sets properties for the scrollview within which the creationsPane sits */
         scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
-        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.ALWAYS);
+        scrollPane.setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
         scrollPane.setStyle("-fx-background-color: #023436; -fx-background: #023436");
-        scrollPane.autosize();
-        JFXScrollPane.smoothScrolling(scrollPane);
         scrollPane.addEventFilter(ScrollEvent.SCROLL,new EventHandler<ScrollEvent>() {
             @Override
             public void handle(ScrollEvent event) {
@@ -130,6 +129,14 @@ public class SearchNamesViewController {
         // Checks for all required directories
         DirectoryManager manager = new DirectoryManager();
         manager.runChecks();
+
+        // Binds the masonry pane for creations to the scroll pane
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                scrollPane.requestFocus();
+            }
+        });
 
     }
 
