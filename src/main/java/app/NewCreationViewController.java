@@ -212,8 +212,13 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "rm " + NameSayer.userRecordingsPath +"/'"+ _nameOfCreation + "_audio.wav'");
-            Process process = builder.start();
+            File file = new File(NameSayer.userRecordingsPath);
+            File[] files = file.listFiles();
+            for (File check : files) {
+                if (check.getName().equals(_nameOfCreation+"_audio.wav")) {
+                    check.delete();
+                }
+            }
             return null;
         }
     }

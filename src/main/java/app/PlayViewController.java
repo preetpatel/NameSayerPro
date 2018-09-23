@@ -289,6 +289,7 @@ public class PlayViewController {
     public static void setCreationsList(List<Name> creationsList){
         _creationsList = creationsList;
     }
+
     @FXML
     public void demoButtonHandler() {
         playFile(_fileToPlay);
@@ -305,14 +306,9 @@ public class PlayViewController {
             @Override
             public void run() {
                 try{
-                    Media media = new Media(fileToPlay.toURI().toString());
-                    mediaPlayer = new MediaPlayer(media);
-                    mediaPlayer.setOnReady(new Runnable() {
-                        @Override
-                        public void run() {
-                            mediaPlayer.play();
-                        }
-                    });
+                    ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + fileToPlay.toURI().toString());
+                    Process process = builder.start();
+                    process.waitFor();
                 }catch(Exception ex){
                     ex.printStackTrace();
                 }
