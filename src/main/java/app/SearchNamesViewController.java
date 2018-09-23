@@ -67,6 +67,9 @@ public class SearchNamesViewController {
     @FXML
     private JFXButton removeButton;
 
+    @FXML
+    private JFXButton removeAllButton;
+
     private ObservableList<JFXButton> creationsButtonList = FXCollections.<JFXButton>observableArrayList();
     ObservableList<JFXButton> unaddedButtonsList = FXCollections.<JFXButton>observableArrayList();
 
@@ -84,6 +87,7 @@ public class SearchNamesViewController {
         creationsList = new ArrayList<>();
         startPracticeButton.setVisible(false);
         removeButton.setVisible(false);
+        removeAllButton.setVisible(false);
         loadCreationsOntoPane();
 
         // Add Enter key listener on search field
@@ -183,6 +187,7 @@ public class SearchNamesViewController {
                             startPracticeButton.setVisible(true);
                             removeButton.setVisible(true);
                             button.setDisable(true);
+                            removeAllButton.setVisible(true);
                         }
                     }
                 });
@@ -228,7 +233,27 @@ public class SearchNamesViewController {
         if (creationsList.isEmpty()) {
             removeButton.setVisible(false);
             startPracticeButton.setVisible(false);
+            removeAllButton.setVisible(false);
         }
+    }
+
+    @FXML
+    private void removeAllButtonHandler(ActionEvent e){
+        creationsList.clear();
+        creationsButtonList.clear();
+        selectedButtonsList.clear();
+
+        for (JFXButton currentButton : unaddedButtonsList) {
+
+            currentButton.setDisable(false);
+
+        }
+
+        addedCreationsPane.getChildren().clear();
+        addedCreationsPane.getChildren().addAll(creationsButtonList);
+        removeButton.setVisible(false);
+        startPracticeButton.setVisible(false);
+        removeAllButton.setVisible(false);
     }
 
 
@@ -281,6 +306,7 @@ public class SearchNamesViewController {
                             creationsList.add(creation);
                             startPracticeButton.setVisible(true);
                             removeButton.setVisible(true);
+                            removeAllButton.setVisible(true);
 
                             for (JFXButton currentButton : unaddedButtonsList) {
                                 if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
