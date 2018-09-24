@@ -11,6 +11,7 @@
 package app;
 
 import com.jfoenix.controls.*;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -328,11 +329,17 @@ public class PlayViewController {
                 } catch (IOException | InterruptedException ex) {
                     ex.printStackTrace();
                 }
-                demoButton.setDisable(false);
-                recordButton.setDisable(false);
-                micTestButton.setDisable(false);
-                nextButton.setDisable(false);
-                previousButton.setDisable(false);
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        demoButton.setDisable(false);
+                        recordButton.setDisable(false);
+                        micTestButton.setDisable(false);
+                        nextButton.setDisable(false);
+                        previousButton.setDisable(false);
+                    }
+                });
+
             }
         };
         monitorThread.start();

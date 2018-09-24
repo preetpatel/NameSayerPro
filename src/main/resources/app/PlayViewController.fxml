@@ -63,7 +63,7 @@
             <ImageView fx:id="star3" fitHeight="44.0" fitWidth="44.0" layoutX="549.0" layoutY="321.0" onMouseClicked="#star3ButtonHandler" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="star4" fitHeight="44.0" fitWidth="44.0" layoutX="594.0" layoutY="321.0" onMouseClicked="#star4ButtonHandler" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="star5" fitHeight="44.0" fitWidth="44.0" layoutX="639.0" layoutY="321.0" onMouseClicked="#star5ButtonHandler" pickOnBounds="true" preserveRatio="true" />
-            <Text fx:id="text1" fill="WHITE" layoutX="184.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="1.0" text="Rate Database Recording:" textAlignment="CENTER" wrappingWidth="257.7578125">
+            <Text fx:id="text2" fill="WHITE" layoutX="184.0" layoutY="352.0" strokeType="OUTSIDE" strokeWidth="1.0" text="Rate Database Recording:" textAlignment="CENTER" wrappingWidth="257.7578125">
                <font>
                   <Font size="18.0" />
                </font>

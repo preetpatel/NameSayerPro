@@ -12,6 +12,7 @@
 package app;
 
 import com.jfoenix.controls.JFXButton;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -58,6 +59,8 @@ public class NewCreationViewController {
     private static String _nameOfCreation;
     private MediaPlayer mediaPlayer;
     private static File databaseName;
+
+    private int currentTimer = 5;
 
     public static void setNameOfCreation(String nameOfCreation) {
         _nameOfCreation = nameOfCreation;
@@ -122,15 +125,27 @@ public class NewCreationViewController {
 
         @Override
         protected Void call() throws Exception {
-            int i = 5;
-            loaderText.setText("");
-            while (i > 0) {
-                loaderText.setText(loaderText.getText() + Integer.toString(i) + "...");
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    loaderText.setText("");
+                }
+            });
+            while (currentTimer > -1) {
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        loaderText.setText(Integer.toString(currentTimer));
+                    }
+                });
+
                 Thread.sleep(1000);
-                i -= 1;
+                currentTimer -= 1;
             }
+            currentTimer = 5;
             return null;
         }
+
     }
 
     /**
@@ -141,13 +156,18 @@ public class NewCreationViewController {
         @Override
         protected Void call() throws Exception {
             Thread.sleep(5000);
-            listenAudio.setVisible(true);
-            keepAudio.setVisible(true);
-            redoAudio.setVisible(true);
-            close.setDisable(false);
-            if (databaseName != null) {
-                databaseButton.setVisible(true);
-            }
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    listenAudio.setVisible(true);
+                    keepAudio.setVisible(true);
+                    redoAudio.setVisible(true);
+                    close.setDisable(false);
+                    if (databaseName != null) {
+                        databaseButton.setVisible(true);
+                    }
+                }
+            });
             return null;
         }
     }
@@ -157,10 +177,18 @@ public class NewCreationViewController {
      */
     @FXML
     private void playAudio() {
+        listenAudio.setDisable(true);
+        keepAudio.setDisable(true);
+        redoAudio.setDisable(true);
+        databaseButton.setDisable(true);
+        record.setDisable(true);
         Thread playAudio = new Thread(new playAudioFile());
         playAudio.start();
-
-
+        listenAudio.setDisable(false);
+        keepAudio.setDisable(false);
+        redoAudio.setDisable(false);
+        databaseButton.setDisable(false);
+        record.setDisable(true);
     }
 
     /**
