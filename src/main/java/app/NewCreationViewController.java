@@ -176,40 +176,9 @@ public class NewCreationViewController {
      * Runs the playAudioFile thread
      */
     @FXML
-    private void playAudio() {
-        listenAudio.setDisable(true);
-        keepAudio.setDisable(true);
-        redoAudio.setDisable(true);
-        databaseButton.setDisable(true);
-        record.setDisable(true);
-        Thread playAudio = new Thread(new playAudioFile());
-        playAudio.start();
-        listenAudio.setDisable(false);
-        keepAudio.setDisable(false);
-        redoAudio.setDisable(false);
-        databaseButton.setDisable(false);
-        record.setDisable(true);
-    }
-
-    /**
-     * Thread for playing an audio file in the background
-     */
-    private class playAudioFile extends Task<Void> {
-
-        @Override
-        protected Void call() {
-            String path = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
-            File file = new File(path);
-            Media media = new Media(file.toURI().toString());
-            mediaPlayer = new MediaPlayer(media);
-            mediaPlayer.setOnReady(new Runnable() {
-                @Override
-                public void run() {
-                    mediaPlayer.play();
-                }
-            });
-            return null;
-        }
+    private void listenButtonHandler() {
+        String path = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
+        playAudioFile(path);
     }
 
     /**
@@ -323,7 +292,15 @@ public class NewCreationViewController {
     }
 
     @FXML
-    private void playDatabaseName() {
+    private void playDatabaseNameButtonHandler() {
+        playAudioFile(databaseName.toURI().toString());
+    }
+
+    /**
+     * Plays a file using the ffplay module
+     * @param filePath A string specifying the absolute path to the file that is intended to be played
+     */
+    private void playAudioFile(String filePath) {
         listenAudio.setDisable(true);
         keepAudio.setDisable(true);
         redoAudio.setDisable(true);
@@ -333,7 +310,7 @@ public class NewCreationViewController {
             @Override
             public void run() {
                 try {
-                    ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + databaseName.toURI().toString());
+                    ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + filePath);
                     Process process = builder.start();
                     process.waitFor();
                 } catch (Exception ex) {

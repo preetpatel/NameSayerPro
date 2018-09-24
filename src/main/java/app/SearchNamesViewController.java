@@ -231,9 +231,7 @@ public class SearchNamesViewController {
         selectedButtonsList.clear();
 
         for (JFXButton currentButton : unaddedButtonsList) {
-
             currentButton.setDisable(false);
-
         }
 
         addedCreationsPane.getChildren().clear();
