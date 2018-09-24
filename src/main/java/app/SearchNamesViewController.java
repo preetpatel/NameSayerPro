@@ -404,6 +404,7 @@ public class SearchNamesViewController {
      * @param buttonText
      */
     private void showErrorDialog(String headerText, String buttonText) {
+        searchField.setDisable(true);
         stackPane.setVisible(true);
         JFXDialogLayout dialogContent = new JFXDialogLayout();
         JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
