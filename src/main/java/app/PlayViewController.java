@@ -179,6 +179,10 @@ public class PlayViewController {
         }
     }
 
+    /**
+     * Updates the stars for the rating functionality to display the rating
+     * @param rating an integer specifying the number of stars to enable
+     */
     private void updateStars(int rating) {
         List<ImageView> stars = new ArrayList<>();
         stars.add(star1);
@@ -197,9 +201,8 @@ public class PlayViewController {
     }
 
     /**
-     * changes the creations
-     *
-     * @param creation
+     * changes the creations based on what Name is selected
+     * @param creation the Name for which the PlayView scene needs to be rendered
      */
     private void loadCreation(Name creation) {
         currentName.setText(creation.getName());
@@ -208,6 +211,10 @@ public class PlayViewController {
         updateRating();
     }
 
+    /**
+     * Loads all versions of the name that is selected into the combo box
+     * @param creation The Name for which versions need to be loaded
+     */
     private void loadVersionsOfCreation(Name creation) {
 
         currentName.setText(creation.getName());
@@ -238,6 +245,9 @@ public class PlayViewController {
 
     }
 
+    /**
+     * Loads the previous user creations into the "Previous Attempts" list
+     */
     private void loadPreviousUserRecordings() {
         previousAttempts.getItems().clear();
         File folder = new File(NameSayer.userRecordingsPath);
@@ -257,6 +267,10 @@ public class PlayViewController {
         }
     }
 
+    /**
+     * Loads the next Name to be practiced in the creations list.
+     * Changes to "Finish" if the current creation is the last on in the list
+     */
     @FXML
     private void nextButtonHandler() {
         currentSelection++;
@@ -273,6 +287,10 @@ public class PlayViewController {
         }
     }
 
+    /**
+     * Loads the previous Name to be practiced in the creations list.
+     * Changes to "Menu" if the current creation is the first on in the list
+     */
     @FXML
     private void backButtonHandler() {
         currentSelection--;
@@ -290,6 +308,9 @@ public class PlayViewController {
     }
 
 
+    /**
+     * Loads the main menu for NameSayer
+     */
     @FXML
     private void loadMainMenuView() {
         _creationsList.clear();
@@ -312,7 +333,12 @@ public class PlayViewController {
         playFile(_fileToPlay);
     }
 
-    public void playFile(File fileToPlay) {
+    /**
+     * Plays an audio file using the ffplay module
+     * @param fileToPlay the file that is intended to be played
+     */
+    private void playFile(File fileToPlay) {
+        previousAttempts.setDisable(true);
         demoButton.setDisable(true);
         recordButton.setDisable(true);
         micTestButton.setDisable(true);
@@ -332,6 +358,7 @@ public class PlayViewController {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
+                        previousAttempts.setDisable(false);
                         demoButton.setDisable(false);
                         recordButton.setDisable(false);
                         micTestButton.setDisable(false);
@@ -345,7 +372,9 @@ public class PlayViewController {
         monitorThread.start();
     }
 
-    // Sets the correct file to play when combo box selection is changed
+    /**
+     * Sets the correct file to play when combo box selection is changed
+     */
     @FXML
     public void versionSelectionHandler(ActionEvent e) {
         if (versions.getSelectionModel().getSelectedItem() != null) {
@@ -354,6 +383,9 @@ public class PlayViewController {
         updateRating();
     }
 
+    /**
+     * Loads the mic test view
+     */
     @FXML
     public void micTestButtonHandler() {
         try {
@@ -365,6 +397,9 @@ public class PlayViewController {
         }
     }
 
+    /**
+     * Loads the user recording creation view
+     */
     @FXML
     public void recordButtonHandler() {
         try {
@@ -378,6 +413,9 @@ public class PlayViewController {
         }
     }
 
+    /**
+     * Selection handler for the ListView for previous user attempts. Plays the selected file.
+     */
     @FXML
     public void playUserCreatedFile() {
 
