@@ -177,10 +177,18 @@ public class NewCreationViewController {
      */
     @FXML
     private void playAudio() {
+        listenAudio.setDisable(true);
+        keepAudio.setDisable(true);
+        redoAudio.setDisable(true);
+        databaseButton.setDisable(true);
+        record.setDisable(true);
         Thread playAudio = new Thread(new playAudioFile());
         playAudio.start();
-
-
+        listenAudio.setDisable(false);
+        keepAudio.setDisable(false);
+        redoAudio.setDisable(false);
+        databaseButton.setDisable(false);
+        record.setDisable(true);
     }
 
     /**
