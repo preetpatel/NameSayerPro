@@ -12,6 +12,7 @@ package app;
 
 
 import com.jfoenix.controls.JFXSlider;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
@@ -42,20 +43,33 @@ public class MicTestViewController {
             DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
             TargetDataLine targetLine = (TargetDataLine) AudioSystem.getLine(info);
             targetLine.open();
+            targetLine.start();
+            soundBar.setValue(0);
 
             monitorThread = new Thread() {
                 @Override
                 public void run() {
-                    targetLine.start();
-                    soundBar.setValue(0);
+
                     byte[] data = new byte[targetLine.getBufferSize() / 5];
                     int readBytes = 1;
                     while (readBytes != 0) {
                         readBytes = targetLine.read(data, 0, data.length);
-                        soundBar.setValue(calculateRMSLevel(data));
+                        Platform.runLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                soundBar.setValue(calculateRMSLevel(data));
+                            }
+                        });
+
                     }
-                    targetLine.stop();
-                    targetLine.close();
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            targetLine.stop();
+                            targetLine.close();
+                        }
+                    });
+
                 }
             };
 
