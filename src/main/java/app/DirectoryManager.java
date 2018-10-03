@@ -18,11 +18,14 @@ public class DirectoryManager {
     private File databaseStorage;
     private File userCreationsStorage;
     private static File ratings;
+    private File concatenatedNamesStorage;
+    private File concatenatedTempStorage;
 
     public DirectoryManager() {
         databaseStorage = new File(NameSayer.creationsPath);
         userCreationsStorage = new File(NameSayer.userRecordingsPath);
-
+        concatenatedNamesStorage = new File(NameSayer.concatenatedNamesPath);
+        concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
         ratings = new File(NameSayer.directoryPath + "/ratings.txt");
 
     }
@@ -37,13 +40,21 @@ public class DirectoryManager {
             } else {
                 if (databaseStorage.listFiles().length == 0) {
                     JOptionPane.showMessageDialog(null, "The database contains no files. Please add files as instructed via the README. NameSayer will not work correctly unless this is done.", "Error", JOptionPane.ERROR_MESSAGE);
-
                 }
             }
         }
-
         if (!userCreationsStorage.exists()) {
             if (!userCreationsStorage.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        if (!concatenatedNamesStorage.exists()) {
+            if (!concatenatedNamesStorage.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        if (!concatenatedTempStorage.exists()) {
+            if (!concatenatedTempStorage.mkdirs()) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
