@@ -83,11 +83,10 @@ public class AudioConcat {
         //do the concatenation
         ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i "+ NameSayer.concatenationTempPath+"/concat.txt -c copy '" + NameSayer.concatenatedNamesPath+"/"+_concatName+".wav'");
         builder.start();
-        System.out.println("ffmpeg -y -f concat -safe 0 -i "+ NameSayer.concatenationTempPath+"/concat.txt -c copy '" + NameSayer.concatenatedNamesPath+"/"+_concatName+".wav'");
 
         //deletes all temp files for concatenation
 
-        //FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
+        FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
 
     }
 
