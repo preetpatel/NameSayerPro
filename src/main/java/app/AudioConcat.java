@@ -11,8 +11,15 @@ import java.util.List;
 public class AudioConcat {
 
     private List<File> _toBeConcated;
+    private String _concatName;
 
-    public AudioConcat(List<File> toBeConcated){
+    /**
+     *
+     * @param toBeConcated the list of audio files to be concatenated
+     * @param concatName the name given to the output file
+     */
+    public AudioConcat(List<File> toBeConcated, String concatName){
+        _concatName = concatName;
         if (toBeConcated.size() > 1) {
             _toBeConcated = toBeConcated;
         } else {
@@ -23,8 +30,6 @@ public class AudioConcat {
     /**
      *
      * Processes and Concatenates the given files to Documents/NameSayer/ConcatenatedNames/output_full.wav
-     *
-     * @return boolean which represents the success of the concatenation
      */
     public void concatenate() throws InterruptedException, IOException {
 
@@ -76,13 +81,13 @@ public class AudioConcat {
         writer.close();
 
         //do the concatenation
-        ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i "+ NameSayer.concatenationTempPath+"/concat.txt -c copy " + NameSayer.concatenatedNamesPath+"/output_full.wav");
+        ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i "+ NameSayer.concatenationTempPath+"/concat.txt -c copy '" + NameSayer.concatenatedNamesPath+"/"+_concatName+".wav'");
         builder.start();
-        System.out.println("ffmpeg -y -f concat -safe 0 -i "+ NameSayer.concatenationTempPath+"/concat.txt -c copy " + NameSayer.concatenatedNamesPath+"/output_full.wav");
+        System.out.println("ffmpeg -y -f concat -safe 0 -i "+ NameSayer.concatenationTempPath+"/concat.txt -c copy '" + NameSayer.concatenatedNamesPath+"/"+_concatName+".wav'");
 
         //deletes all temp files for concatenation
 
-        FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
+        //FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
 
     }
 
