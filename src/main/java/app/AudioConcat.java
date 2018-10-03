@@ -22,7 +22,8 @@ public class AudioConcat {
 
     /**
      *
-     * Concatenates the given files to a directory somewhere... on a separate thread
+     * Processes and Concatenates the given files to Documents/NameSayer/ConcatenatedNames/output_full.wav
+     *
      * @return boolean which represents the success of the concatenation
      */
     public void concatenate() throws InterruptedException, IOException {
