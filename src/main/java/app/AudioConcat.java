@@ -27,6 +27,7 @@ public class AudioConcat {
     /**
      *
      * @param toBeConcated the list of audio files to be concatenated
+     * @param fileName the name of the output file
      */
     public AudioConcat(List<File> toBeConcated, String fileName){
         _fileName=fileName;
