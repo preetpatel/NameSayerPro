@@ -17,6 +17,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+
 public class NameSayer extends Application {
 
     public static void main(String[] args) {
@@ -27,10 +31,12 @@ public class NameSayer extends Application {
     public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer/Database";
     public static final String userRecordingsPath = System.getProperty("user.home") + "/Documents/NameSayer/UserRecordings";
     public static final String directoryPath = System.getProperty("user.home") + "/Documents/NameSayer";
-
+    public static final String concatenatedNamesPath = System.getProperty("user.home") + "/Documents/NameSayer/ConcatenatedNames";
+    public static final String concatenationTempPath = System.getProperty("user.home") + "/Documents/NameSayer/ConcatenatedNames/temp";
     @Override
     public void start(Stage primaryStage) throws Exception {
         loadScene("SearchNamesViewController.fxml", primaryStage);
+
     }
 
     /** Loads FXML onto the scene and renders the first scene: HomeViewController.java */
