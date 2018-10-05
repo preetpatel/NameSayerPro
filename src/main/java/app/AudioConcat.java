@@ -5,6 +5,8 @@ import org.apache.commons.io.FileUtils;
 
 import javax.swing.*;
 import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,8 +67,6 @@ public class AudioConcat {
                 if (!line.equals("")) {
                     String[] stringsOfFilesToBeConcated = line.split("\\s+");
 
-                    System.out.println(line);
-
                     //for each line, construct the list of files to be concatenated
                     List<File> newConcatenations = new ArrayList<>();
                     for (String nameOfFile : stringsOfFilesToBeConcated) {
@@ -85,7 +85,7 @@ public class AudioConcat {
     public void concatenate() throws InterruptedException, IOException {
 
 
-        //normalise the audio
+
         for(List<File> toBeConcated : _listOfConcatenations) {
 
             List<String> normalisedList = new ArrayList<>();
@@ -97,6 +97,7 @@ public class AudioConcat {
             Process process = builderSilence.start();
             process.waitFor();
 
+            //normalise the audio
             for (File fileToNormalise : toBeConcated) {
                 String normalisedFile = "/normalised_" + Integer.toString(i) + ".wav";
                 normalisedList.add(normalisedFile);
@@ -149,8 +150,27 @@ public class AudioConcat {
             } else {
                 fullName = _fileName;
             }
+
+            //find a name that hasnt been used yet for the creation
+            String concatedFileName = fullName + "_v1";
+            File file = new File(NameSayer.concatenatedNamesPath + "/" + concatedFileName + ".wav");
+            boolean exists = false;
+            if (file.exists()) {
+                 exists = true;
+            }
+
+            i=2;
+            while (exists){
+                concatedFileName = fullName + "_v" + Integer.toString(i);
+                File file2 = new File(NameSayer.concatenatedNamesPath + "/" +concatedFileName+ ".wav");
+                if (!file2.exists()) {
+                    exists = false;
+                }
+                i++;
+            }
+
             //do the concatenation
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/" + fullName + ".wav'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/" + concatedFileName + ".wav'");
             Process processConcat = builder.start();
             processConcat.waitFor();
 
