@@ -39,7 +39,7 @@ public class AudioConcat {
      * @param textFileToBeConcated a text file containing the names of the files to be concatenated
      *                             The files that are to be concatenated must all be in NameSayer/Database directory
      *                             The structure of the text file MUST BE as follows:
-     *                              - each line contains the audio files that are to be concatenated together
+     *                              - each line contains the names that are to be concatenated together
      *                              - each different file is separated by a space
      *                              - the exact file name must be used (with the extension)
      *                              - each new line represents a new bunch of files to be concatenated together
