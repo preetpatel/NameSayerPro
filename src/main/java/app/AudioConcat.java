@@ -141,6 +141,7 @@ public class AudioConcat {
                     String displayName = file.getName();
                     displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
                     displayName = displayName.replaceAll("[.][^.]+$", "");
+                    displayName = displayName.substring(0,1).toUpperCase() + displayName.substring(1);
                     if (!fullName.equals("")) {
                         fullName = fullName + "_" + displayName;
                     } else {
@@ -186,9 +187,10 @@ public class AudioConcat {
      * otherwise returns a random file of the name if no files are rated or no files have rating above 1
      *
      * @throws IOException
+     * @throws FileNotFoundException if the given name input does not exist
      * @return bestFileVersion
      */
-    public File getFileOfName(String name) throws IOException{
+    private File getFileOfName(String name) throws IOException{
         BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/ratings.txt"));
         String line;
 
@@ -218,7 +220,11 @@ public class AudioConcat {
         if (bestFileVersion==null){
             FileFilter filter = new WildcardFileFilter("*_" + name + ".wav", IOCase.INSENSITIVE);
             File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
-            bestFileVersion = files[0];
+            try {
+                bestFileVersion = files[0];
+            }catch (NullPointerException e){
+                throw new FileNotFoundException("No file for that name exists");
+            }
         }
 
         return bestFileVersion;
