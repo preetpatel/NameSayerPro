@@ -1,12 +1,10 @@
 package app;
 
-import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
-import javax.swing.*;
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,12 +63,14 @@ public class AudioConcat {
             //read each line of text file
             while ((line = br.readLine())!=null) {
                 if (!line.equals("")) {
-                    String[] stringsOfFilesToBeConcated = line.split("\\s+");
+
+                    String[] stringsOfNamesToBeConcated = line.split("\\s+");
 
                     //for each line, construct the list of files to be concatenated
                     List<File> newConcatenations = new ArrayList<>();
-                    for (String nameOfFile : stringsOfFilesToBeConcated) {
-                        newConcatenations.add(new File(NameSayer.creationsPath + "/" + nameOfFile));
+                    for (String name : stringsOfNamesToBeConcated) {
+                        File fileOfName = getFileOfName(name);
+                        newConcatenations.add(fileOfName);
                     }
                     _listOfConcatenations.add(newConcatenations);
                 }
@@ -180,5 +180,48 @@ public class AudioConcat {
 
     }
 
+    /**
+     * looks in the rating file to see if that name has ratings
+     * returns the best file if all files are above rating 1
+     * otherwise returns a random file of the name if no files are rated or no files have rating above 1
+     *
+     * @throws IOException
+     * @return bestFileVersion
+     */
+    public File getFileOfName(String name) throws IOException{
+        BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/ratings.txt"));
+        String line;
+
+        String nameLower = name.toLowerCase();
+        File bestFileVersion = null;
+        int maxRatingNumber = 1;
+
+        //scan through the entire text file
+        while ((line = br.readLine())!=null) {
+            String lineLower = line.toLowerCase();
+
+            //check if the line contains the name of the file.
+            if (lineLower.contains("_" + nameLower + ".wav" )){
+
+                String[] ratingInfo = line.split("\\s+");
+                int ratingNumber = Integer.parseInt(ratingInfo[1]);
+
+                //if the current file looked at is higher rated than the previous versions of that file, set it as the best file version
+                if (ratingNumber > maxRatingNumber) {
+                    maxRatingNumber = ratingNumber;
+                    bestFileVersion = new File(NameSayer.creationsPath + "/" + ratingInfo[0]);
+                }
+            }
+        }
+
+        //if no rating or no rating above 1 exists for any version of the file
+        if (bestFileVersion==null){
+            FileFilter filter = new WildcardFileFilter("*_" + name + ".wav", IOCase.INSENSITIVE);
+            File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
+            bestFileVersion = files[0];
+        }
+
+        return bestFileVersion;
+    }
 
 }
