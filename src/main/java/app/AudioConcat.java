@@ -15,8 +15,8 @@ public class AudioConcat {
     private File _textFile;
     private List<List<File>> _listOfConcatenations;
     private String _fileName;
+
     /**
-     *
      * @param toBeConcated the list of audio files to be concatenated
      */
     public AudioConcat(List<File> toBeConcated){
