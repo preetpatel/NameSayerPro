@@ -5,6 +5,7 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.*;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class AudioConcat {
      *                              - the exact file name must be used (with the extension)
      *                              - each new line represents a new bunch of files to be concatenated together
      */
-    public AudioConcat(File textFileToBeConcated) throws IOException{
+    public AudioConcat(File textFileToBeConcated) throws IOException {
         _textFile = textFileToBeConcated;
         _listOfConcatenations = new ArrayList<>();
         processTextFile();
@@ -57,6 +58,9 @@ public class AudioConcat {
      * @throws IOException
      */
     private void processTextFile() throws IOException{
+
+        List<String> nonExistantNames = new ArrayList<>();
+
         if (_textFile != null){
             BufferedReader br = new BufferedReader(new FileReader(_textFile));
             String line;
@@ -64,18 +68,33 @@ public class AudioConcat {
             //read each line of text file
             while ((line = br.readLine())!=null) {
                 if (!line.equals("")) {
+                    boolean allNamesExist = true;
 
                     String[] stringsOfNamesToBeConcated = line.split("\\s+");
 
                     //for each line, construct the list of files to be concatenated
                     List<File> newConcatenations = new ArrayList<>();
                     for (String name : stringsOfNamesToBeConcated) {
-                        File fileOfName = getFileOfName(name);
-                        newConcatenations.add(fileOfName);
+                        try {
+                            File fileOfName = getFileOfName(name);
+                            newConcatenations.add(fileOfName);
+                        } catch (FileNotFoundException e){
+                            allNamesExist = false;
+                            nonExistantNames.add(name);
+                        }
                     }
-                    _listOfConcatenations.add(newConcatenations);
+
+                    if (allNamesExist) {
+                        _listOfConcatenations.add(newConcatenations);
+                    }
                 }
             }
+        }
+
+        if (nonExistantNames.size()>0){
+            String badNames = String.join(" ", nonExistantNames);
+            //TODO warn the user that some names do not exist in the database which they have added to the textfile
+            throw new FileNotFoundException("WARNING, the following names do not exist in the database, and so their concatenations will fail: " + badNames);
         }
     }
 
@@ -217,14 +236,15 @@ public class AudioConcat {
             }
         }
 
-        //if no rating or no rating above 1 exists for any version of the file
+        //if no rating or no rating above 1 exists for any version of the file, get the first version that comes up
         if (bestFileVersion==null){
             FileFilter filter = new WildcardFileFilter("*_" + name + ".wav", IOCase.INSENSITIVE);
             File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
+
             try {
                 bestFileVersion = files[0];
-            }catch (NullPointerException e){
-                throw new FileNotFoundException("No file for that name exists");
+            }catch (Exception e){
+                throw new FileNotFoundException();
             }
         }
 
