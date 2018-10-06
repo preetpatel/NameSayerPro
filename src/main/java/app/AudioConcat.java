@@ -1,12 +1,11 @@
 package app;
 
-import javafx.concurrent.Task;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOCase;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 
-import javax.swing.*;
 import java.io.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +13,6 @@ public class AudioConcat {
 
 
     private File _textFile;
-
     private List<List<File>> _listOfConcatenations;
     private String _fileName;
     /**
@@ -29,6 +27,7 @@ public class AudioConcat {
     /**
      *
      * @param toBeConcated the list of audio files to be concatenated
+     * @param fileName the name of the output file
      */
     public AudioConcat(List<File> toBeConcated, String fileName){
         _fileName=fileName;
@@ -41,12 +40,12 @@ public class AudioConcat {
      * @param textFileToBeConcated a text file containing the names of the files to be concatenated
      *                             The files that are to be concatenated must all be in NameSayer/Database directory
      *                             The structure of the text file MUST BE as follows:
-     *                              - each line contains the audio files that are to be concatenated together
+     *                              - each line contains the names that are to be concatenated together
      *                              - each different file is separated by a space
      *                              - the exact file name must be used (with the extension)
      *                              - each new line represents a new bunch of files to be concatenated together
      */
-    public AudioConcat(File textFileToBeConcated) throws IOException{
+    public AudioConcat(File textFileToBeConcated) throws IOException {
         _textFile = textFileToBeConcated;
         _listOfConcatenations = new ArrayList<>();
         processTextFile();
@@ -58,6 +57,9 @@ public class AudioConcat {
      * @throws IOException
      */
     private void processTextFile() throws IOException{
+
+        List<String> nonExistantNames = new ArrayList<>();
+
         if (_textFile != null){
             BufferedReader br = new BufferedReader(new FileReader(_textFile));
             String line;
@@ -65,16 +67,32 @@ public class AudioConcat {
             //read each line of text file
             while ((line = br.readLine())!=null) {
                 if (!line.equals("")) {
-                    String[] stringsOfFilesToBeConcated = line.split("\\s+");
+                    boolean allNamesExist = true;
+
+                    String[] stringsOfNamesToBeConcated = line.split("\\s+");
 
                     //for each line, construct the list of files to be concatenated
                     List<File> newConcatenations = new ArrayList<>();
-                    for (String nameOfFile : stringsOfFilesToBeConcated) {
-                        newConcatenations.add(new File(NameSayer.creationsPath + "/" + nameOfFile));
+                    for (String name : stringsOfNamesToBeConcated) {
+                        try {
+                            File fileOfName = getFileOfName(name);
+                            newConcatenations.add(fileOfName);
+                        } catch (FileNotFoundException e){
+                            allNamesExist = false;
+                            nonExistantNames.add(name);
+                        }
                     }
-                    _listOfConcatenations.add(newConcatenations);
+
+                    if (allNamesExist) {
+                        _listOfConcatenations.add(newConcatenations);
+                    }
                 }
             }
+        }
+
+        if (nonExistantNames.size()>0){
+            String badNames = String.join(" ", nonExistantNames);
+            throw new FileNotFoundException("WARNING, the following names do not exist in the database, and so their concatenations will fail: " + badNames);
         }
     }
 
@@ -141,6 +159,7 @@ public class AudioConcat {
                     String displayName = file.getName();
                     displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
                     displayName = displayName.replaceAll("[.][^.]+$", "");
+                    displayName = displayName.substring(0,1).toUpperCase() + displayName.substring(1);
                     if (!fullName.equals("")) {
                         fullName = fullName + "_" + displayName;
                     } else {
@@ -180,5 +199,54 @@ public class AudioConcat {
 
     }
 
+    /**
+     * looks in the rating file to see if that name has ratings
+     * returns the best file if all files are above rating 1
+     * otherwise returns a random file of the name if no files are rated or no files have rating above 1
+     *
+     * @throws IOException
+     * @throws FileNotFoundException if the given name input does not exist
+     * @return bestFileVersion
+     */
+    private File getFileOfName(String name) throws IOException{
+        BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/ratings.txt"));
+        String line;
+
+        String nameLower = name.toLowerCase();
+        File bestFileVersion = null;
+        int maxRatingNumber = 1;
+
+        //scan through the entire text file
+        while ((line = br.readLine())!=null) {
+            String lineLower = line.toLowerCase();
+
+            //check if the line contains the name of the file.
+            if (lineLower.contains("_" + nameLower + ".wav" )){
+
+                String[] ratingInfo = line.split("\\s+");
+                int ratingNumber = Integer.parseInt(ratingInfo[1]);
+
+                //if the current file looked at is higher rated than the previous versions of that file, set it as the best file version
+                if (ratingNumber > maxRatingNumber) {
+                    maxRatingNumber = ratingNumber;
+                    bestFileVersion = new File(NameSayer.creationsPath + "/" + ratingInfo[0]);
+                }
+            }
+        }
+
+        //if no rating or no rating above 1 exists for any version of the file, get the first version that comes up
+        if (bestFileVersion==null){
+            FileFilter filter = new WildcardFileFilter("*_" + name + ".wav", IOCase.INSENSITIVE);
+            File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
+
+            try {
+                bestFileVersion = files[0];
+            }catch (Exception e){
+                throw new FileNotFoundException();
+            }
+        }
+
+        return bestFileVersion;
+    }
 
 }
