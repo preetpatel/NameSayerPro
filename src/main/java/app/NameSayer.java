@@ -25,16 +25,10 @@ public class NameSayer extends Application {
 
     public static void main(String[] args) {
         launch(args);
-
-        try{
-            currentUser = new User("");
-        } catch (Exception e){
-
-        }
     }
 
     /** Path for storing universal creations */
-    public static User currentUser;
+    public static User currentUser= new User("");;
     public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer/Database";
     public static String userRecordingsPath = System.getProperty("user.home") + "/Documents/NameSayer/UserRecordings";
     public static final String directoryPath = System.getProperty("user.home") + "/Documents/NameSayer";
