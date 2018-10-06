@@ -24,6 +24,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
+import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
@@ -64,6 +65,9 @@ public class SearchNamesViewController {
 
     @FXML
     private JFXButton removeButton;
+
+    @FXML
+    private JFXButton profileButton;
 
     @FXML
     private JFXButton removeAllButton;

@@ -33,9 +33,20 @@ public class NameSayer extends Application {
     public static final String directoryPath = System.getProperty("user.home") + "/Documents/NameSayer";
     public static final String concatenatedNamesPath = System.getProperty("user.home") + "/Documents/NameSayer/ConcatenatedNames";
     public static final String concatenationTempPath = System.getProperty("user.home") + "/Documents/NameSayer/ConcatenatedNames/temp";
+    public static User currentUser = null;
+
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User propCurrentUser) {
+        currentUser = propCurrentUser;
+    }
+
+
     @Override
     public void start(Stage primaryStage) throws Exception {
-        loadScene("SearchNamesViewController.fxml", primaryStage);
+        loadScene("LoginViewController.fxml", primaryStage);
 
     }
 
