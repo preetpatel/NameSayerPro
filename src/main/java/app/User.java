@@ -1,5 +1,6 @@
 package app;
 
+import javax.swing.*;
 import java.io.*;
 
 public class User {
@@ -8,7 +9,7 @@ public class User {
     private String _name;
     private int _score;
 
-    public User(String username) throws FileNotFoundException, IOException {
+    public User(String username){
         _username = username;
         _name = "Demo";
         readScores();
@@ -26,16 +27,20 @@ public class User {
         return _username;
     }
 
-    private void readScores() throws FileNotFoundException, IOException {
+    private void readScores(){
+        try {
         _score = 0;
         BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/score.txt"));
         String line;
-
-        while ((line = br.readLine())!=null) {
-            String[] scoreInfo = line.split("\\s+");
-            if (scoreInfo[0].equals(_username)){
-                _score = Integer.parseInt(scoreInfo[1]);
+            while ((line = br.readLine()) != null) {
+                String[] scoreInfo = line.split("\\s+");
+                if (scoreInfo[0].equals(_username)) {
+                    _score = Integer.parseInt(scoreInfo[1]);
+                }
             }
+        }catch (Exception e){
+            JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+
         }
 
 

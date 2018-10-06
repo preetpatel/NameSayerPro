@@ -27,7 +27,7 @@ public class NameSayer extends Application {
         launch(args);
 
         try{
-            currentUser = new User("Demo");
+            currentUser = new User("");
         } catch (Exception e){
 
         }
