@@ -20,6 +20,7 @@ public class DirectoryManager {
     private static File ratings;
     private File concatenatedNamesStorage;
     private File concatenatedTempStorage;
+    private static File score;
 
     public DirectoryManager() {
         databaseStorage = new File(NameSayer.creationsPath);
@@ -27,7 +28,7 @@ public class DirectoryManager {
         concatenatedNamesStorage = new File(NameSayer.concatenatedNamesPath);
         concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
         ratings = new File(NameSayer.directoryPath + "/ratings.txt");
-
+        score = new File(NameSayer.directoryPath + "/score.txt");
     }
 
     /**
@@ -64,6 +65,14 @@ public class DirectoryManager {
                 ratings.createNewFile();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load ratings file", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        if (!score.exists()) {
+            try {
+                score.createNewFile();
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load score file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
