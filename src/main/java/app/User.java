@@ -10,8 +10,6 @@ public class User {
 
     public User(String username) throws FileNotFoundException, IOException {
         _username = username;
-
-        // TODO Need to change this to reflect database connection
         _name = "Demo";
         readScores();
     }
