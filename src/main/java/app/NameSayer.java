@@ -25,6 +25,12 @@ public class NameSayer extends Application {
 
     public static void main(String[] args) {
         launch(args);
+
+        try{
+            currentUser = new User("Demo");
+        } catch (Exception e){
+
+        }
     }
 
     /** Path for storing universal creations */
