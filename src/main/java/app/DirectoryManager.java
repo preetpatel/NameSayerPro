@@ -35,6 +35,8 @@ public class DirectoryManager {
      * Checks that the directories and files which are to be used exist
      */
     public void runChecks() {
+        System.out.println("We here");
+
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);

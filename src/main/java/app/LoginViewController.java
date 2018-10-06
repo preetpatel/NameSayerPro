@@ -29,6 +29,10 @@ public class LoginViewController {
     @FXML
     private void initialize() {
         stackPane.setVisible(false);
+
+        // Checks for all required directories
+        DirectoryManager manager = new DirectoryManager();
+        manager.runChecks();
     }
 
     @FXML

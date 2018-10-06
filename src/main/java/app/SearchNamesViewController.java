@@ -87,10 +87,6 @@ public class SearchNamesViewController {
     @FXML
     private void initialize() {
 
-        // Checks for all required directories
-        DirectoryManager manager = new DirectoryManager();
-        manager.runChecks();
-
         loadCreationsOntoPane();
 
         // Add Enter key listener on search field
