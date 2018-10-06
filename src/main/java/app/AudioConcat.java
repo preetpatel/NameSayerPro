@@ -13,7 +13,6 @@ public class AudioConcat {
 
 
     private File _textFile;
-
     private List<List<File>> _listOfConcatenations;
     private String _fileName;
     /**
