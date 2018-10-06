@@ -28,7 +28,7 @@ public class NameSayer extends Application {
     }
 
     /** Path for storing universal creations */
-    public static User currentUser= new User("");;
+    public static User currentUser;
     public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer/Database";
     public static String userRecordingsPath = System.getProperty("user.home") + "/Documents/NameSayer/UserRecordings";
     public static final String directoryPath = System.getProperty("user.home") + "/Documents/NameSayer";
