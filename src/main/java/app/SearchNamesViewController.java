@@ -26,6 +26,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import org.controlsfx.control.textfield.TextFields;
 
 import javax.swing.*;
 import java.io.*;
@@ -80,12 +81,16 @@ public class SearchNamesViewController {
 
     private List<Name> creationsList = new ArrayList<>();
 
+    private Collection<String> databaseNames = new ArrayList<>();
+
     /**
      * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
      * Initialises properties of the scroll view
      */
     @FXML
     private void initialize() {
+
+        TextFields.bindAutoCompletion(searchField, databaseNames);
 
         loadCreationsOntoPane();
 
