@@ -28,12 +28,12 @@ public class NameSayer extends Application {
     }
 
     /** Path for storing universal creations */
+    public static User currentUser = new User("");
     public static final String creationsPath = System.getProperty("user.home") + "/Documents/NameSayer/Database";
-    public static final String userRecordingsPath = System.getProperty("user.home") + "/Documents/NameSayer/UserRecordings";
+    public static String userRecordingsPath = System.getProperty("user.home") + "/Documents/NameSayer/UserRecordings";
     public static final String directoryPath = System.getProperty("user.home") + "/Documents/NameSayer";
     public static final String concatenatedNamesPath = System.getProperty("user.home") + "/Documents/NameSayer/ConcatenatedNames";
     public static final String concatenationTempPath = System.getProperty("user.home") + "/Documents/NameSayer/ConcatenatedNames/temp";
-    public static User currentUser = null;
 
     public static User getCurrentUser() {
         return currentUser;
@@ -41,6 +41,7 @@ public class NameSayer extends Application {
 
     public static void setCurrentUser(User propCurrentUser) {
         currentUser = propCurrentUser;
+        userRecordingsPath = userRecordingsPath + "/" + currentUser.getUsername();
     }
 
 

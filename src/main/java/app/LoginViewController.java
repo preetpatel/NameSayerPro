@@ -2,6 +2,7 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -33,14 +34,19 @@ public class LoginViewController {
     @FXML
     private void loginButtonHandler() {
         if (_username.getText().toLowerCase().equals("demo") && _password.getText().equals("demo")) {
-            try {
-                Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
-                NameSayer.setCurrentUser(new User(_username.getText()));
-                anchorPane.getChildren().clear();
-                anchorPane.getChildren().add(newLoadedPane);
-            } catch (IOException err) {
-                JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
+            NameSayer.setCurrentUser(new User(_username.getText()));
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
+                        anchorPane.getChildren().clear();
+                        anchorPane.getChildren().add(newLoadedPane);
+                    } catch (IOException err) {
+                        JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+            });
         } else {
             _username.setDisable(true);
             _password.setDisable(true);

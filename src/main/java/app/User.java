@@ -21,4 +21,8 @@ public class User {
     public int getScore() {
         return _score;
     }
+
+    public String getUsername() {
+        return _username;
+    }
 }
