@@ -92,7 +92,6 @@ public class AudioConcat {
 
         if (nonExistantNames.size()>0){
             String badNames = String.join(" ", nonExistantNames);
-            //TODO warn the user that some names do not exist in the database which they have added to the textfile
             throw new FileNotFoundException("WARNING, the following names do not exist in the database, and so their concatenations will fail: " + badNames);
         }
     }
