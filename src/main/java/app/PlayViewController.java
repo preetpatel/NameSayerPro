@@ -258,16 +258,18 @@ public class PlayViewController {
         File folder = new File(NameSayer.userRecordingsPath);
         File[] files = folder.listFiles();
         userFiles = new HashMap<>();
-        for (File file : files) {
-            Name tempName = new Name(file);
-            Name currentFile = new Name(_fileToPlay);
+        if (folder.isDirectory()) {
+            for (File file : files) {
+                Name tempName = new Name(file);
+                Name currentFile = new Name(_fileToPlay);
 
-            String compareString = currentFile.getName() + "_V";
-            compareString = compareString.toLowerCase();
-            if (tempName.getName().toLowerCase().contains(compareString) && tempName.isValid()) {
-                String fileName = tempName.getName().replace("_", " ");
-                previousAttempts.getItems().add(fileName);
-                userFiles.put(fileName, file);
+                String compareString = currentFile.getName() + "_V";
+                compareString = compareString.toLowerCase();
+                if (tempName.getName().toLowerCase().contains(compareString) && tempName.isValid()) {
+                    String fileName = tempName.getName().replace("_", " ");
+                    previousAttempts.getItems().add(fileName);
+                    userFiles.put(fileName, file);
+                }
             }
         }
     }
@@ -329,12 +331,14 @@ public class PlayViewController {
         }
     }
 
-    public static void setCreationsList(List<String> creationsList) {
+    public static List<String> setCreationsList(List<String> creationsList) {
         try {
             AudioConcat.deleteAllFiles();
         }catch (IOException e) {
             System.out.println(e.getStackTrace());
         }
+
+        List<String> notFoundNames = new ArrayList<>();
 
         for (String name:creationsList) {
             List<String> brokenName = new ArrayList<>();
@@ -345,10 +349,10 @@ public class PlayViewController {
             try {
                 AudioConcat concatNames = new AudioConcat(brokenName);
                 concatNames.concatenate();
-            } catch (IOException e) {
-                System.out.println(e.getMessage());
             } catch (InterruptedException e) {
                 System.out.println("Interupt" + e.getMessage());
+            } catch (IOException w) {
+                notFoundNames.add(brokenName + " in " + name);
             }
         }
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
@@ -357,6 +361,29 @@ public class PlayViewController {
                 _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
             }
         }
+        return notFoundNames;
+    }
+
+    public static List<String> setCreationsListFromFile(File text) {
+        List<String> notFoundNames = new ArrayList<>();
+        try {
+            AudioConcat.deleteAllFiles();
+            AudioConcat uploadListConcat = new AudioConcat(text);
+            uploadListConcat.concatenate();
+        } catch (IOException e) {
+            notFoundNames.add("Some files were not found. (Displaying these files coming soon!)");
+        } catch (InterruptedException e) {
+            System.out.println(e.getStackTrace());
+        }
+
+        File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
+        for (File file : directory) {
+            if (!file.isDirectory()) {
+                _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
+            }
+        }
+
+        return notFoundNames;
     }
 
     @FXML
