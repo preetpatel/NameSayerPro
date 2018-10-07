@@ -24,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import javax.swing.*;
 import java.io.*;
@@ -93,6 +94,9 @@ public class PlayViewController {
      */
     @FXML
     public void initialize() {
+        for(Name name: _creationsList) {
+            System.out.println(name.getName());
+        }
         currentLoadedCreation = _creationsList.get(currentSelection);
         loadCreation(currentLoadedCreation);
         previousButton.setText("< Menu");
