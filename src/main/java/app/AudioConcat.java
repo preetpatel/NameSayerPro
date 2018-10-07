@@ -3,6 +3,7 @@ package app;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.*;
 import java.text.DateFormat;
@@ -184,9 +185,15 @@ public class AudioConcat {
             Date date = new Date();
 
             //do the concatenation
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/namesayer_" + dateFormat.format(date) + "_" + concatedFileName + ".wav'");
-            Process processConcat = builder.start();
-            processConcat.waitFor();
+            if(toBeConcated.size() == 1) {
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/" + toBeConcated.get(0).getName()+ "'");
+                Process processConcat = builder.start();
+                processConcat.waitFor();
+            } else {
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/namesayer_" + dateFormat.format(date) + "_" + concatedFileName + ".wav'");
+                Process processConcat = builder.start();
+                processConcat.waitFor();
+            }
 
             //deletes all temporary files used for concatenation
             FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
@@ -221,11 +228,11 @@ public class AudioConcat {
 
                 String[] ratingInfo = line.split("\\s+");
                 int ratingNumber = Integer.parseInt(ratingInfo[1]);
-
                 //if the current file looked at is higher rated than the previous versions of that file, set it as the best file version
                 if (ratingNumber > maxRatingNumber) {
                     maxRatingNumber = ratingNumber;
                     bestFileVersion = new File(NameSayer.creationsPath + "/" + ratingInfo[0]);
+
                 }
             }
         }

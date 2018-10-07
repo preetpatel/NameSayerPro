@@ -93,11 +93,10 @@ public class PlayViewController {
      */
     @FXML
     public void initialize() {
-        for(Name name: _creationsList) {
-            System.out.println(name.getName());
+        if(_creationsList.size() > 0) {
+            currentLoadedCreation = _creationsList.get(currentSelection);
+            loadCreation(currentLoadedCreation);
         }
-        currentLoadedCreation = _creationsList.get(currentSelection);
-        loadCreation(currentLoadedCreation);
         previousButton.setText("< Menu");
         if (_creationsList.size() == 1) {
             nextButton.setText("Finish >");
