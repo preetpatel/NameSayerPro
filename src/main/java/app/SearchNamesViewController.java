@@ -157,8 +157,10 @@ public class SearchNamesViewController {
             // Adds names to the database that suggests names in the search field
             String dataName = tempName.getName();
             dataName = dataName.substring(0,1).toUpperCase() + dataName.substring(1);
-            databaseNames.add(dataName);
-            concatSafeNames.add(dataName);
+            if (!databaseNames.contains(dataName)) {
+                databaseNames.add(dataName);
+                concatSafeNames.add(dataName);
+            }
         }
     }
 
