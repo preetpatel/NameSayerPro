@@ -28,11 +28,21 @@ public class AudioConcat {
         _listOfConcatenations = new ArrayList<>();
         List<File> bestFileList = new ArrayList<>();
         nonExistantNames = new ArrayList<>();
-        for (String name : toBeConcated ){
-            if (getFileOfName(name) != null) {
-                bestFileList.add(getFileOfName(name));
-            } else {
-                throw new FileNotFoundException();
+
+        if (toBeConcated.size() == 1){
+            Name name = new Name(toBeConcated.get(0));
+            for (File file : name.getAllFilesOfName(new File(NameSayer.creationsPath))){
+                List<File> fileList = new ArrayList<>();
+                fileList.add(file);
+                _listOfConcatenations.add(fileList);
+            }
+        } else {
+            for (String name : toBeConcated) {
+                if (getFileOfName(name) != null) {
+                    bestFileList.add(getFileOfName(name));
+                } else {
+                    throw new FileNotFoundException();
+                }
             }
         }
         _listOfConcatenations.add(bestFileList);
@@ -100,8 +110,6 @@ public class AudioConcat {
      * @return NonExistantNames - a list of strings which contains all the input names that do not exist
      */
     public List<String> concatenate() throws InterruptedException, IOException {
-
-
 
         for(List<File> toBeConcated : _listOfConcatenations) {
 
