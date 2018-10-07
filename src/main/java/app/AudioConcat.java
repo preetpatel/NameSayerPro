@@ -14,15 +14,22 @@ public class AudioConcat {
 
     private File _textFile;
     private List<List<File>> _listOfConcatenations;
+    private List<String> nonExistantNames;
 
     /**
-     * @param toBeConcated the list of audio files to be concatenated
+     * @param toBeConcated the list of names to be concatenated
+     * @throws FileNotFoundException if an input name is not found within the database
      */
     public AudioConcat(List<String> toBeConcated)throws IOException {
         _listOfConcatenations = new ArrayList<>();
         List<File> bestFileList = new ArrayList<>();
+        nonExistantNames = new ArrayList<>();
         for (String name : toBeConcated ){
-            bestFileList.add(getFileOfName(name));
+            if (getFileOfName(name) != null) {
+                bestFileList.add(getFileOfName(name));
+            } else {
+                throw new FileNotFoundException();
+            }
         }
         _listOfConcatenations.add(bestFileList);
     }
@@ -33,13 +40,13 @@ public class AudioConcat {
      *                             The files that are to be concatenated must all be in NameSayer/Database directory
      *                             The structure of the text file MUST BE as follows:
      *                              - each line contains the names that are to be concatenated together
-     *                              - each different file is separated by a space
-     *                              - the exact file name must be used (with the extension)
-     *                              - each new line represents a new bunch of files to be concatenated together
+     *                              - each different names is separated by a space
+     *                              - each new line represents a new list of names to be concatenated together
      */
     public AudioConcat(File textFileToBeConcated) throws IOException {
         _textFile = textFileToBeConcated;
         _listOfConcatenations = new ArrayList<>();
+        nonExistantNames = new ArrayList<>();
         processTextFile();
     }
 
@@ -49,8 +56,6 @@ public class AudioConcat {
      * @throws IOException
      */
     private void processTextFile() throws IOException{
-
-        List<String> nonExistantNames = new ArrayList<>();
 
         if (_textFile != null){
             BufferedReader br = new BufferedReader(new FileReader(_textFile));
@@ -66,12 +71,12 @@ public class AudioConcat {
                     //for each line, construct the list of files to be concatenated
                     List<File> newConcatenations = new ArrayList<>();
                     for (String name : stringsOfNamesToBeConcated) {
-                        try {
-                            File fileOfName = getFileOfName(name);
+
+                        File fileOfName = getFileOfName(name);
+                        if (fileOfName != null) {
                             newConcatenations.add(fileOfName);
-                        } catch (FileNotFoundException e){
+                        } else {
                             allNamesExist = false;
-                            nonExistantNames.add(name);
                         }
                     }
 
@@ -82,17 +87,15 @@ public class AudioConcat {
             }
         }
 
-        if (nonExistantNames.size()>0){
-            String badNames = String.join(" ", nonExistantNames);
-            throw new FileNotFoundException("WARNING, the following names do not exist in the database, and so their concatenations will fail: " + badNames);
-        }
     }
 
     /**
      *
-     * Processes and Concatenates the lists of files to Documents/NameSayer/ConcatenatedNames/output_full.wav
+     * Processes and Concatenates the lists of files to Documents/NameSayer/ConcatenatedNames/[OUTPUT].wav
+     *
+     * @return NonExistantNames - a list of strings which contains all the input names that do not exist
      */
-    public void concatenate() throws InterruptedException, IOException {
+    public List<String> concatenate() throws InterruptedException, IOException {
 
 
 
@@ -183,6 +186,8 @@ public class AudioConcat {
             FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
         }
 
+        return nonExistantNames;
+
     }
 
     /**
@@ -191,8 +196,7 @@ public class AudioConcat {
      * otherwise returns a random file of the name if no files are rated or no files have rating above 1
      *
      * @throws IOException
-     * @throws FileNotFoundException if the given name input does not exist
-     * @return bestFileVersion
+     * @return bestFileVersion is null if a file does not exist for given name, otherwise returns the highest rated file for that name
      */
     private File getFileOfName(String name) throws IOException{
         BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/ratings.txt"));
@@ -228,7 +232,8 @@ public class AudioConcat {
             try {
                 bestFileVersion = files[0];
             }catch (Exception e){
-                throw new FileNotFoundException();
+                nonExistantNames.add(name);
+                return null;
             }
         }
 
