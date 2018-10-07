@@ -5,8 +5,11 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.*;
+import java.text.DateFormat;
 import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class AudioConcat {
@@ -160,7 +163,7 @@ public class AudioConcat {
 
 
             //find a name that hasnt been used yet for the creation
-            String concatedFileName = fullName + "_v1";
+            String concatedFileName = fullName;
             File file = new File(NameSayer.concatenatedNamesPath + "/" + concatedFileName + ".wav");
             boolean exists = false;
             if (file.exists()) {
@@ -177,8 +180,11 @@ public class AudioConcat {
                 i++;
             }
 
+            DateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy_HH-mm-ss");
+            Date date = new Date();
+
             //do the concatenation
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/" + concatedFileName + ".wav'");
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f concat -safe 0 -i " + NameSayer.concatenationTempPath + "/concat.txt -c copy '" + NameSayer.concatenatedNamesPath + "/namesayer_" + dateFormat.format(date) + "_" + concatedFileName + ".wav'");
             Process processConcat = builder.start();
             processConcat.waitFor();
 

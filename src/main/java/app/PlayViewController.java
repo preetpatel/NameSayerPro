@@ -213,6 +213,7 @@ public class PlayViewController {
         loadVersionsOfCreation(creation);
         loadPreviousUserRecordings();
         updateRating();
+
     }
 
     /**
