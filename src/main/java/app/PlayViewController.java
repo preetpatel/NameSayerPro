@@ -76,7 +76,7 @@ public class PlayViewController {
     private ImageView star5;
 
 
-    private static List<Name> _creationsList;
+    private static List<Name> _creationsList = new ArrayList<>();
     private Name currentLoadedCreation;
     private static int currentSelection = 0;
     private HashMap<String, File> versionPerms;
@@ -330,12 +330,14 @@ public class PlayViewController {
             AudioConcat concatNames = new AudioConcat(creationsList);
             concatNames.concatenate();
         } catch (IOException | InterruptedException e) {
-            System.out.println("Name not found?");
+            System.out.println(e.getMessage());
         }
 
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
         for (File file : directory) {
-            _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
+            if (!file.isDirectory()) {
+                _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
+            }
         }
     }
 
