@@ -164,7 +164,7 @@ public class AudioConcat {
             File file = new File(NameSayer.concatenatedNamesPath + "/" + concatedFileName + ".wav");
             boolean exists = false;
             if (file.exists()) {
-                 exists = true;
+                exists = true;
             }
 
             i=2;

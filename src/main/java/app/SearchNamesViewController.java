@@ -75,6 +75,8 @@ public class SearchNamesViewController {
 
     private List<Name> creationsList = new ArrayList<>();
 
+    private List<String> selectedNames = new ArrayList<>();
+
     private List<String> databaseNames = new ArrayList<>();
 
     private List<String> concatSafeNames = new ArrayList<>();
@@ -281,6 +283,10 @@ public class SearchNamesViewController {
     @FXML
     private void startPracticeHandler(ActionEvent e) {
 
+        for (Name name: creationsList) {
+            selectedNames.add(name.getName());
+        }
+
         if (addedCreationsPane.getChildren().size() > 1) {
             stackPane.setVisible(true);
             stackPane.getChildren().clear();
@@ -301,8 +307,8 @@ public class SearchNamesViewController {
                 public void handle(ActionEvent event) {
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    Collections.shuffle(creationsList);
-                    PlayViewController.setCreationsList(creationsList);
+                    Collections.shuffle(selectedNames);
+                    PlayViewController.setCreationsList(selectedNames);
                     loadPracticeView();
                 }
             });
@@ -315,7 +321,7 @@ public class SearchNamesViewController {
                 public void handle(ActionEvent event) {
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    PlayViewController.setCreationsList(creationsList);
+                    PlayViewController.setCreationsList(selectedNames);
                     loadPracticeView();
                 }
             });
@@ -334,7 +340,7 @@ public class SearchNamesViewController {
 
             randomiseDialog.show();
         } else {
-            PlayViewController.setCreationsList(creationsList);
+            PlayViewController.setCreationsList(selectedNames);
             loadPracticeView();
         }
     }

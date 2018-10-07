@@ -11,6 +11,7 @@
 package app;
 
 import com.jfoenix.controls.*;
+import com.sun.xml.ws.policy.privateutil.PolicyUtils;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -75,7 +76,7 @@ public class PlayViewController {
     private ImageView star5;
 
 
-    private static List<Name> _creationsList;
+    private static List<Name> _creationsList = new ArrayList<>();
     private Name currentLoadedCreation;
     private static int currentSelection = 0;
     private HashMap<String, File> versionPerms;
@@ -324,8 +325,20 @@ public class PlayViewController {
         }
     }
 
-    public static void setCreationsList(List<Name> creationsList) {
-        _creationsList = creationsList;
+    public static void setCreationsList(List<String> creationsList) {
+        try {
+            AudioConcat concatNames = new AudioConcat(creationsList);
+            concatNames.concatenate();
+        } catch (IOException | InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+
+        File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
+        for (File file : directory) {
+            if (!file.isDirectory()) {
+                _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
+            }
+        }
     }
 
     @FXML
