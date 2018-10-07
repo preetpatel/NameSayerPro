@@ -26,6 +26,7 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
 import javax.swing.*;
@@ -81,7 +82,11 @@ public class SearchNamesViewController {
 
     private List<Name> creationsList = new ArrayList<>();
 
-    private Collection<String> databaseNames = new ArrayList<>();
+    private List<String> databaseNames = new ArrayList<>();
+
+    private List<String> concatSafeNames = new ArrayList<>();
+
+    private AutoCompletionBinding<String> searchBinding;
 
     /**
      * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
@@ -90,9 +95,9 @@ public class SearchNamesViewController {
     @FXML
     private void initialize() {
 
-        TextFields.bindAutoCompletion(searchField, databaseNames);
-
         loadCreationsOntoPane();
+
+        searchBinding = TextFields.bindAutoCompletion(searchField, concatSafeNames);
 
         // Add Enter key listener on search field
         searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
@@ -102,6 +107,35 @@ public class SearchNamesViewController {
                 if (event.getCode() == KeyCode.ENTER) {
                     addButtonHandler(new ActionEvent());
                 }
+            }
+        });
+        searchField.setOnKeyReleased(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                char compare = 'a';
+                if (searchField.getLength() > 0) {
+                    compare = searchField.getText().charAt(searchField.getLength() - 1);
+                }
+                    if (compare == ' ' || searchField.getLength() == 0) {
+                        int i = 0;
+                        concatSafeNames.clear();
+                        while (i < databaseNames.size()) {
+                            concatSafeNames.add(searchField.getText() + databaseNames.get(i));
+                            i++;
+                        }
+                        searchBinding.dispose();
+                        searchBinding = TextFields.bindAutoCompletion(searchField,concatSafeNames);
+                    }
+//                    else if (!searchField.getText().contains(" ")) {
+//                        ListIterator<String> iterator = databaseNames.listIterator();
+//                        while (iterator.hasNext()) {
+//                            String s = iterator.next();
+//                            s = s.split(" ([^ ]+)$")[0];
+//                            iterator.set(s);
+//                        }
+//                        TextFields.bindAutoCompletion(searchField, concatSafeNames);
+//                    }
+
             }
         });
 
@@ -145,6 +179,13 @@ public class SearchNamesViewController {
 
         for (File file : files) {
             Name tempName = new Name(file);
+
+            // Adds names to the database that suggests names in the search field
+            String dataName = tempName.getName();
+            dataName = dataName.substring(0,1).toUpperCase() + dataName.substring(1);
+            databaseNames.add(dataName);
+            concatSafeNames.add(dataName);
+
             JFXButton button = tempName.generateButton(selectedButtonsList);
             boolean buttonExists = false;
 

@@ -35,7 +35,6 @@ public class DirectoryManager {
      * Checks that the directories and files which are to be used exist
      */
     public void runChecks() {
-        System.out.println("We here");
 
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {
