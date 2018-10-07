@@ -327,12 +327,26 @@ public class PlayViewController {
 
     public static void setCreationsList(List<String> creationsList) {
         try {
-            AudioConcat concatNames = new AudioConcat(creationsList);
-            concatNames.concatenate();
-        } catch (IOException | InterruptedException e) {
-            System.out.println(e.getMessage());
+            AudioConcat.deleteAllFiles();
+        }catch (IOException e) {
+            System.out.println(e.getStackTrace());
         }
 
+        for (String name:creationsList) {
+            List<String> brokenName = new ArrayList<>();
+            String[] array = name.split(" ");
+            for (String partName : array) {
+                brokenName.add(partName);
+            }
+            try {
+                AudioConcat concatNames = new AudioConcat(brokenName);
+                concatNames.concatenate();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            } catch (InterruptedException e) {
+                System.out.println("Interupt" + e.getMessage());
+            }
+        }
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
         for (File file : directory) {
             if (!file.isDirectory()) {
