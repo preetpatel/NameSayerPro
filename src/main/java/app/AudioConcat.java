@@ -256,4 +256,20 @@ public class AudioConcat {
         return bestFileVersion;
     }
 
+    /**
+     * deletes all concatenated name files from NameSayer/ConcatenatedNames
+     * @throws IOException If deletion goes wrong for some reason
+     */
+    public static void deleteAllFiles() throws IOException{
+        //deletes all temporary files used for concatenation
+        FileUtils.cleanDirectory(new File(NameSayer.concatenatedNamesPath));
+        File concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
+
+        if (!concatenatedTempStorage.exists()) {
+            if (!concatenatedTempStorage.mkdirs()) {
+                throw new IOException("Something went wrong with creating the temporary storage");
+            }
+        }
+    }
+
 }
