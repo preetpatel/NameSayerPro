@@ -33,9 +33,19 @@ public class Name {
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
     }
 
+    public Name(File file, File directory) {
+        _name = getFileName(file);
+        _files = getAllFilesOfName(directory);
+    }
+
     public Name(String name) {
         _name = name;
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+    }
+
+    public Name(String name, File directory) {
+        _name = name;
+        _files = getAllFilesOfName(directory);
     }
 
     /**
