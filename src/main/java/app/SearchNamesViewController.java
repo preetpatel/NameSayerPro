@@ -349,13 +349,18 @@ public class SearchNamesViewController {
      * loads the PlayViewController gui
      */
     private void loadPracticeView() {
-        try {
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
-            anchorPane.getChildren().clear();
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException err) {
-            JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
+                    anchorPane.getChildren().clear();
+                    anchorPane.getChildren().add(newLoadedPane);
+                } catch (IOException err) {
+                    JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
 
     /**
