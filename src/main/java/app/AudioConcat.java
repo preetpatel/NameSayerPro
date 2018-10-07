@@ -105,6 +105,9 @@ public class AudioConcat {
             List<String> desilencedList = new ArrayList<>();
 
             //create a 0.25 second silent audio for concatenation purposes
+            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.2 " +NameSayer.concatenationTempPath+"/silent.wav" );
+            Process process = builderSilence.start();
+            process.waitFor();
             int i=0;
 
             //normalise the audio
@@ -139,6 +142,7 @@ public class AudioConcat {
 
             for (String desilencedFile : desilencedList) {
                 writer.write("file '" + NameSayer.concatenationTempPath + desilencedFile + "'\n");
+                writer.write("file '"+NameSayer.concatenationTempPath+"/silent.wav'\n");
             }
             writer.close();
 
@@ -188,22 +192,6 @@ public class AudioConcat {
 
         return nonExistantNames;
 
-    }
-
-    /**
-     * deletes all concatenated name files from NameSayer/ConcatenatedNames
-     * @throws IOException If deletion goes wrong for some reason
-     */
-    public static void deleteAllFiles() throws IOException{
-        //deletes all temporary files used for concatenation
-        FileUtils.cleanDirectory(new File(NameSayer.concatenatedNamesPath));
-        File concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
-
-        if (!concatenatedTempStorage.exists()) {
-            if (!concatenatedTempStorage.mkdirs()) {
-                throw new IOException("Something went wrong with creating the temporary storage");
-            }
-        }
     }
 
     /**
