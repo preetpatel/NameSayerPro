@@ -12,6 +12,7 @@
 package app;
 
 import com.jfoenix.controls.JFXButton;
+import com.sun.xml.internal.ws.util.StringUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import org.apache.commons.io.FilenameUtils;
@@ -100,7 +101,8 @@ public class Name {
         //create a new button to represent the item
         JFXButton button = new JFXButton();
         button.setMnemonicParsing(false);
-        button.setText(this.getName());
+        String name = StringUtils.capitalize(this.getName());
+        button.setText(name);
         button.setId(this.getName());
         button.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 20;");
 

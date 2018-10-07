@@ -30,16 +30,10 @@
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <AnchorPane layoutX="27.0" layoutY="302.0" prefHeight="428.0" prefWidth="553.0" style="-fx-border-color: #037971;" />
-      <AnchorPane layoutX="625.0" layoutY="302.0" prefHeight="428.0" prefWidth="553.0" style="-fx-border-color: #037971;" />
-      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutX="34.0" layoutY="308.0" prefHeight="415.0" prefWidth="540.0" style="-fx-background-color: #023436; -fx-border-color: white; -fx-border-style: solid; -fx-background: #023436;">
+      <AnchorPane layoutX="23.0" layoutY="302.0" prefHeight="428.0" prefWidth="1155.0" style="-fx-border-color: #037971;" />
+      <ScrollPane fx:id="addedScrollPane" hbarPolicy="NEVER" layoutX="30.0" layoutY="309.0" prefHeight="415.0" prefWidth="1141.0" style="-fx-background-color: #023436; -fx-border-color: white; -fx-border-style: solid; -fx-background: #023436;">
          <content>
-            <JFXMasonryPane fx:id="creationsPane" prefHeight="411.0" prefWidth="531.0" />
-         </content>
-      </ScrollPane>
-      <ScrollPane fx:id="addedScrollPane" hbarPolicy="NEVER" layoutX="631.0" layoutY="309.0" prefHeight="415.0" prefWidth="540.0" style="-fx-background-color: #023436; -fx-border-color: white; -fx-border-style: solid; -fx-background: #023436;">
-         <content>
-            <JFXMasonryPane fx:id="addedCreationsPane" prefHeight="411.0" prefWidth="526.0" />
+            <JFXMasonryPane fx:id="addedCreationsPane" prefHeight="411.0" prefWidth="1136.0" />
          </content>
       </ScrollPane>
       <JFXButton fx:id="startPracticeButton" layoutX="938.0" layoutY="735.0" onAction="#startPracticeHandler" prefHeight="57.0" prefWidth="221.0" style="-fx-background-color: #037971;" text="Start Practice" textFill="WHITE" visible="false">
@@ -66,12 +60,7 @@
             <Font size="24.0" />
          </font>
       </JFXButton>
-      <Text fx:id="text1" fill="WHITE" layoutX="34.0" layoutY="291.0" strokeType="OUTSIDE" strokeWidth="1.0" text="Select a name from the database:" wrappingWidth="460.7578125">
-         <font>
-            <Font size="24.0" />
-         </font>
-      </Text>
-      <Text fx:id="text11" fill="WHITE" layoutX="631.0" layoutY="290.0" strokeType="OUTSIDE" strokeWidth="1.0" text="Your selection:" wrappingWidth="460.7578125">
+      <Text fx:id="text11" fill="WHITE" layoutX="30.0" layoutY="288.0" strokeType="OUTSIDE" strokeWidth="1.0" text="Your selection:" wrappingWidth="460.7578125">
          <font>
             <Font size="24.0" />
          </font>

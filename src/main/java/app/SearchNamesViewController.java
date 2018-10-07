@@ -31,6 +31,7 @@ import org.controlsfx.control.textfield.TextFields;
 
 import javax.swing.*;
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -45,13 +46,7 @@ public class SearchNamesViewController {
     private StackPane stackPane;
 
     @FXML
-    private JFXMasonryPane creationsPane;
-
-    @FXML
     private JFXMasonryPane addedCreationsPane;
-
-    @FXML
-    private ScrollPane scrollPane;
 
     @FXML
     private ScrollPane addedScrollPane;
@@ -75,8 +70,6 @@ public class SearchNamesViewController {
     private JFXButton removeAllButton;
 
     private ObservableList<JFXButton> creationsButtonList = FXCollections.observableArrayList();
-
-    private ObservableList<JFXButton> unaddedButtonsList = FXCollections.observableArrayList();
 
     private ObservableList<JFXButton> selectedButtonsList = FXCollections.observableArrayList();
 
@@ -126,25 +119,6 @@ public class SearchNamesViewController {
                         searchBinding.dispose();
                         searchBinding = TextFields.bindAutoCompletion(searchField,concatSafeNames);
                     }
-//                    else if (!searchField.getText().contains(" ")) {
-//                        ListIterator<String> iterator = databaseNames.listIterator();
-//                        while (iterator.hasNext()) {
-//                            String s = iterator.next();
-//                            s = s.split(" ([^ ]+)$")[0];
-//                            iterator.set(s);
-//                        }
-//                        TextFields.bindAutoCompletion(searchField, concatSafeNames);
-//                    }
-
-            }
-        });
-
-        scrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
-                if (event.getDeltaX() != 0) {
-                    event.consume();
-                }
             }
         });
 
@@ -157,21 +131,12 @@ public class SearchNamesViewController {
             }
         });
 
-        // Binds the masonry pane for creations to the scroll pane
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                scrollPane.requestFocus();
-            }
-        });
-
     }
 
     /**
      * Initialises the left pane to show every existing wav file in the directory
      */
     private void loadCreationsOntoPane() {
-        creationsPane.getChildren().clear();
         stackPane.setVisible(false);
 
         File folder = new File(NameSayer.creationsPath);
@@ -185,49 +150,7 @@ public class SearchNamesViewController {
             dataName = dataName.substring(0,1).toUpperCase() + dataName.substring(1);
             databaseNames.add(dataName);
             concatSafeNames.add(dataName);
-
-            JFXButton button = tempName.generateButton(selectedButtonsList);
-            boolean buttonExists = false;
-
-            //see if that item has already been added to the list
-            for (JFXButton currentButton : unaddedButtonsList) {
-                if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                    buttonExists = true;
-                }
-            }
-
-            if (!buttonExists) {
-                unaddedButtonsList.add(button);
-                button.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-
-                        boolean buttonExists = false;
-                        Name creation = new Name(button.getText());
-
-                        //see if that item has already been added to the list
-                        for (JFXButton currentButton : creationsButtonList) {
-                            if (creation.getName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                                buttonExists = true;
-                            }
-                        }
-
-                        if (!buttonExists) {
-                            creationsButtonList.add(creation.generateButton(selectedButtonsList));
-                            creationsList.add(creation);
-                            addedCreationsPane.getChildren().clear();
-                            addedCreationsPane.getChildren().addAll(creationsButtonList);
-                            startPracticeButton.setVisible(true);
-                            removeButton.setVisible(true);
-                            button.setDisable(true);
-                            removeAllButton.setVisible(true);
-                            button.setFocusTraversable(false);
-                        }
-                    }
-                });
-            }
         }
-        creationsPane.getChildren().addAll(unaddedButtonsList);
     }
 
     /**
@@ -249,11 +172,6 @@ public class SearchNamesViewController {
                     creations.remove();
                     creationsButtonList.remove(comparedButton);
 
-                    for (JFXButton currentButton : unaddedButtonsList) {
-                        if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                            currentButton.setDisable(false);
-                        }
-                    }
                     break;
                 }
             }
@@ -275,10 +193,6 @@ public class SearchNamesViewController {
         creationsList.clear();
         creationsButtonList.clear();
         selectedButtonsList.clear();
-
-        for (JFXButton currentButton : unaddedButtonsList) {
-            currentButton.setDisable(false);
-        }
 
         addedCreationsPane.getChildren().clear();
         addedCreationsPane.getChildren().addAll(creationsButtonList);
@@ -306,63 +220,59 @@ public class SearchNamesViewController {
 
         } else {
 
-            Name creation;
-
             File folder = new File(NameSayer.creationsPath);
             File[] files = folder.listFiles();
             boolean fileFound = false;
 
-            for (File file : files) {
+            String[] names = searchedItems.split(" ");
 
+            for (String name: names) {
                 fileFound = false;
-                Name tempName = new Name(file);
-                if (searchedItems.toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
-                    creation = new Name(file);
-                    fileFound = true;
-                    if (creation.getName() != null) {
-
-                        JFXButton button = creation.generateButton(selectedButtonsList);
-
-                        boolean buttonExists = false;
-
-                        //see if that item has already been added to the list
-                        for (JFXButton currentButton : creationsButtonList) {
-                            if (creation.getName().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                                buttonExists = true;
-                            }
-                        }
-
-                        if (!buttonExists) {
-
-                            creationsButtonList.add(button);
-                            creationsList.add(creation);
-                            startPracticeButton.setVisible(true);
-                            removeButton.setVisible(true);
-                            removeAllButton.setVisible(true);
-
-                            for (JFXButton currentButton : unaddedButtonsList) {
-                                if (button.getId().toLowerCase().equals(currentButton.getId().toLowerCase())) {
-                                    currentButton.setDisable(true);
-                                }
-                            }
-
-                        } else {
-                            showErrorDialog("This name has already been added", "Ok");
-                        }
+                for (File file : files) {
+                    Name tempName = new Name(file);
+                    if (name.toLowerCase().equals(tempName.getName().toLowerCase()) && tempName.isValid()) {
+                        fileFound = true;
                     }
-                    searchField.setDisable(false);
+                }
+                if (!fileFound) {
                     break;
                 }
             }
-            if (!fileFound) {
+
+            if (fileFound) {
+                Name name = new Name(searchedItems);
+
+                boolean buttonExists = false;
+
+                //see if that item has already been added to the list
+                for (JFXButton currentButton : creationsButtonList) {
+                    if (searchedItems.toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                        buttonExists = true;
+                    }
+                }
+
+                if (!buttonExists) {
+                    JFXButton button = name.generateButton(selectedButtonsList);
+                    creationsButtonList.add(button);
+                    creationsList.add(name);
+                    startPracticeButton.setVisible(true);
+                    removeButton.setVisible(true);
+                    removeAllButton.setVisible(true);
+
+                } else {
+                    showErrorDialog("This name has already been added", "Ok");
+                }
+
+                searchField.setDisable(false);
+
+            } else {
                 // If no name is found
                 showErrorDialog("This name could not be found on the database", "Ok");
             }
             addedCreationsPane.getChildren().addAll(creationsButtonList);
             searchField.setText("");
+            searchBinding.dispose();
         }
-
-
     }
 
     /**
