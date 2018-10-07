@@ -26,6 +26,8 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
@@ -83,12 +85,17 @@ public class SearchNamesViewController {
 
     private AutoCompletionBinding<String> searchBinding;
 
+    private File uploadList = null;
+
     /**
      * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
      * Initialises properties of the scroll view
      */
     @FXML
     private void initialize() {
+
+        DirectoryManager manager = new DirectoryManager();
+        manager.runChecks();
 
         loadCreationsOntoPane();
 
@@ -277,6 +284,22 @@ public class SearchNamesViewController {
         }
     }
 
+    @FXML
+    private void uploadButtonHandler() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text file", "*.txt"));
+        File result = fileChooser.showOpenDialog((Stage)anchorPane.getScene().getWindow());
+        if (result != null) {
+            uploadList = result;
+        }
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                startPracticeHandler(null);
+            }
+        });
+    }
+
     /**
      * Allows the user to pick between starting their practice with a randomised list or a non randomised list
      */
@@ -307,8 +330,12 @@ public class SearchNamesViewController {
                 public void handle(ActionEvent event) {
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    Collections.shuffle(selectedNames);
-                    PlayViewController.setCreationsList(selectedNames);
+                    if (creationsList.size() != 0) {
+                        Collections.shuffle(selectedNames);
+                        PlayViewController.setCreationsList(selectedNames);
+                    } else if (uploadList != null) {
+                        PlayViewController.setCreationsListFromFile(uploadList);
+                    }
                     loadPracticeView();
                 }
             });
@@ -321,7 +348,11 @@ public class SearchNamesViewController {
                 public void handle(ActionEvent event) {
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    PlayViewController.setCreationsList(selectedNames);
+                    if (creationsList.size() != 0) {
+                        PlayViewController.setCreationsList(selectedNames);
+                    } else if (uploadList != null) {
+                        PlayViewController.setCreationsListFromFile(uploadList);
+                    }
                     loadPracticeView();
                 }
             });
@@ -340,7 +371,11 @@ public class SearchNamesViewController {
 
             randomiseDialog.show();
         } else {
-            PlayViewController.setCreationsList(selectedNames);
+            if (creationsList.size() != 0) {
+                PlayViewController.setCreationsList(selectedNames);
+            } else if (uploadList != null) {
+                PlayViewController.setCreationsListFromFile(uploadList);
+            }
             loadPracticeView();
         }
     }
@@ -357,7 +392,8 @@ public class SearchNamesViewController {
                     anchorPane.getChildren().clear();
                     anchorPane.getChildren().add(newLoadedPane);
                 } catch (IOException err) {
-                    JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    err.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage() , "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         });
