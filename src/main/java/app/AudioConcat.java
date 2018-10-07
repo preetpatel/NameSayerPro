@@ -14,25 +14,17 @@ public class AudioConcat {
 
     private File _textFile;
     private List<List<File>> _listOfConcatenations;
-    private String _fileName;
 
     /**
      * @param toBeConcated the list of audio files to be concatenated
      */
-    public AudioConcat(List<File> toBeConcated){
+    public AudioConcat(List<String> toBeConcated)throws IOException {
         _listOfConcatenations = new ArrayList<>();
-        _listOfConcatenations.add(toBeConcated);
-    }
-
-    /**
-     *
-     * @param toBeConcated the list of audio files to be concatenated
-     * @param fileName the name of the output file
-     */
-    public AudioConcat(List<File> toBeConcated, String fileName){
-        _fileName=fileName;
-        _listOfConcatenations = new ArrayList<>();
-        _listOfConcatenations.add(toBeConcated);
+        List<File> bestFileList = new ArrayList<>();
+        for (String name : toBeConcated ){
+            bestFileList.add(getFileOfName(name));
+        }
+        _listOfConcatenations.add(bestFileList);
     }
 
     /**
@@ -111,9 +103,6 @@ public class AudioConcat {
 
             //create a 0.25 second silent audio for concatenation purposes
             int i=0;
-            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.25 " +NameSayer.concatenationTempPath+"/silent.wav" );
-            Process process = builderSilence.start();
-            process.waitFor();
 
             //normalise the audio
             for (File fileToNormalise : toBeConcated) {
@@ -147,28 +136,25 @@ public class AudioConcat {
 
             for (String desilencedFile : desilencedList) {
                 writer.write("file '" + NameSayer.concatenationTempPath + desilencedFile + "'\n");
-                writer.write("file '" + NameSayer.concatenationTempPath + "/silent.wav'\n");
             }
             writer.close();
 
             //get the full name of the audio files put together, if a name has not already been chosen by caller
             String fullName;
-            if (_fileName == null) {
-                fullName = "";
-                for (File file : toBeConcated) {
-                    String displayName = file.getName();
-                    displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
-                    displayName = displayName.replaceAll("[.][^.]+$", "");
-                    displayName = displayName.substring(0,1).toUpperCase() + displayName.substring(1);
-                    if (!fullName.equals("")) {
-                        fullName = fullName + "_" + displayName;
-                    } else {
-                        fullName = fullName + displayName;
-                    }
+
+            fullName = "";
+            for (File file : toBeConcated) {
+                String displayName = file.getName();
+                displayName = displayName.replaceAll("^[^_]*_[^_]*_[^_]*_", "");
+                displayName = displayName.replaceAll("[.][^.]+$", "");
+                displayName = displayName.substring(0,1).toUpperCase() + displayName.substring(1);
+                if (!fullName.equals("")) {
+                    fullName = fullName + "_" + displayName;
+                } else {
+                    fullName = fullName + displayName;
                 }
-            } else {
-                fullName = _fileName;
             }
+
 
             //find a name that hasnt been used yet for the creation
             String concatedFileName = fullName + "_v1";
