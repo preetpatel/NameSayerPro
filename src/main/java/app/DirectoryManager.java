@@ -21,6 +21,7 @@ public class DirectoryManager {
     private File concatenatedNamesStorage;
     private File concatenatedTempStorage;
     private static File score;
+    private static File users;
 
     public DirectoryManager() {
         databaseStorage = new File(NameSayer.creationsPath);
@@ -29,6 +30,7 @@ public class DirectoryManager {
         concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
         ratings = new File(NameSayer.directoryPath + "/ratings.txt");
         score = new File(NameSayer.directoryPath + "/score.txt");
+        users = new File(NameSayer.directoryPath + "/users.txt");
     }
 
     /**
@@ -45,40 +47,38 @@ public class DirectoryManager {
                 }
             }
         }
-        if (!userCreationsStorage.exists()) {
-            if (!userCreationsStorage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        if (!concatenatedNamesStorage.exists()) {
-            if (!concatenatedNamesStorage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        if (!concatenatedTempStorage.exists()) {
-            if (!concatenatedTempStorage.mkdirs()) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
 
-        if (!ratings.exists()) {
-            try {
-                ratings.createNewFile();
-            } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load ratings file", "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
+        checkForDirectory(userCreationsStorage);
 
-        if (!score.exists()) {
+        //these concatenated names storage must be in this order
+        checkForDirectory(concatenatedNamesStorage);
+        checkForDirectory(concatenatedTempStorage);
+
+        checkForTextFile(ratings);
+        checkForTextFile(score);
+        checkForTextFile(users);
+
+    }
+
+    public static File getRatings() {
+        return ratings;
+    }
+
+    private void checkForTextFile(File file){
+        if (!file.exists()) {
             try {
-                score.createNewFile();
+                file.createNewFile();
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load score file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
-    public static File getRatings() {
-        return ratings;
+    private void checkForDirectory(File file){
+        if (!file.exists()) {
+            if (!file.mkdirs()) {
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 }
