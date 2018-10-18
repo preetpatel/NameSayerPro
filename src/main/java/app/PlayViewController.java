@@ -208,7 +208,7 @@ public class PlayViewController {
      * @param creation the Name for which the PlayView scene needs to be rendered
      */
     private void loadCreation(Name creation) {
-        currentName.setText(creation.getName());
+        currentName.setText(creation.getName().replaceAll("_"," "));
         loadVersionsOfCreation(creation);
         loadPreviousUserRecordings();
         updateRating();
@@ -221,7 +221,6 @@ public class PlayViewController {
      */
     private void loadVersionsOfCreation(Name creation) {
 
-        currentName.setText(creation.getName());
         versions.getItems().clear();
 
         versionPerms = creation.getVersions();
@@ -271,6 +270,7 @@ public class PlayViewController {
                 }
             }
         }
+
     }
 
     /**

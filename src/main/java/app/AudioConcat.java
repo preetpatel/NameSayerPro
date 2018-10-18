@@ -28,11 +28,21 @@ public class AudioConcat {
         _listOfConcatenations = new ArrayList<>();
         List<File> bestFileList = new ArrayList<>();
         nonExistantNames = new ArrayList<>();
-        for (String name : toBeConcated ){
-            if (getFileOfName(name) != null) {
-                bestFileList.add(getFileOfName(name));
-            } else {
-                throw new FileNotFoundException();
+
+        if (toBeConcated.size() == 1){
+            Name name = new Name(toBeConcated.get(0));
+            for (File file : name.getAllFilesOfName(new File(NameSayer.creationsPath))){
+                List<File> fileList = new ArrayList<>();
+                fileList.add(file);
+                _listOfConcatenations.add(fileList);
+            }
+        } else {
+            for (String name : toBeConcated) {
+                if (getFileOfName(name) != null) {
+                    bestFileList.add(getFileOfName(name));
+                } else {
+                    throw new FileNotFoundException();
+                }
             }
         }
         _listOfConcatenations.add(bestFileList);
@@ -101,14 +111,15 @@ public class AudioConcat {
      */
     public List<String> concatenate() throws InterruptedException, IOException {
 
-
-
         for(List<File> toBeConcated : _listOfConcatenations) {
 
             List<String> normalisedList = new ArrayList<>();
             List<String> desilencedList = new ArrayList<>();
 
             //create a 0.25 second silent audio for concatenation purposes
+            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.2 " +NameSayer.concatenationTempPath+"/silent.wav" );
+            Process process = builderSilence.start();
+            process.waitFor();
             int i=0;
 
             //normalise the audio
@@ -143,6 +154,7 @@ public class AudioConcat {
 
             for (String desilencedFile : desilencedList) {
                 writer.write("file '" + NameSayer.concatenationTempPath + desilencedFile + "'\n");
+                writer.write("file '"+NameSayer.concatenationTempPath+"/silent.wav'\n");
             }
             writer.close();
 
