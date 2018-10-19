@@ -10,7 +10,6 @@ import javafx.scene.layout.StackPane;
 
 public class RegisterViewController extends Controller{
 
-
     @FXML
     Button _confirmButton;
     @FXML
@@ -56,8 +55,6 @@ public class RegisterViewController extends Controller{
                 switchController("LoginViewController.fxml", anchorPane);
             }
         }
-
-
     }
 
     public void cancelButtonHandler(){
