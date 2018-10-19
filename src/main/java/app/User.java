@@ -1,5 +1,7 @@
 package app;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 import javax.swing.*;
 import java.io.*;
 
@@ -9,7 +11,7 @@ public class User {
     private String _name;
     private String _password;
     private int _score;
-    private static int VALIDSESSION = 1800000;
+    private static int VALIDSESSION = 600000;
 
     public User(String username){
         _username = username;
@@ -19,7 +21,7 @@ public class User {
 
     public User(String username, String password){
         _username = username;
-        _password = password;
+        _password = DigestUtils.sha256Hex(password);
         _name = _username;
     }
 
@@ -36,11 +38,7 @@ public class User {
     }
 
     public void setPassword(String password) {
-        _password = password;
-    }
-
-    public String getPassword() {
-        return _password;
+        _password = DigestUtils.sha256Hex(password);
     }
 
     private void readScores(){

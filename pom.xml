@@ -85,6 +85,12 @@
             <systemPath>${java.home}/../lib/tools.jar</systemPath>
         </dependency>
 
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <version>1.11</version>
+        </dependency>
+
 
     </dependencies>
 
