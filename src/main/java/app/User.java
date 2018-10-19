@@ -79,15 +79,15 @@ public class User {
 
     public boolean exists(){
         //check if user exists
+        boolean userExists = false;
+
         try {
             BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/users.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] userInfo = line.split("\\s+");
                 if (userInfo[0].equals(_username)){
-                    return true;
-                } else {
-                    return false;
+                    userExists = true;
                 }
             }
 
@@ -95,7 +95,7 @@ public class User {
             JOptionPane.showMessageDialog(null, "An error occurred while loading the user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        return false;
+        return userExists;
     }
 
     /**
