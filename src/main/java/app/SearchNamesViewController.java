@@ -39,7 +39,7 @@ import java.util.List;
 
 import static javafx.scene.layout.StackPane.setAlignment;
 
-public class SearchNamesViewController {
+public class SearchNamesViewController extends Controller{
 
     @FXML
     private AnchorPane anchorPane;
@@ -312,6 +312,7 @@ public class SearchNamesViewController {
             selectedNames.add(name.getName());
         }
 
+        //if more than 1 selected creations
         if (addedCreationsPane.getChildren().size() > 1) {
             stackPane.setVisible(true);
             stackPane.getChildren().clear();
@@ -323,8 +324,8 @@ public class SearchNamesViewController {
             header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
             dialogContent.setHeading(header);
 
+            //button for randomisation
             JFXButton confirmRandomise = new JFXButton();
-
             confirmRandomise.setText("Randomise and play");
             confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
             confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
@@ -332,16 +333,17 @@ public class SearchNamesViewController {
                 public void handle(ActionEvent event) {
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    if (creationsList.size() != 0) {
+                    if (uploadList != null) {
+                        PlayViewController.setCreationsListFromFile(uploadList);
+                    } else if (creationsList.size() != 0) {
                         Collections.shuffle(selectedNames);
                         PlayViewController.setCreationsList(selectedNames);
-                    } else if (uploadList != null) {
-                        PlayViewController.setCreationsListFromFile(uploadList);
                     }
-                    loadPracticeView();
+                    switchController("PlayViewController.fxml", anchorPane);
                 }
             });
 
+            //button for normal play
             JFXButton confirmPlay = new JFXButton();
             confirmPlay.setText("Play");
             confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
@@ -350,12 +352,12 @@ public class SearchNamesViewController {
                 public void handle(ActionEvent event) {
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    if (creationsList.size() != 0) {
-                        PlayViewController.setCreationsList(selectedNames);
-                    } else if (uploadList != null) {
+                    if (uploadList != null) {
                         PlayViewController.setCreationsListFromFile(uploadList);
+                    } else if (creationsList.size() != 0) {
+                        PlayViewController.setCreationsList(selectedNames);
                     }
-                    loadPracticeView();
+                    switchController("PlayViewController.fxml", anchorPane);
                 }
             });
 
@@ -373,32 +375,13 @@ public class SearchNamesViewController {
 
             randomiseDialog.show();
         } else {
-            if (creationsList.size() != 0) {
-                PlayViewController.setCreationsList(selectedNames);
-            } else if (uploadList != null) {
+            if (uploadList != null) {
                 PlayViewController.setCreationsListFromFile(uploadList);
+            } else if (creationsList.size() != 0) {
+                PlayViewController.setCreationsList(selectedNames);
             }
-            loadPracticeView();
+            switchController("PlayViewController.fxml", anchorPane);
         }
-    }
-
-    /**
-     * loads the PlayViewController gui
-     */
-    private void loadPracticeView() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
-                    anchorPane.getChildren().clear();
-                    anchorPane.getChildren().add(newLoadedPane);
-                } catch (IOException err) {
-                    err.printStackTrace();
-                    JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage() , "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
     }
 
     /**
@@ -439,5 +422,13 @@ public class SearchNamesViewController {
 
         dialogContent.setActions(confirmDelete);
         deleteDialog.show();
+    }
+
+    @FXML
+    /**
+     *
+     */
+    public void profileButtonHandler(){
+
     }
 }

@@ -23,7 +23,7 @@ import javax.swing.*;
 import java.io.IOException;
 
 
-public class MicTestViewController {
+public class MicTestViewController extends Controller{
 
     @FXML
     private JFXSlider soundBar;
@@ -87,14 +87,7 @@ public class MicTestViewController {
     @FXML
     private void backButtonHandler() {
         monitorThread.interrupt();
-        Pane newLoadedPane = null;
-        try {
-            newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-        }
-        anchorPane.getChildren().add(newLoadedPane);
+        switchController("PlayViewController.fxml", anchorPane);
     }
 
     /**

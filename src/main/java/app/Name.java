@@ -15,6 +15,7 @@ import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
@@ -39,8 +40,10 @@ public class Name {
     }
 
     public Name(String name) {
+
         _name = name;
         _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+
     }
 
     public Name(String name, File directory) {
@@ -90,7 +93,7 @@ public class Name {
      * @return a list of all files which include the name object
      */
     public List<File> getAllFilesOfName(File dir) {
-        FileFilter filter = new WildcardFileFilter("*_" + _name + ".wav");
+        FileFilter filter = new WildcardFileFilter("*_" + _name + ".wav", IOCase.INSENSITIVE);
         File[] files = dir.listFiles(filter);
         return Arrays.asList(files);
 

@@ -36,6 +36,7 @@ public class AudioConcat {
                 fileList.add(file);
                 _listOfConcatenations.add(fileList);
             }
+
         } else {
             for (String name : toBeConcated) {
                 if (getFileOfName(name) != null) {
@@ -255,7 +256,7 @@ public class AudioConcat {
             File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
 
             try {
-                bestFileVersion = files[0];
+                bestFileVersion = files[files.length-1];
             }catch (Exception e){
                 nonExistantNames.add(name);
                 return null;

@@ -15,7 +15,7 @@ import javafx.scene.text.Text;
 import javax.swing.*;
 import java.io.IOException;
 
-public class LoginViewController {
+public class LoginViewController extends Controller{
 
     @FXML
     private JFXTextField _username;
@@ -37,20 +37,14 @@ public class LoginViewController {
 
     @FXML
     private void loginButtonHandler() {
-        if (_username.getText().toLowerCase().equals("demo") && _password.getText().equals("demo")) {
+
+        String username = _username.getText();
+        String password = _password.getText();
+        User user = new User(username, password);
+
+        if (user.usernamePasswordMatch()) {
             NameSayer.setCurrentUser(new User(_username.getText()));
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
-                        anchorPane.getChildren().clear();
-                        anchorPane.getChildren().add(newLoadedPane);
-                    } catch (IOException err) {
-                        JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-            });
+            switchController("SearchNamesViewController.fxml", anchorPane);
         } else {
             _username.setDisable(true);
             _password.setDisable(true);
@@ -58,7 +52,7 @@ public class LoginViewController {
             JFXDialogLayout dialogContent = new JFXDialogLayout();
             JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
-            Text header = new Text("Please enter a valid username and password or register if you are new");
+            Text header = new Text("Please enter the correct username or password");
             header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
             dialogContent.setHeading(header);
 
@@ -92,17 +86,6 @@ public class LoginViewController {
 
     @FXML
     private void newUserButtonHandler() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Pane newLoadedPane = FXMLLoader.load(getClass().getResource("RegisterViewController.fxml"));
-                    anchorPane.getChildren().clear();
-                    anchorPane.getChildren().add(newLoadedPane);
-                } catch (IOException err) {
-                    JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        switchController("RegisterViewController.fxml",anchorPane);
     }
 }
