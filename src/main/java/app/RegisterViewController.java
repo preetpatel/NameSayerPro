@@ -1,26 +1,12 @@
 package app;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.JFXPasswordField;
-import com.jfoenix.controls.events.JFXDialogEvent;
-import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 
-import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 
 public class RegisterViewController extends Controller{
 
@@ -51,28 +37,33 @@ public class RegisterViewController extends Controller{
         String password = _passwordText.getText();
         String confirmPassword = _passwordConfirmText.getText();
 
+
         if (username.contains(" ") | password.contains(" ") | confirmPassword.contains(" ")) {
             showErrorDialogOnStackpane("Neither the Username nor the Password may contain a space!", "OK", stackPane);
         } else if (username.isEmpty() | password.isEmpty() | confirmPassword.isEmpty()) {
             showErrorDialogOnStackpane("Please fill out all of the fields!", "OK", stackPane);
-        } else {
+        } else if (!password.equals(confirmPassword)) {
+            showErrorDialogOnStackpane("The passwords must match!", "OK", stackPane);
+        } else{
             //check if username is used
-
-            //check if passwords match
-
+            User newUser = new User(username, password);
+            if (newUser.exists()){
+                showErrorDialogOnStackpane("A user of that name already exists!", "OK", stackPane);
+            } else {
+                newUser.saveUser();
+                newUser.saveScore();
+                //return user to login
+                switchController("LoginViewController.fxml", anchorPane);
+            }
         }
 
-        //return user to login
-        switchController("LoginViewController.fxml", anchorPane);
-    }
 
+    }
 
     public void cancelButtonHandler(){
         //return to menu
+        switchController("LoginViewController.fxml", anchorPane);
     }
 
-    private boolean checkUsername(String username){
-        return false;
-    }
 
 }
