@@ -21,6 +21,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.util.StringConverter;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
@@ -75,6 +76,8 @@ public class PlayViewController extends Controller{
     @FXML
     private ImageView star5;
 
+    @FXML
+    private StackPane stackPane;
 
     private static List<Name> _creationsList = new ArrayList<>();
     private Name currentLoadedCreation;
@@ -208,6 +211,7 @@ public class PlayViewController extends Controller{
      * @param creation the Name for which the PlayView scene needs to be rendered
      */
     private void loadCreation(Name creation) {
+
         currentName.setText(creation.getName().replaceAll("_"," "));
         loadVersionsOfCreation(creation);
         loadPreviousUserRecordings();
