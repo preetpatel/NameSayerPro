@@ -220,7 +220,7 @@ public class User {
                 }
             }
             return null;
-        } catch (IOException e) {
+        } catch (IOException | NumberFormatException e) {
             return null;
         }
     }
