@@ -106,6 +106,7 @@ public class User {
         try {
             bwUsers = new BufferedWriter(new FileWriter(new File(NameSayer.directoryPath +"/users.txt"), true));
             bwUsers.write(_username + " " + _password + "\n");
+            bwUsers.close();
         } catch (IOException e) {
             JOptionPane.showMessageDialog(null, "An error occurred while saving the user: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
