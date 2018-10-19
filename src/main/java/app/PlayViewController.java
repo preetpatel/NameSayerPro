@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class PlayViewController {
+public class PlayViewController extends Controller{
 
     @FXML
     private AnchorPane anchorPane;
@@ -321,13 +321,7 @@ public class PlayViewController {
     private void loadMainMenuView() {
         _creationsList.clear();
         currentSelection = 0;
-        try {
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("SearchNamesViewController.fxml"));
-            anchorPane.getChildren().clear();
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException err) {
-            JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        switchController("SearchNamesViewController.fxml",anchorPane);
     }
 
     public static List<String> setCreationsList(List<String> creationsList) {
@@ -445,13 +439,7 @@ public class PlayViewController {
      */
     @FXML
     public void micTestButtonHandler() {
-        try {
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("MicTestViewController.fxml"));
-            anchorPane.getChildren().clear();
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException err) {
-            JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        switchController("MicTestViewController.fxml", anchorPane);
     }
 
     /**
@@ -459,15 +447,11 @@ public class PlayViewController {
      */
     @FXML
     public void recordButtonHandler() {
-        try {
-            NewCreationViewController.setDatabaseName(_fileToPlay);
-            NewCreationViewController.setNameOfCreation(currentLoadedCreation.getName());
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("NewCreationViewController.fxml"));
-            anchorPane.getChildren().clear();
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException err) {
-            JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+
+        NewCreationViewController.setDatabaseName(_fileToPlay);
+        NewCreationViewController.setNameOfCreation(currentLoadedCreation.getName());
+        switchController("NewCreationViewController.fxml", anchorPane);
+
     }
 
     /**

@@ -29,7 +29,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class NewCreationViewController {
+public class NewCreationViewController extends Controller{
 
     @FXML
     private JFXButton close;
@@ -72,15 +72,10 @@ public class NewCreationViewController {
      */
     @FXML
     private void handleCloseButton() {
-        try {
-            Thread deleteAudio = new Thread(new deleteAudioFile());
-            deleteAudio.start();
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
-        }
+        Thread deleteAudio = new Thread(new deleteAudioFile());
+        deleteAudio.start();
+        switchController("PlayViewController.fxml", anchorPane);
     }
 
     public static void setDatabaseName(File file) {
@@ -206,13 +201,7 @@ public class NewCreationViewController {
         }
         Thread deleteAudio = new Thread(new deleteAudioFile());
         deleteAudio.start();
-        try {
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("NewCreationViewController.fxml"));
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-
-        }
+        switchController("NewCreationViewController.fxml",anchorPane);
     }
 
     /**
@@ -275,20 +264,7 @@ public class NewCreationViewController {
 
         // Set database name to null to prevent unauthorised playback
         databaseName = null;
-        goBack();
-    }
-
-    /**
-     * Loads the HomeViewController scene
-     */
-    private void goBack() {
-        try {
-            databaseName = null;
-            Pane newLoadedPane = FXMLLoader.load(getClass().getResource("PlayViewController.fxml"));
-            anchorPane.getChildren().add(newLoadedPane);
-        } catch (IOException io) {
-            JOptionPane.showMessageDialog(null, "An Error occurred while trying to continue: " + io.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        switchController("PlayViewController.fxml", anchorPane);
     }
 
     @FXML
