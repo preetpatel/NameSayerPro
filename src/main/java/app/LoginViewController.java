@@ -43,7 +43,9 @@ public class LoginViewController extends Controller{
         User user = new User(username, password);
 
         if (user.usernamePasswordMatch()) {
-            NameSayer.setCurrentUser(new User(_username.getText()));
+            User authorisedUser = new User(_username.getText());
+            authorisedUser.setPassword(_password.getText());
+            NameSayer.setCurrentUser(authorisedUser);
             switchController("SearchNamesViewController.fxml", anchorPane);
         } else {
             _username.setDisable(true);

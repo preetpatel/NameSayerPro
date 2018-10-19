@@ -5,21 +5,21 @@
  * Copyright Preet Patel, 2018
  *
  * @Author Preet Patel
- * @Auther Chuyang Chen
+ * @Author Chuyang Chen
  * Date Created: 13 August, 2018
  */
 
 package app;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.*;
 
 public class NameSayer extends Application {
 
@@ -47,7 +47,13 @@ public class NameSayer extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        loadScene("LoginViewController.fxml", primaryStage);
+        User user = User.getSessionValidUser();
+        if (user != null) {
+            currentUser = user;
+            loadScene("SearchNamesViewController.fxml", primaryStage);
+        } else {
+            loadScene("LoginViewController.fxml", primaryStage);
+        }
 
     }
 
@@ -62,6 +68,14 @@ public class NameSayer extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("NameSayer");
         primaryStage.show();
+        primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+            @Override
+            public void handle(WindowEvent event) {
+                if (currentUser != null) {
+                    currentUser.updateLoginTime();
+                }
+            }
+        });
     }
 
 

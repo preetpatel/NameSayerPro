@@ -5,7 +5,7 @@
  * Copyright Preet Patel, 2018
  *
  * @Author Preet Patel
- * @Auther Chuyang Chen
+ * @Author Chuyang Chen
  * Date Created: 19 August, 2018
  */
 

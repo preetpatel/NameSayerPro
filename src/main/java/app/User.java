@@ -9,6 +9,7 @@ public class User {
     private String _name;
     private String _password;
     private int _score;
+    private static int VALIDSESSION = 1800000;
 
     public User(String username){
         _username = username;
@@ -32,6 +33,14 @@ public class User {
 
     public String getUsername() {
         return _username;
+    }
+
+    public void setPassword(String password) {
+        _password = password;
+    }
+
+    public String getPassword() {
+        return _password;
     }
 
     private void readScores(){
@@ -158,6 +167,63 @@ public class User {
 
         }catch (IOException e2) {
             JOptionPane.showMessageDialog(null, "An error occurred during saving score", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void updateLoginTime() {
+        try {
+            /*
+             * File writing and replacement code sourced from:
+             * https://stackoverflow.com/questions/1377279/find-a-line-in-a-file-and-remove-it
+             */
+            File inputFile = new File(NameSayer.directoryPath + "/users.txt");
+            File tempFile = new File("TempFile.txt");
+
+            BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+            String lineToRemove = _username + " " + _password;
+            String currentLine;
+
+            while((currentLine = reader.readLine()) != null) {
+                // trim newline when comparing with lineToRemove
+                String trimmedLine = currentLine.trim();
+                String[] strings = trimmedLine.split("\\s");
+                if (strings.length >= 2) {
+                    trimmedLine = strings[0] + " " + strings[1];
+                    if (trimmedLine.equals(lineToRemove)) {
+                        writer.write(trimmedLine + " " + System.currentTimeMillis() + System.getProperty("line.separator"));
+                    } else {
+                        writer.write(currentLine + System.getProperty("line.separator"));
+                    }
+                }
+            }
+            writer.close();
+            reader.close();
+            tempFile.renameTo(inputFile);
+        } catch (IOException e) {
+            //TODO Add some form of handling here
+        }
+    }
+
+    public static User getSessionValidUser() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(new File(NameSayer.directoryPath + "/users.txt")));
+            String line;
+
+            while ((line = br.readLine()) != null) {
+                String[] strings = line.split("\\s");
+                if (strings.length == 3) {
+                    if ((System.currentTimeMillis() - VALIDSESSION) < Long.parseLong(strings[2])) {
+                        User loggedUser = new User(strings[0]);
+                        loggedUser.setPassword(strings[1]);
+                        return loggedUser;
+                    }
+                }
+            }
+            return null;
+        } catch (IOException e) {
+            return null;
         }
     }
 }
