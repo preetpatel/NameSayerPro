@@ -86,17 +86,6 @@ public class LoginViewController extends Controller{
 
     @FXML
     private void newUserButtonHandler() {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Pane newLoadedPane = FXMLLoader.load(getClass().getResource("RegisterViewController.fxml"));
-                    anchorPane.getChildren().clear();
-                    anchorPane.getChildren().add(newLoadedPane);
-                } catch (IOException err) {
-                    JOptionPane.showMessageDialog(null, "An error occurred: " + err.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+        switchController("RegisterViewController.fxml",anchorPane);
     }
 }
