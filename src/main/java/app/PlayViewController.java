@@ -304,6 +304,7 @@ public class PlayViewController extends Controller{
     @FXML
     private void backButtonHandler() {
         currentSelection--;
+
         if (currentSelection >= 0) {
             currentLoadedCreation = _creationsList.get(currentSelection);
             loadCreation(_creationsList.get(currentSelection));
