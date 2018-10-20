@@ -237,7 +237,7 @@ public class AudioConcat {
             String lineLower = line.toLowerCase();
 
             //check if the line contains the name of the file.
-            if (lineLower.contains("_" + nameLower + ".wav" )){
+            if (lineLower.contains("\\d+"+"_" + nameLower + ".wav" )){
 
                 String[] ratingInfo = line.split("\\s+");
                 int ratingNumber = Integer.parseInt(ratingInfo[1]);
