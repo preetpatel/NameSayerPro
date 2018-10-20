@@ -337,6 +337,7 @@ public class PlayViewController extends Controller{
      * @return
      */
     public static List<String> setCreationsList(List<String> creationsList) {
+
         try {
             AudioConcat.deleteAllFiles();
         }catch (IOException e) {
@@ -362,7 +363,8 @@ public class PlayViewController extends Controller{
         }
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
 
-        addNamesToCreationsList();
+        addNamesToCreationsList(creationsList);
+
         return notFoundNames;
     }
 
@@ -381,7 +383,7 @@ public class PlayViewController extends Controller{
         } catch (IOException e) {
             notFoundNames.add("Some files were not found. (Displaying these files coming soon!)");
         } catch (InterruptedException e) {
-            System.out.println(e.getStackTrace());
+            e.printStackTrace();
         }
 
         addNamesToCreationsList();
@@ -396,6 +398,28 @@ public class PlayViewController extends Controller{
     public static boolean creationsExist(){
         return (!_creationsList.isEmpty());
     }
+
+    /**
+     * adds all unique names from the cancatenated names directory into the PlayViewController's list of names to be
+     * practiced, in the order of the creationsList
+     */
+    private static void addNamesToCreationsList(List<String> creationsList){
+        File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
+
+        for(String s : creationsList) {
+            for (File file : directory) {
+                if (!file.isDirectory()) {
+                    String currentString = s.replaceAll(" ", "_");
+                    Name currentName = new Name(currentString, new File(NameSayer.concatenatedNamesPath));
+                    //if the name has NOT already been added
+                    if (!_creationsList.contains(currentName)) {
+                        _creationsList.add(currentName);
+                    }
+                }
+            }
+        }
+    }
+
 
     /**
      * adds all unique names from the cancatenated names directory into the PlayViewController's list of names to be
