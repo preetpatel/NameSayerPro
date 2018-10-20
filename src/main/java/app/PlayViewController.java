@@ -100,11 +100,13 @@ public class PlayViewController extends Controller{
     public void initialize() {
 
         stackPane.setDisable(true);
-        if(_creationsList.size() > 0) {
+        if(_creationsList.size() > 0 ) {
             currentLoadedCreation = _creationsList.get(currentSelection);
             loadCreation(currentLoadedCreation);
         }
-        previousButton.setText("< Menu");
+        if(currentSelection==0) {
+            previousButton.setText("< Menu");
+        }
         if (_creationsList.size() == 1) {
             nextButton.setText("Finish >");
         }
@@ -169,7 +171,7 @@ public class PlayViewController extends Controller{
         try {
             BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
             String line;
-
+            updateStars(0);
             while ((line = br.readLine()) != null) {
                 if (line.contains(_fileToPlay.getName())) {
                     String[] nameCreation = line.split("\\s+");
@@ -385,6 +387,14 @@ public class PlayViewController extends Controller{
         addNamesToCreationsList();
 
         return notFoundNames;
+    }
+
+    /**
+     * A method to check whether the list of creations is empty
+     * @return true if the creations list is not empty
+     */
+    public static boolean creationsExist(){
+        return (!_creationsList.isEmpty());
     }
 
     /**
