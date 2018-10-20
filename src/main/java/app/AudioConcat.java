@@ -82,7 +82,7 @@ public class AudioConcat {
             while ((line = br.readLine())!=null) {
                 if (!line.equals("")) {
                     boolean allNamesExist = true;
-
+                    line = line.replaceAll("-", " ");
                     String[] stringsOfNamesToBeConcated = line.split("\\s+");
 
                     //for each line, construct the list of files to be concatenated

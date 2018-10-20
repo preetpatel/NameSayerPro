@@ -96,7 +96,8 @@ public class Name {
      * @return a list of all files which include the name object
      */
     public List<File> getAllFilesOfName(File dir) {
-        if (_name.contains("_")) {
+        if (_name.contains(" ")) {
+            String searchName = _name.replaceAll(" ","_");
             FileFilter filter = new WildcardFileFilter("*_" + _name + ".wav", IOCase.INSENSITIVE);
             File[] files = dir.listFiles(filter);
             return Arrays.asList(files);
@@ -147,7 +148,7 @@ public class Name {
     @Override
     public boolean equals(Object o) {
         Name name = (Name) o;
-        return _name.equals(name.getName());
+        return _name.toLowerCase().equals(name.getName().toLowerCase());
     }
 
     @Override
