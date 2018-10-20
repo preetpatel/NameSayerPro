@@ -12,6 +12,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AudioConcat {
 
@@ -237,8 +239,9 @@ public class AudioConcat {
             String lineLower = line.toLowerCase();
 
             //check if the line contains the name of the file.
-            if (lineLower.contains("\\d+"+"_" + nameLower + ".wav" )){
-
+            Pattern pat = Pattern.compile("\\d" + "_" + nameLower + ".wav" );
+            Matcher mat = pat.matcher(lineLower);
+            if (mat.find()){
                 String[] ratingInfo = line.split("\\s+");
                 int ratingNumber = Integer.parseInt(ratingInfo[1]);
                 //if the current file looked at is higher rated than the previous versions of that file, set it as the best file version
