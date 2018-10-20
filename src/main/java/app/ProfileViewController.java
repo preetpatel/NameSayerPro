@@ -24,7 +24,7 @@ public class ProfileViewController extends Controller{
 
     @FXML
     private void initialize() {
-
+        getScore();
     }
 
     private void loadLeaderboard(){
@@ -33,6 +33,8 @@ public class ProfileViewController extends Controller{
 
     private void getScore(){
         //changes the practicesText to the score the user currently has
+
+        NameSayer.currentUser.getScore();
     }
 
     private void getRecordingsNumber(){
