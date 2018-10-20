@@ -238,8 +238,8 @@ public class SearchNamesViewController extends Controller{
             File folder = new File(NameSayer.creationsPath);
             File[] files = folder.listFiles();
             boolean fileFound = false;
-
-            String[] names = searchedItems.split(" ");
+            String processedSearchedItems = searchedItems.replaceAll("-", " ");
+            String[] names = processedSearchedItems.split(" ");
 
             for (String name: names) {
                 fileFound = false;
@@ -255,13 +255,13 @@ public class SearchNamesViewController extends Controller{
             }
 
             if (fileFound) {
-                Name name = new Name(searchedItems);
+                Name name = new Name(processedSearchedItems);
 
                 boolean buttonExists = false;
 
                 //see if that item has already been added to the list
                 for (JFXButton currentButton : creationsButtonList) {
-                    if (searchedItems.toLowerCase().equals(currentButton.getId().toLowerCase())) {
+                    if (processedSearchedItems.toLowerCase().equals(currentButton.getId().toLowerCase())) {
                         buttonExists = true;
                     }
                 }
