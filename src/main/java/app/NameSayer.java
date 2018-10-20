@@ -44,6 +44,12 @@ public class NameSayer extends Application {
         userRecordingsPath = userRecordingsPath + "/" + currentUser.getUsername();
     }
 
+    public static void performUserLogout() {
+        currentUser.updateLoginTime(false);
+        currentUser = null;
+        userRecordingsPath = directoryPath + "/UserRecordings";
+    }
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -73,7 +79,7 @@ public class NameSayer extends Application {
             @Override
             public void handle(WindowEvent event) {
                 if (currentUser != null) {
-                    currentUser.updateLoginTime();
+                    currentUser.updateLoginTime(true);
                 }
             }
         });
