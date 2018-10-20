@@ -452,7 +452,16 @@ public class SearchNamesViewController extends Controller{
                 switchController("LoginViewController.fxml", anchorPane);
             }
         });
-        VBox vbox = new VBox(logoutButton);
+
+        JFXButton openProfileButton = new JFXButton("Profile");
+        openProfileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                switchController("ProfileViewController.fxml", anchorPane);
+            }
+        });
+
+        VBox vbox = new VBox(openProfileButton, logoutButton);
         userPopup.setPopupContent(vbox);
         userPopup.show(profileButton, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }
