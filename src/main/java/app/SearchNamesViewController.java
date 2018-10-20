@@ -17,6 +17,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -67,6 +68,9 @@ public class SearchNamesViewController extends Controller{
 
     @FXML
     private JFXButton profileButton;
+
+    @FXML
+    private JFXPopup userPopup = new JFXPopup();
 
     @FXML
     private JFXButton removeAllButton;
@@ -425,10 +429,10 @@ public class SearchNamesViewController extends Controller{
     }
 
     @FXML
-    /**
-     *
-     */
-    public void profileButtonHandler(){
-
+    public void profileButtonHandler() {
+        JFXButton b1 = new JFXButton("Logout");
+        VBox vbox = new VBox(b1);
+        userPopup.setPopupContent(vbox);
+        userPopup.show(profileButton, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }
 }
