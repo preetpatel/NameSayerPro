@@ -135,6 +135,17 @@ public class Name {
         return button;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        Name name = (Name) o;
+        return _name.equals(name.getName());
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public JFXButton getButton() {
         return _button;
     }
