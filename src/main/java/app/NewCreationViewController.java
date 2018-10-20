@@ -184,7 +184,17 @@ public class NewCreationViewController extends Controller{
 
         @Override
         protected Void call() throws Exception {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'");
+
+            String recordProcess = "";
+            if(System.getProperty("os.name").toLowerCase().contains("mac")) {
+                recordProcess = "ffmpeg -t 5 -f avfoundation -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+            } else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+                recordProcess = "ffmpeg -t 5 -f dshow -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+            } else {
+                recordProcess = "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+            }
+
+            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", recordProcess);
             builder.start();
             return null;
         }
