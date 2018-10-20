@@ -141,6 +141,11 @@ public class Name {
         return _name.equals(name.getName());
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public JFXButton getButton() {
         return _button;
     }
