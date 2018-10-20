@@ -98,6 +98,7 @@ public class PlayViewController extends Controller{
      */
     @FXML
     public void initialize() {
+
         stackPane.setDisable(true);
         if(_creationsList.size() > 0) {
             currentLoadedCreation = _creationsList.get(currentSelection);
@@ -115,53 +116,108 @@ public class PlayViewController extends Controller{
     @FXML
     private void logRating(int rating) {
         BufferedWriter writer;
-        try {
-
-            String ratingString = _fileToPlay.getName() + " " + Integer.toString(rating);
-
-            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
-            String line;
-
-            //check if file is already given a rating
-            boolean lineExists = false;
-            while ((line = br.readLine()) != null) {
-                if (line.contains(_fileToPlay.getName())) {
-                    lineExists = true;
-                    break;
+        //get the files of the creation which were used in audio concatenation
+        if (currentLoadedCreation.getName().contains("_")){
+            try {
+                AudioConcat acFiller = new AudioConcat(new ArrayList<String>());
+                String[] splitName = currentLoadedCreation.getName().split("_");
+                List<File> usedFileList = new ArrayList<>();
+                for(String s : splitName) {
+                    usedFileList.add(acFiller.getFileOfName(s));
                 }
-            }
-
-            //if a rating does not exist, add a new rating
-            if (!lineExists) {
-                writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
-                writer.write(ratingString + "\n");
-                writer.close();
-
-                //if a rating does exist, replace the old rating
-            } else {
-                String old = "";
-                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
-                String line2 = reader.readLine();
-
-                while (line2 != null) {
-                    old = old + line2 + System.lineSeparator();
-                    line2 = reader.readLine();
 
 
+                for(File f : usedFileList) {
+                    boolean ratingFound = false;
+                    BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                    String line;
+                    while ((line = br.readLine()) != null) {
+                        //if a rating already exists
+                        if (line.contains(f.getName())) {
+                            String[] nameCreation = line.split("\\s+");
+
+                            //update rating to become the average
+                            int oldRating = Integer.parseInt(nameCreation[1]);
+                            int newRating = (oldRating + rating) / 2;
+                            String ratingString = f.getName() + " " + Integer.toString(newRating);
+
+                            String old = "";
+                            BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                            String line2 = reader.readLine();
+
+                            while (line2 != null) {
+                                old = old + line2 + System.lineSeparator();
+                                line2 = reader.readLine();
+                            }
+                            String newContent = old.replaceAll(_fileToPlay.getName() + " [12345]", ratingString);
+                            FileWriter writer2 = new FileWriter(DirectoryManager.getRatings());
+                            writer2.write(newContent);
+                            reader.close();
+                            writer2.close();
+                            ratingFound = true;
+                            break;
+                        }
+                    }
+                    if (!ratingFound) {
+                        //write rating
+                        String ratingString = f.getName() + " " + Integer.toString(rating);
+                        writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
+                        writer.write(ratingString + "\n");
+                        writer.close();
+                    }
                 }
-                String newContent = old.replaceAll(_fileToPlay.getName() + " [12345]", ratingString);
-                FileWriter writer2 = new FileWriter(DirectoryManager.getRatings());
-                writer2.write(newContent);
-                reader.close();
-                writer2.close();
-            }
+            }catch(IOException e){
+                JOptionPane.showMessageDialog(null, "An error occurred printing rating", "Error", JOptionPane.ERROR_MESSAGE);
 
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Please Enter a number from 1-5", "Error", JOptionPane.ERROR_MESSAGE);
-        } catch (IOException e2) {
-            JOptionPane.showMessageDialog(null, "An error occurred printing rating", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
+        //get the ratings for those files
+        else {
+            try {
 
+                String ratingString = _fileToPlay.getName() + " " + Integer.toString(rating);
+
+                BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                String line;
+
+                //check if file is already given a rating
+                boolean lineExists = false;
+                while ((line = br.readLine()) != null) {
+                    if (line.contains(_fileToPlay.getName())) {
+                        lineExists = true;
+                        break;
+                    }
+                }
+
+                //if a rating does not exist, add a new rating
+                if (!lineExists) {
+                    writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
+                    writer.write(ratingString + "\n");
+                    writer.close();
+
+                    //if a rating does exist, replace the old rating
+                } else {
+                    String old = "";
+                    BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                    String line2 = reader.readLine();
+
+                    while (line2 != null) {
+                        old = old + line2 + System.lineSeparator();
+                        line2 = reader.readLine();
+                    }
+                    String newContent = old.replaceAll(_fileToPlay.getName() + " [12345]", ratingString);
+                    FileWriter writer2 = new FileWriter(DirectoryManager.getRatings());
+                    writer2.write(newContent);
+                    reader.close();
+                    writer2.close();
+                }
+
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Please Enter a number from 1-5", "Error", JOptionPane.ERROR_MESSAGE);
+            } catch (IOException e2) {
+                JOptionPane.showMessageDialog(null, "An error occurred printing rating", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
 
     }
 

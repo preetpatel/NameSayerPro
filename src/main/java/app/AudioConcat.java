@@ -224,7 +224,7 @@ public class AudioConcat {
      * @throws IOException
      * @return bestFileVersion is null if a file does not exist for given name, otherwise returns the highest rated file for that name
      */
-    private File getFileOfName(String name) throws IOException{
+    public File getFileOfName(String name) throws IOException{
         BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/ratings.txt"));
         String line;
 
