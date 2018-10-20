@@ -50,6 +50,7 @@ public class NameSayer extends Application {
         User user = User.getSessionValidUser();
         if (user != null) {
             currentUser = user;
+            userRecordingsPath = userRecordingsPath + "/" + currentUser.getUsername();
             loadScene("SearchNamesViewController.fxml", primaryStage);
         } else {
             loadScene("LoginViewController.fxml", primaryStage);
