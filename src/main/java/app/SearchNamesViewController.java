@@ -297,13 +297,13 @@ public class SearchNamesViewController extends Controller{
         File result = fileChooser.showOpenDialog((Stage)anchorPane.getScene().getWindow());
         if (result != null) {
             uploadList = result;
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    startPracticeHandler(null);
+                }
+            });
         }
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                startPracticeHandler(null);
-            }
-        });
     }
 
     /**
@@ -343,7 +343,11 @@ public class SearchNamesViewController extends Controller{
                         Collections.shuffle(selectedNames);
                         PlayViewController.setCreationsList(selectedNames);
                     }
-                    switchController("PlayViewController.fxml", anchorPane);
+                    if (PlayViewController.creationsExist()) {
+                        switchController("PlayViewController.fxml", anchorPane);
+                    } else {
+                        showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
+                    }
                 }
             });
 
@@ -361,7 +365,11 @@ public class SearchNamesViewController extends Controller{
                     } else if (creationsList.size() != 0) {
                         PlayViewController.setCreationsList(selectedNames);
                     }
-                    switchController("PlayViewController.fxml", anchorPane);
+                    if (PlayViewController.creationsExist()) {
+                        switchController("PlayViewController.fxml", anchorPane);
+                    } else {
+                        showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
+                    }
                 }
             });
 
@@ -376,15 +384,20 @@ public class SearchNamesViewController extends Controller{
             });
 
             dialogContent.setActions(confirmRandomise, confirmPlay);
-
             randomiseDialog.show();
+
+            //for uploaded lists
         } else {
             if (uploadList != null) {
                 PlayViewController.setCreationsListFromFile(uploadList);
             } else if (creationsList.size() != 0) {
                 PlayViewController.setCreationsList(selectedNames);
             }
-            switchController("PlayViewController.fxml", anchorPane);
+            if (PlayViewController.creationsExist()) {
+                switchController("PlayViewController.fxml", anchorPane);
+            } else {
+                showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
+            }
         }
     }
 
@@ -439,7 +452,16 @@ public class SearchNamesViewController extends Controller{
                 switchController("LoginViewController.fxml", anchorPane);
             }
         });
-        VBox vbox = new VBox(logoutButton);
+
+        JFXButton openProfileButton = new JFXButton("Profile");
+        openProfileButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                switchController("ProfileViewController.fxml", anchorPane);
+            }
+        });
+
+        VBox vbox = new VBox(openProfileButton, logoutButton);
         userPopup.setPopupContent(vbox);
         userPopup.show(profileButton, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }

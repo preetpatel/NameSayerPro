@@ -30,7 +30,12 @@ public class User {
     }
 
     public int getScore() {
+        readScores();
         return _score;
+    }
+
+    public void increaseScore(){
+        _score++;
     }
 
     public String getUsername() {
@@ -56,8 +61,6 @@ public class User {
             JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
         }
-
-
     }
 
     /**
