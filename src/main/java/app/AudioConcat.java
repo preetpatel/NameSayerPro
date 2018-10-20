@@ -262,7 +262,6 @@ public class AudioConcat {
                 return null;
             }
         }
-
         return bestFileVersion;
     }
 

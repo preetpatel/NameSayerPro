@@ -332,6 +332,11 @@ public class PlayViewController extends Controller{
         switchController("SearchNamesViewController.fxml",anchorPane);
     }
 
+    /**
+     * Sets the list of names to be practised in the PlayViewController
+     * @param creationsList
+     * @return
+     */
     public static List<String> setCreationsList(List<String> creationsList) {
         try {
             AudioConcat.deleteAllFiles();
@@ -357,14 +362,17 @@ public class PlayViewController extends Controller{
             }
         }
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
-        for (File file : directory) {
-            if (!file.isDirectory()) {
-                _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
-            }
-        }
+
+        addNamesToCreationsList();
         return notFoundNames;
     }
 
+
+    /**
+     * Sets the list of names to be practised in the PlayViewController from a text file
+     * @param text the file to be input
+     * @return
+     */
     public static List<String> setCreationsListFromFile(File text) {
         List<String> notFoundNames = new ArrayList<>();
         try {
@@ -377,14 +385,26 @@ public class PlayViewController extends Controller{
             System.out.println(e.getStackTrace());
         }
 
+        addNamesToCreationsList();
+
+        return notFoundNames;
+    }
+
+    /**
+     * adds all unique names from the cancatenated names directory into the PlayViewController's list of names to be
+     * practiced
+     */
+    private static void addNamesToCreationsList(){
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
         for (File file : directory) {
             if (!file.isDirectory()) {
-                _creationsList.add(new Name(file, new File(NameSayer.concatenatedNamesPath)));
+                Name currentName = new Name(file, new File(NameSayer.concatenatedNamesPath));
+                //if the name has NOT already been added
+                if (!_creationsList.contains(currentName)) {
+                    _creationsList.add(currentName);
+                }
             }
         }
-
-        return notFoundNames;
     }
 
     @FXML
