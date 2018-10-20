@@ -18,7 +18,7 @@
                         <Font name="Lato Heavy" size="96.0" />
                     </font>
                 </Text>
-            <JFXButton fx:id="profileButton" layoutX="58.0" layoutY="30.0" onAction="#addButtonHandler" prefHeight="81.0" prefWidth="81.0" style="-fx-background-color: #023436; -fx-background-radius: 20em;" textFill="WHITE">
+            <JFXButton fx:id="profileButton" layoutX="58.0" layoutY="30.0" onAction="#profileButtonHandler" prefHeight="81.0" prefWidth="81.0" style="-fx-background-color: #023436; -fx-background-radius: 20em;" textFill="WHITE">
                <font>
                   <Font size="24.0" />
                </font>
@@ -65,11 +65,11 @@
             <Font size="24.0" />
          </font>
       </Text>
-      <StackPane fx:id="stackPane" prefHeight="800.0" prefWidth="1200.0" />
       <JFXButton fx:id="uploadButton" layoutX="965.0" layoutY="173.0" onAction="#uploadButtonHandler" prefHeight="57.0" prefWidth="168.0" style="-fx-background-color: #037971;" text="Upload" textFill="WHITE">
          <font>
             <Font size="24.0" />
          </font>
       </JFXButton>
+      <StackPane fx:id="stackPane" prefHeight="800.0" prefWidth="1200.0" />
     </children>
 </AnchorPane>

@@ -168,7 +168,7 @@ public class User {
         }
     }
 
-    public void updateLoginTime() {
+    public void updateLoginTime(boolean valid) {
         try {
             /*
              * File writing and replacement code sourced from:
@@ -190,7 +190,11 @@ public class User {
                 if (strings.length >= 2) {
                     trimmedLine = strings[0] + " " + strings[1];
                     if (trimmedLine.equals(lineToRemove)) {
-                        writer.write(trimmedLine + " " + System.currentTimeMillis() + System.getProperty("line.separator"));
+                        if (valid) {
+                            writer.write(trimmedLine + " " + System.currentTimeMillis() + System.getProperty("line.separator"));
+                        } else {
+                            writer.write(trimmedLine + System.getProperty("line.separator"));
+                        }
                     } else {
                         writer.write(currentLine + System.getProperty("line.separator"));
                     }

@@ -430,8 +430,16 @@ public class SearchNamesViewController extends Controller{
 
     @FXML
     public void profileButtonHandler() {
-        JFXButton b1 = new JFXButton("Logout");
-        VBox vbox = new VBox(b1);
+        JFXButton logoutButton = new JFXButton("Logout");
+        logoutButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                userPopup.hide();
+                NameSayer.performUserLogout();
+                switchController("LoginViewController.fxml", anchorPane);
+            }
+        });
+        VBox vbox = new VBox(logoutButton);
         userPopup.setPopupContent(vbox);
         userPopup.show(profileButton, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }
