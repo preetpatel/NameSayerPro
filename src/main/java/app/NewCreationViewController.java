@@ -88,6 +88,14 @@ public class NewCreationViewController extends Controller{
      */
     @FXML
     private void initialize() {
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                setupVolume();
+            }
+        });
+
         loaderText.setText("Press the button below and pronounce the name: \"" + _nameOfCreation + "\"");
         listenAudio.setVisible(false);
         keepAudio.setVisible(false);
@@ -161,6 +169,7 @@ public class NewCreationViewController extends Controller{
                     close.setDisable(false);
                     if (databaseName != null) {
                         compareButton.setVisible(true);
+
                     }
                 }
             });
@@ -292,6 +301,9 @@ public class NewCreationViewController extends Controller{
             compareButton.setText("Compare");
             _playing = !_playing;
             _playThread.stop();
+            listenAudio.setDisable(false);
+            keepAudio.setDisable(false);
+            redoAudio.setDisable(false);
         }
     }
 
