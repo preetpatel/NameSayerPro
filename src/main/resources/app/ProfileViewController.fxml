@@ -15,6 +15,11 @@
                         <Font name="Lato Heavy" size="96.0" />
                     </font>
                 </Text>
+                <JFXButton fx:id="_helpButton" layoutX="1050.0" layoutY="37.0" onAction="#helpButtonHandler" prefHeight="57.0" prefWidth="137.0" style="-fx-background-color: #023436;" text="Help" textFill="WHITE">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </JFXButton>
             </children>
         </AnchorPane>
         <JFXButton fx:id="_backButton" layoutX="150.0" layoutY="691.0" onAction="#backButtonHandler" prefHeight="57.0" prefWidth="137.0" style="-fx-background-color: #037971;" text="Back" textFill="WHITE">

@@ -11,6 +11,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Maven: org.controlsfx:controlsfx:8.40.14" level="project" />
+    <orderEntry type="library" name="Maven: com.barchart.wrap:barchart-wrap-browser-launcher:1.3.0-build001" level="project" />
     <orderEntry type="library" name="Maven: com.jfoenix:jfoenix:8.0.7" level="project" />
     <orderEntry type="library" name="Maven: org.kordamp.ikonli:ikonli-javafx:11.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.kordamp.ikonli:ikonli-core:11.0.0" level="project" />
