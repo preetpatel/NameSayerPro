@@ -457,6 +457,7 @@ public class SearchNamesViewController extends Controller{
         openProfileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                userPopup.hide();
                 switchController("ProfileViewController.fxml", anchorPane);
             }
         });

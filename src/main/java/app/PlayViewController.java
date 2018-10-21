@@ -474,6 +474,11 @@ public class PlayViewController extends Controller{
                         micTestButton.setDisable(false);
                         nextButton.setDisable(false);
                         previousButton.setDisable(false);
+
+                        // Score is increased by 1 for listening to a database name
+                        NameSayer.currentUser.increaseScore(1);
+
+
                     }
                 });
 
