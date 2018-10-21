@@ -18,6 +18,11 @@
                         <Font name="Lato Heavy" size="96.0" />
                     </font>
                 </Text>
+                <JFXButton fx:id="_helpButton" layoutX="1050.0" layoutY="37.0" onAction="#helpButtonHandler" prefHeight="57.0" prefWidth="137.0" style="-fx-background-color: #023436;" text="Help" textFill="WHITE">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </JFXButton>
             </children>
         </AnchorPane>
         <JFXButton fx:id="previousButton" alignment="CENTER" buttonType="RAISED" layoutX="19.0" layoutY="710.0" onAction="#backButtonHandler" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="&lt; Previous" textAlignment="CENTER" textFill="WHITE">
