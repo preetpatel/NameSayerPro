@@ -24,6 +24,10 @@ abstract public class Controller {
     private Button _helpButton;
 
     @FXML
+    /**
+     * Opens a browser to the wiki
+     * The code for this method pulled from 'https://stackoverflow.com/questions/5226212/how-to-open-the-default-webbrowser-using-java'
+     */
     public void helpButtonHandler(){
         Runtime rt = Runtime.getRuntime();
         String url = "https://github.com/PreetPatel/NameSayerPro/wiki";
