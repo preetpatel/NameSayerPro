@@ -4,7 +4,6 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.events.JFXDialogEvent;
-import edu.stanford.ejalbert.BrowserLauncher;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -17,11 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 abstract public class Controller {
 
@@ -30,11 +25,21 @@ abstract public class Controller {
 
     @FXML
     public void helpButtonHandler(){
+        Runtime rt = Runtime.getRuntime();
         String url = "https://github.com/PreetPatel/NameSayerPro/wiki";
+        String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror",
+                "netscape", "opera", "links", "lynx" };
+
+        StringBuffer cmd = new StringBuffer();
+        for (int i = 0; i < browsers.length; i++)
+            if(i == 0)
+                cmd.append(String.format(    "%s \"%s\"", browsers[i], url));
+            else
+                cmd.append(String.format(" || %s \"%s\"", browsers[i], url));
         try {
-            new BrowserLauncher().openURLinBrowser(url);
-        }catch (Exception e){
-            e.printStackTrace();
+            rt.exec(new String[]{"sh", "-c", cmd.toString()});
+        } catch (Exception e){
+                e.printStackTrace();
         }
 
     }
