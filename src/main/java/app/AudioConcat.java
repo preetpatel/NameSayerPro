@@ -120,7 +120,7 @@ public class AudioConcat {
             List<String> desilencedList = new ArrayList<>();
 
             //create a 0.25 second silent audio for concatenation purposes
-            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.2 " +NameSayer.concatenationTempPath+"/silent.wav" );
+            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.1 " +NameSayer.concatenationTempPath+"/silent.wav" );
             Process process = builderSilence.start();
             process.waitFor();
             int i=0;
