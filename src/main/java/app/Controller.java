@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
 import com.jfoenix.controls.JFXDialogLayout;
 import com.jfoenix.controls.events.JFXDialogEvent;
+import edu.stanford.ejalbert.BrowserLauncher;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,23 +31,12 @@ abstract public class Controller {
     @FXML
     public void helpButtonHandler(){
         String url = "https://github.com/PreetPatel/NameSayerPro/wiki";
-
-        if(Desktop.isDesktopSupported()){
-            Desktop desktop = Desktop.getDesktop();
-            try {
-                desktop.browse(new URI(url));
-
-            } catch (IOException | URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }else{
-            Runtime runtime = Runtime.getRuntime();
-            try {
-                runtime.exec("xdg-open " + url);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        try {
+            new BrowserLauncher().openURLinBrowser(url);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
     }
 
     public void switchController(String fxmlFile, AnchorPane anchorPane){
