@@ -55,6 +55,7 @@ public class NewCreationViewController extends Controller{
     @FXML
     private JFXButton compareButton;
 
+    private Thread _playThread;
     private boolean _playing;
     private static String _nameOfCreation;
     private MediaPlayer mediaPlayer;
@@ -285,9 +286,12 @@ public class NewCreationViewController extends Controller{
             String myAudioPath = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
             String databaseAudioPath = databaseName.toURI().toString();
             playAudioFileOnLoop(databaseAudioPath, myAudioPath);
+            _playThread.start();
+
         } else {
             compareButton.setText("Compare");
             _playing = !_playing;
+            _playThread.stop();
         }
     }
 
@@ -329,7 +333,7 @@ public class NewCreationViewController extends Controller{
         listenAudio.setDisable(true);
         keepAudio.setDisable(true);
         redoAudio.setDisable(true);
-        Thread monitorThread = new Thread() {
+        _playThread = new Thread() {
             @Override
             public void run() {
                 try {
@@ -341,7 +345,6 @@ public class NewCreationViewController extends Controller{
                         Process process2 = builder2.start();
                         process2.waitFor();
                     }
-
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
@@ -355,7 +358,5 @@ public class NewCreationViewController extends Controller{
                 }
             }
         };
-
-        monitorThread.start();
     }
 }
