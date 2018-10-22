@@ -17,15 +17,12 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
-import javafx.scene.shape.Circle;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -33,9 +30,7 @@ import javafx.stage.Stage;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
 import org.controlsfx.control.textfield.TextFields;
 
-import javax.swing.*;
 import java.io.*;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.List;
 
@@ -156,12 +151,12 @@ public class SearchNamesViewController extends Controller{
      */
     private void changeDatabaseButtonHandler(){
         DirectoryChooser chooser = new DirectoryChooser();
-        chooser.setTitle("Database");
-        File defaultDirectory = new File(NameSayer.creationsPath);
+        chooser.setTitle("Choose a new Database");
+        File defaultDirectory = new File(NameSayer.audioPath);
         chooser.setInitialDirectory(defaultDirectory);
         File selectedDirectory = chooser.showDialog((Stage)anchorPane.getScene().getWindow());
         if (selectedDirectory.isDirectory()){
-            NameSayer.creationsPath = selectedDirectory.getPath();
+            NameSayer.audioPath = selectedDirectory.getPath();
             switchController("SearchNamesViewController.fxml", anchorPane);
         }
     }
@@ -172,7 +167,7 @@ public class SearchNamesViewController extends Controller{
     private void loadCreationsOntoPane() {
         stackPane.setVisible(false);
 
-        File folder = new File(NameSayer.creationsPath);
+        File folder = new File(NameSayer.audioPath);
         File[] files = folder.listFiles();
 
         for (File file : files) {
@@ -255,7 +250,7 @@ public class SearchNamesViewController extends Controller{
 
         } else {
 
-            File folder = new File(NameSayer.creationsPath);
+            File folder = new File(NameSayer.audioPath);
             File[] files = folder.listFiles();
             boolean fileFound = false;
             String processedSearchedItems = searchedItems.replaceAll("-", " ");

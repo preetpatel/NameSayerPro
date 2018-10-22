@@ -24,7 +24,7 @@ public class DirectoryManager {
     private static File users;
 
     public DirectoryManager() {
-        databaseStorage = new File(NameSayer.creationsPath);
+        databaseStorage = new File(NameSayer.audioPath);
         userCreationsStorage = new File(NameSayer.userRecordingsPath);
         concatenatedNamesStorage = new File(NameSayer.concatenatedNamesPath);
         concatenatedTempStorage = new File(NameSayer.concatenationTempPath);

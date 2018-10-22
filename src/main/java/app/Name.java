@@ -22,7 +22,6 @@ import org.apache.commons.io.filefilter.WildcardFileFilter;
 import java.io.File;
 import java.io.FileFilter;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Name {
@@ -34,7 +33,7 @@ public class Name {
 
     public Name(File file) {
         _name = getFileName(file);
-        _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+        _files = getAllFilesOfName(new File(NameSayer.audioPath));
     }
 
     public Name(File file, File directory) {
@@ -45,7 +44,7 @@ public class Name {
     public Name(String name) {
 
         _name = name;
-        _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+        _files = getAllFilesOfName(new File(NameSayer.audioPath));
 
     }
 
