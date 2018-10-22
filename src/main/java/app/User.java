@@ -10,8 +10,9 @@ public class User {
     private String _username;
     private String _name;
     private String _password;
-    private int _score;
+    private int _score = 0;
     private static int VALIDSESSION = 600000;
+    private int _rank;
 
     public User(String username){
         _username = username;
@@ -34,8 +35,14 @@ public class User {
         return _score;
     }
 
-    public void increaseScore(){
-        _score++;
+    public void increaseScore(int i){
+        _score+=i;
+        saveScore();
+    }
+
+    public int getRank() {
+        readScores();
+        return _rank;
     }
 
     public String getUsername() {
@@ -51,12 +58,23 @@ public class User {
         _score = 0;
         BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/score.txt"));
         String line;
+        int rank = 1;
             while ((line = br.readLine()) != null) {
                 String[] scoreInfo = line.split("\\s+");
-                if (scoreInfo[0].equals(_username)) {
+                if (scoreInfo.length >= 2 && scoreInfo[0].equals(_username)) {
                     _score = Integer.parseInt(scoreInfo[1]);
                 }
             }
+            br.close();
+            BufferedReader rankReader = new BufferedReader(new FileReader(NameSayer.directoryPath +"/score.txt"));
+            while ((line = rankReader.readLine()) != null) {
+                String[] scoreInfo = line.split("\\s+");
+                if (scoreInfo.length >= 2 && Integer.parseInt(scoreInfo[1]) > _score) {
+                    rank++;
+                }
+            }
+            rankReader.close();
+            _rank = rank;
         }catch (Exception e){
             JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
 
@@ -135,22 +153,22 @@ public class User {
             boolean userExists = false;
 
             while ((line = br.readLine()) != null) {
-                if (line.contains("username")) {
+                if (line.contains(_username)) {
                     userExists = true;
                     break;
                 }
             }
 
-            //if a score does not exist, add a new rating
+            //if a score does not exist, add a new score
             if (!userExists) {
-                writer = new BufferedWriter(new FileWriter(NameSayer.directoryPath +"/score.txt", true));
-                writer.write(_username + " " + _score + "\n");
+                writer = new BufferedWriter(new FileWriter(DirectoryManager.getScore(), true));
+                writer.write(_username + " " + _score + System.getProperty("line.separator"));
                 writer.close();
 
-                //if a score does exist, replace the old rating
+                //if a score does exist, replace the old score
             } else {
                 String old = "";
-                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getScore()));
                 String line2 = reader.readLine();
 
                 while (line2 != null) {
@@ -159,9 +177,11 @@ public class User {
 
 
                 }
-                String newContent = old.replaceAll(_username + " " + "\\d+", Integer.toString(_score));
-                FileWriter writer2 = new FileWriter(DirectoryManager.getRatings());
+                String newContent = old.replaceAll(_username + " " + "\\d+", _username + " " + Integer.toString(_score));
+                File temp = new File("tempScoreFile.txt");
+                FileWriter writer2 = new FileWriter(temp);
                 writer2.write(newContent);
+                temp.renameTo(DirectoryManager.getScore());
                 reader.close();
                 writer2.close();
             }

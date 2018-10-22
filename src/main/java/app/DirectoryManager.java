@@ -64,6 +64,10 @@ public class DirectoryManager {
         return ratings;
     }
 
+    public static File getScore() {
+        return score;
+    }
+
     private void checkForTextFile(File file){
         if (!file.exists()) {
             try {

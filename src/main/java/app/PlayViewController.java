@@ -269,7 +269,8 @@ public class PlayViewController extends Controller{
 
                 String compareString = currentFile.getName() + "_V";
                 compareString = compareString.toLowerCase();
-                if (tempName.getName().toLowerCase().contains(compareString) && tempName.isValid()) {
+                String currentFileName = tempName.getName().replaceAll("\\d$", "").toLowerCase();
+                if (currentFileName.equals(compareString) && tempName.isValid()) {
                     String fileName = tempName.getName().replace("_", " ");
                     previousAttempts.getItems().add(fileName);
                     userFiles.put(fileName, file);
@@ -474,6 +475,11 @@ public class PlayViewController extends Controller{
                         micTestButton.setDisable(false);
                         nextButton.setDisable(false);
                         previousButton.setDisable(false);
+
+                        // Score is increased by 1 for listening to a database name
+                        NameSayer.currentUser.increaseScore(1);
+
+
                     }
                 });
 
