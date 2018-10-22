@@ -3,11 +3,9 @@ package app;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.*;
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +31,7 @@ public class AudioConcat {
 
         if (toBeConcated.size() == 1){
             Name name = new Name(toBeConcated.get(0));
-            for (File file : name.getAllFilesOfName(new File(NameSayer.creationsPath))){
+            for (File file : name.getAllFilesOfName(new File(NameSayer.audioPath))){
                 List<File> fileList = new ArrayList<>();
                 fileList.add(file);
                 _listOfConcatenations.add(fileList);
@@ -128,7 +126,7 @@ public class AudioConcat {
             for (File fileToNormalise : toBeConcated) {
                 String normalisedFile = "/normalised_" + Integer.toString(i) + ".wav";
                 normalisedList.add(normalisedFile);
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.creationsPath + "/" + fileToNormalise.getName() + " -filter:a dynaudnorm " + NameSayer.concatenationTempPath + normalisedFile);
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.audioPath + "/" + fileToNormalise.getName() + " -filter:a dynaudnorm " + NameSayer.concatenationTempPath + normalisedFile);
                 Process processNormal = builder.start();
                 processNormal.waitFor();
                 i++;
@@ -247,7 +245,7 @@ public class AudioConcat {
                 //if the current file looked at is higher rated than the previous versions of that file, set it as the best file version
                 if (ratingNumber > maxRatingNumber) {
                     maxRatingNumber = ratingNumber;
-                    bestFileVersion = new File(NameSayer.creationsPath + "/" + ratingInfo[0]);
+                    bestFileVersion = new File(NameSayer.audioPath + "/" + ratingInfo[0]);
 
                 }
             }
@@ -256,7 +254,7 @@ public class AudioConcat {
         //if no rating or no rating above 1 exists for any version of the file, get the first version that comes up
         if (bestFileVersion==null){
             FileFilter filter = new WildcardFileFilter("*_" + name + ".wav", IOCase.INSENSITIVE);
-            File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
+            File[] files = (new File(NameSayer.audioPath)).listFiles(filter);
 
             try {
                 bestFileVersion = files[files.length-1];

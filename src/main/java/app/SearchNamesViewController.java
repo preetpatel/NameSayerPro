@@ -146,7 +146,7 @@ public class SearchNamesViewController extends Controller{
     private void loadCreationsOntoPane() {
         stackPane.setVisible(false);
 
-        File folder = new File(NameSayer.creationsPath);
+        File folder = new File(NameSayer.audioPath);
         File[] files = folder.listFiles();
 
         for (File file : files) {
@@ -245,7 +245,7 @@ public class SearchNamesViewController extends Controller{
             addedCreationsPane.getChildren().addAll(creationsButtonList);
         } else {
 
-            File folder = new File(NameSayer.creationsPath);
+            File folder = new File(NameSayer.audioPath);
             File[] files = folder.listFiles();
             boolean fileFound = false;
             String processedSearchedItems = searchedItems.replaceAll("-", " ");
