@@ -96,17 +96,11 @@ public class Name {
      * @return a list of all files which include the name object
      */
     public List<File> getAllFilesOfName(File dir) {
-        if (_name.contains(" ")) {
-            String searchName = _name.replaceAll(" ","_");
-            FileFilter filter = new WildcardFileFilter("*_" + _name + ".wav", IOCase.INSENSITIVE);
-            File[] files = dir.listFiles(filter);
-            return Arrays.asList(files);
-        } else {
             Pattern pat = Pattern.compile(".*\\d" + "_" + _name + ".wav", Pattern.CASE_INSENSITIVE);
             FileFilter filter = new RegexFileFilter(pat);
             File[] files = dir.listFiles(filter);
             return Arrays.asList(files);
-        }
+
     }
 
     public String getName() {
