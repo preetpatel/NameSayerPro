@@ -23,6 +23,7 @@ public class AudioConcat {
     private List<String> nonExistantNames;
 
     /**
+     * Creates an object for the names that are to be concatenated
      * @param toBeConcated the list of names to be concatenated
      * @throws FileNotFoundException if an input name is not found within the database
      */

@@ -68,6 +68,10 @@ public class DirectoryManager {
         return score;
     }
 
+    /**
+     * checks whether the input text file exists, and creates it if it doesnt
+     * @param file
+     */
     private void checkForTextFile(File file){
         if (!file.exists()) {
             try {
@@ -77,7 +81,10 @@ public class DirectoryManager {
             }
         }
     }
-
+    /**
+     * checks whether the input directory exists, and creates it if it doesnt
+     * @param file
+     */
     private void checkForDirectory(File file){
         if (!file.exists()) {
             if (!file.mkdirs()) {

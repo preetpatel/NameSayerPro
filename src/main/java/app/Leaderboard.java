@@ -12,6 +12,7 @@ public class Leaderboard {
 
     private Map<String, Integer> _scores = new HashMap<>();
 
+
     public Leaderboard(File leaderFile) {
         try {
             BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath + "/score.txt"));
