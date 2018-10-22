@@ -13,7 +13,6 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -218,6 +217,10 @@ public class SearchNamesViewController extends Controller{
         }
     }
 
+    /**
+     * removes all the buttons from the list
+     * @param e
+     */
     @FXML
     private void removeAllButtonHandler(ActionEvent e) {
         creationsList.clear();
@@ -237,17 +240,29 @@ public class SearchNamesViewController extends Controller{
      * Allows adding creations to the list of creations to be played
      */
     private void addButtonHandler(ActionEvent e) {
-        addedCreationsPane.getChildren().clear();
+
         stackPane.setVisible(false);
         stackPane.getChildren().clear();
         searchField.setDisable(true);
 
         String searchedItems = searchField.getText().trim();
-        if (searchedItems.equals("")) {
+        addNamesToList(searchedItems, true);
 
+    }
+
+    /**
+     * adds given searched item to the list of names
+     *
+     * @param searchedItems item to be added
+     * @param errors if we want error messages or not
+     * @return true if file is successfully added
+     */
+    private boolean addNamesToList(String searchedItems, boolean errors){
+        addedCreationsPane.getChildren().clear();
+
+        if (searchedItems.equals("")) {
             showErrorDialog("Please enter a valid name", "Ok");
             addedCreationsPane.getChildren().addAll(creationsButtonList);
-
         } else {
 
             File folder = new File(NameSayer.audioPath);
@@ -289,22 +304,28 @@ public class SearchNamesViewController extends Controller{
                     removeButton.setVisible(true);
                     removeAllButton.setVisible(true);
 
-                } else {
+                } else if (errors){
                     showErrorDialog("This name has already been added", "Ok");
                 }
 
                 searchField.setDisable(false);
 
-            } else {
+            } else if (errors){
                 // If no name is found
                 showErrorDialog("This name could not be found on the database", "Ok");
+                return false;
             }
             addedCreationsPane.getChildren().addAll(creationsButtonList);
             searchField.setText("");
             searchBinding.dispose();
+            return true;
         }
+        return false;
     }
 
+    /**
+     * allows user to upload a text file as the database
+     */
     @FXML
     private void uploadButtonHandler() {
         FileChooser fileChooser = new FileChooser();
@@ -312,12 +333,26 @@ public class SearchNamesViewController extends Controller{
         File result = fileChooser.showOpenDialog((Stage)anchorPane.getScene().getWindow());
         if (result != null) {
             uploadList = result;
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    startPracticeHandler(null);
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(uploadList));
+                String line;
+                boolean success = true;
+                boolean atLeastOneFailure = false;
+                //scan through the entire text file
+                while ((line = br.readLine()) != null) {
+                    success = addNamesToList(line, false);
+                    if (!success){
+                        atLeastOneFailure = true;
+                    }
                 }
-            });
+
+                if (atLeastOneFailure){
+                    showErrorDialogOnStackpane("Some names in the list could not be added because they were invalid", "OK",stackPane);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
         }
     }
 
@@ -456,6 +491,10 @@ public class SearchNamesViewController extends Controller{
         deleteDialog.show();
     }
 
+
+    /**
+     * loads the profile view
+     */
     @FXML
     public void profileButtonHandler() {
         JFXButton logoutButton = new JFXButton("Logout");

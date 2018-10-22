@@ -38,6 +38,9 @@ public class DirectoryManager {
      */
     public void runChecks() {
 
+        CopyDatabaseFiles copier = new CopyDatabaseFiles();
+        copier.run();
+
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);

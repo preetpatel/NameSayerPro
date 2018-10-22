@@ -88,6 +88,14 @@ public class NewCreationViewController extends Controller{
      */
     @FXML
     private void initialize() {
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                setupVolume();
+            }
+        });
+
         loaderText.setText("Press the button below and pronounce the name: \"" + _nameOfCreation + "\"");
         listenAudio.setVisible(false);
         keepAudio.setVisible(false);
@@ -161,6 +169,7 @@ public class NewCreationViewController extends Controller{
                     close.setDisable(false);
                     if (databaseName != null) {
                         compareButton.setVisible(true);
+
                     }
                 }
             });
@@ -292,6 +301,9 @@ public class NewCreationViewController extends Controller{
             compareButton.setText("Compare");
             _playing = !_playing;
             _playThread.stop();
+            listenAudio.setDisable(false);
+            keepAudio.setDisable(false);
+            redoAudio.setDisable(false);
         }
     }
 
@@ -329,6 +341,12 @@ public class NewCreationViewController extends Controller{
         monitorThread.start();
     }
 
+
+    /**
+     * functionality for the program to play the files given on loop
+     * @param filePath1 path to first file
+     * @param filePath2 path to second file
+     */
     private void playAudioFileOnLoop(String filePath1, String filePath2){
         listenAudio.setDisable(true);
         keepAudio.setDisable(true);
@@ -338,12 +356,14 @@ public class NewCreationViewController extends Controller{
             public void run() {
                 try {
                     while(_playing) {
+
                         ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + filePath1);
-                        Process process = builder.start();
-                        process.waitFor();
+                        Process playProcess1 = builder.start();
+                        playProcess1.waitFor();
                         ProcessBuilder builder2 = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + filePath2);
-                        Process process2 = builder2.start();
-                        process2.waitFor();
+                        Process playProcess2 = builder2.start();
+                        playProcess2.waitFor();
+
                     }
                     Platform.runLater(new Runnable() {
                         @Override
@@ -359,4 +379,5 @@ public class NewCreationViewController extends Controller{
             }
         };
     }
+
 }
