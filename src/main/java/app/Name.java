@@ -15,14 +15,11 @@ import com.jfoenix.controls.JFXButton;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.RegexFileFilter;
-import org.apache.commons.io.filefilter.WildcardFileFilter;
 
 import java.io.File;
 import java.io.FileFilter;
 import java.util.*;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Name {
@@ -34,7 +31,7 @@ public class Name {
 
     public Name(File file) {
         _name = getFileName(file);
-        _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+        _files = getAllFilesOfName(new File(NameSayer.audioPath));
     }
 
     public Name(File file, File directory) {
@@ -45,7 +42,7 @@ public class Name {
     public Name(String name) {
 
         _name = name;
-        _files = getAllFilesOfName(new File(NameSayer.creationsPath));
+        _files = getAllFilesOfName(new File(NameSayer.audioPath));
 
     }
 
@@ -96,17 +93,11 @@ public class Name {
      * @return a list of all files which include the name object
      */
     public List<File> getAllFilesOfName(File dir) {
-        if (_name.contains(" ")) {
-            String searchName = _name.replaceAll(" ","_");
-            FileFilter filter = new WildcardFileFilter("*_" + _name + ".wav", IOCase.INSENSITIVE);
-            File[] files = dir.listFiles(filter);
-            return Arrays.asList(files);
-        } else {
             Pattern pat = Pattern.compile(".*\\d" + "_" + _name + ".wav", Pattern.CASE_INSENSITIVE);
             FileFilter filter = new RegexFileFilter(pat);
             File[] files = dir.listFiles(filter);
             return Arrays.asList(files);
-        }
+
     }
 
     public String getName() {

@@ -53,9 +53,10 @@ public class NewCreationViewController extends Controller{
     private JFXButton redoAudio;
 
     @FXML
-    private JFXButton databaseButton;
+    private JFXButton compareButton;
 
-
+    private Thread _playThread;
+    private boolean _playing;
     private static String _nameOfCreation;
     private MediaPlayer mediaPlayer;
     private static File databaseName;
@@ -72,7 +73,7 @@ public class NewCreationViewController extends Controller{
      */
     @FXML
     private void handleCloseButton() {
-
+        _playing = false;
         Thread deleteAudio = new Thread(new deleteAudioFile());
         deleteAudio.start();
         switchController("PlayViewController.fxml", anchorPane);
@@ -87,11 +88,19 @@ public class NewCreationViewController extends Controller{
      */
     @FXML
     private void initialize() {
+
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                setupVolume();
+            }
+        });
+
         loaderText.setText("Press the button below and pronounce the name: \"" + _nameOfCreation + "\"");
         listenAudio.setVisible(false);
         keepAudio.setVisible(false);
         redoAudio.setVisible(false);
-        databaseButton.setVisible(false);
+        compareButton.setVisible(false);
     }
 
     /**
@@ -159,7 +168,8 @@ public class NewCreationViewController extends Controller{
                     redoAudio.setVisible(true);
                     close.setDisable(false);
                     if (databaseName != null) {
-                        databaseButton.setVisible(true);
+                        compareButton.setVisible(true);
+
                     }
                 }
             });
@@ -278,8 +288,23 @@ public class NewCreationViewController extends Controller{
     }
 
     @FXML
-    private void playDatabaseNameButtonHandler() {
-        playAudioFile(databaseName.toURI().toString());
+    private void compareButtonHandler() {
+        if (!_playing) {
+            compareButton.setText("Stop");
+            _playing = !_playing;
+            String myAudioPath = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
+            String databaseAudioPath = databaseName.toURI().toString();
+            playAudioFileOnLoop(databaseAudioPath, myAudioPath);
+            _playThread.start();
+
+        } else {
+            compareButton.setText("Compare");
+            _playing = !_playing;
+            _playThread.stop();
+            listenAudio.setDisable(false);
+            keepAudio.setDisable(false);
+            redoAudio.setDisable(false);
+        }
     }
 
     /**
@@ -290,8 +315,7 @@ public class NewCreationViewController extends Controller{
         listenAudio.setDisable(true);
         keepAudio.setDisable(true);
         redoAudio.setDisable(true);
-        databaseButton.setDisable(true);
-        record.setDisable(true);
+        compareButton.setDisable(true);
         Thread monitorThread = new Thread() {
             @Override
             public void run() {
@@ -302,13 +326,58 @@ public class NewCreationViewController extends Controller{
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
-                listenAudio.setDisable(false);
-                keepAudio.setDisable(false);
-                redoAudio.setDisable(false);
-                databaseButton.setDisable(false);
-                record.setDisable(true);
+
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        listenAudio.setDisable(false);
+                        keepAudio.setDisable(false);
+                        redoAudio.setDisable(false);
+                        compareButton.setDisable(false);
+                    }
+                });
             }
         };
         monitorThread.start();
     }
+
+
+    /**
+     * functionality for the program to play the files given on loop
+     * @param filePath1 path to first file
+     * @param filePath2 path to second file
+     */
+    private void playAudioFileOnLoop(String filePath1, String filePath2){
+        listenAudio.setDisable(true);
+        keepAudio.setDisable(true);
+        redoAudio.setDisable(true);
+        _playThread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while(_playing) {
+
+                        ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + filePath1);
+                        Process playProcess1 = builder.start();
+                        playProcess1.waitFor();
+                        ProcessBuilder builder2 = new ProcessBuilder("/bin/bash", "-c", "ffplay -nodisp -autoexit " + filePath2);
+                        Process playProcess2 = builder2.start();
+                        playProcess2.waitFor();
+
+                    }
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            listenAudio.setDisable(false);
+                            keepAudio.setDisable(false);
+                            redoAudio.setDisable(false);
+                        }
+                    });
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        };
+    }
+
 }

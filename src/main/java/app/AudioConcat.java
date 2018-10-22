@@ -3,11 +3,9 @@ package app;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOCase;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 import java.io.*;
 import java.text.DateFormat;
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,7 +31,7 @@ public class AudioConcat {
 
         if (toBeConcated.size() == 1){
             Name name = new Name(toBeConcated.get(0));
-            for (File file : name.getAllFilesOfName(new File(NameSayer.creationsPath))){
+            for (File file : name.getAllFilesOfName(new File(NameSayer.audioPath))){
                 List<File> fileList = new ArrayList<>();
                 fileList.add(file);
                 _listOfConcatenations.add(fileList);
@@ -115,12 +113,11 @@ public class AudioConcat {
     public List<String> concatenate() throws InterruptedException, IOException {
 
         for(List<File> toBeConcated : _listOfConcatenations) {
-
             List<String> normalisedList = new ArrayList<>();
             List<String> desilencedList = new ArrayList<>();
 
             //create a 0.25 second silent audio for concatenation purposes
-            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.2 " +NameSayer.concatenationTempPath+"/silent.wav" );
+            ProcessBuilder builderSilence = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -f lavfi -i anullsrc=channel_layout=5.1:sample_rate=48000 -t 0.1 " +NameSayer.concatenationTempPath+"/silent.wav" );
             Process process = builderSilence.start();
             process.waitFor();
             int i=0;
@@ -129,7 +126,7 @@ public class AudioConcat {
             for (File fileToNormalise : toBeConcated) {
                 String normalisedFile = "/normalised_" + Integer.toString(i) + ".wav";
                 normalisedList.add(normalisedFile);
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.creationsPath + "/" + fileToNormalise.getName() + " -filter:a loudnorm " + NameSayer.concatenationTempPath + normalisedFile);
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.audioPath + "/" + fileToNormalise.getName() + " -filter:a dynaudnorm " + NameSayer.concatenationTempPath + normalisedFile);
                 Process processNormal = builder.start();
                 processNormal.waitFor();
                 i++;
@@ -140,10 +137,11 @@ public class AudioConcat {
             for (String normalisedFile : normalisedList) {
                 String desilencedFile = "/desilenced_" + Integer.toString(i) + ".wav";
                 desilencedList.add(desilencedFile);
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -hide_banner -y -i " + NameSayer.concatenationTempPath + normalisedFile + " -af silenceremove=1:0:-35dB:1:5:-35dB:0:peak " + NameSayer.concatenationTempPath + desilencedFile);
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -hide_banner -y -i " + NameSayer.concatenationTempPath + normalisedFile + " -af silenceremove=1:0:-50dB " + NameSayer.concatenationTempPath + desilencedFile);
                 Process processDesilence = builder.start();
                 processDesilence.waitFor();
                 i++;
+
             }
 
 
@@ -247,7 +245,7 @@ public class AudioConcat {
                 //if the current file looked at is higher rated than the previous versions of that file, set it as the best file version
                 if (ratingNumber > maxRatingNumber) {
                     maxRatingNumber = ratingNumber;
-                    bestFileVersion = new File(NameSayer.creationsPath + "/" + ratingInfo[0]);
+                    bestFileVersion = new File(NameSayer.audioPath + "/" + ratingInfo[0]);
 
                 }
             }
@@ -256,7 +254,7 @@ public class AudioConcat {
         //if no rating or no rating above 1 exists for any version of the file, get the first version that comes up
         if (bestFileVersion==null){
             FileFilter filter = new WildcardFileFilter("*_" + name + ".wav", IOCase.INSENSITIVE);
-            File[] files = (new File(NameSayer.creationsPath)).listFiles(filter);
+            File[] files = (new File(NameSayer.audioPath)).listFiles(filter);
 
             try {
                 bestFileVersion = files[files.length-1];

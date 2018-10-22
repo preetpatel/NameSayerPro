@@ -24,7 +24,7 @@ public class DirectoryManager {
     private static File users;
 
     public DirectoryManager() {
-        databaseStorage = new File(NameSayer.creationsPath);
+        databaseStorage = new File(NameSayer.audioPath);
         userCreationsStorage = new File(NameSayer.userRecordingsPath);
         concatenatedNamesStorage = new File(NameSayer.concatenatedNamesPath);
         concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
@@ -37,6 +37,9 @@ public class DirectoryManager {
      * Checks that the directories and files which are to be used exist
      */
     public void runChecks() {
+
+        CopyDatabaseFiles copier = new CopyDatabaseFiles();
+        copier.run();
 
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {

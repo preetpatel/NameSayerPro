@@ -23,6 +23,13 @@
                   <Font size="24.0" />
                </font>
             </JFXButton>
+
+                <JFXButton fx:id="_helpButton" layoutX="1050.0" layoutY="37.0" onAction="#helpButtonHandler" prefHeight="57.0" prefWidth="137.0" style="-fx-background-color: #023436;" text="Help" textFill="WHITE">
+                    <font>
+                        <Font size="24.0" />
+                    </font>
+                </JFXButton>
+
             </children>
         </AnchorPane>
       <JFXButton fx:id="addButton" layoutX="770.0" layoutY="173.0" onAction="#addButtonHandler" prefHeight="57.0" prefWidth="168.0" style="-fx-background-color: #037971;" text="Add" textFill="WHITE">
