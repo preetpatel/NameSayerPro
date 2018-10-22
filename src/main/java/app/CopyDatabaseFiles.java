@@ -10,7 +10,6 @@ import java.nio.file.Paths;
 public class CopyDatabaseFiles implements Runnable {
 
     public CopyDatabaseFiles(){
-
     }
 
     @Override

@@ -40,7 +40,7 @@ abstract public class Controller {
      */
     public void helpButtonHandler(){
         Runtime rt = Runtime.getRuntime();
-        String url = "https://github.com/PreetPatel/NameSayerPro/wiki";
+        String url = "https://docdro.id/wu624B7";
         String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror",
                 "netscape", "opera", "links", "lynx" };
 
