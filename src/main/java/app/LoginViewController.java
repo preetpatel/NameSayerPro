@@ -1,3 +1,13 @@
+/**
+ * LoginViewController.java
+ * Copyright Preet Patel, 2018
+ * A class which handles the functionality of the login screen
+ *
+ * @Author Preet Patel
+ * @Author Chuyang Chen
+ * Date Created: 17 October, 2018
+ */
+
 package app;
 
 import com.jfoenix.controls.*;
@@ -37,20 +47,22 @@ public class LoginViewController extends Controller{
 
     @FXML
     /**
-     * Functionality for logging in
+     * Functionality for the logging in button
      */
     private void loginButtonHandler() {
-
+        //get the info from the fields
         String username = _username.getText();
         String password = _password.getText();
         User user = new User(username, password);
 
+        //check whether the information allows a login to be performed
         if (user.usernamePasswordMatch()) {
             User authorisedUser = new User(_username.getText());
             authorisedUser.setPassword(_password.getText());
             NameSayer.setCurrentUser(authorisedUser);
             switchController("SearchNamesViewController.fxml", anchorPane);
         } else {
+            //error for inability to login
             _username.setDisable(true);
             _password.setDisable(true);
             stackPane.setVisible(true);
@@ -90,6 +102,9 @@ public class LoginViewController extends Controller{
     }
 
     @FXML
+    /**
+     * handles login to change pane to the search names view controller
+     */
     private void newUserButtonHandler() {
         switchController("RegisterViewController.fxml",anchorPane);
     }

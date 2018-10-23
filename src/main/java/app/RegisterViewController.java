@@ -1,3 +1,12 @@
+/**
+ * RegisterViewController.java
+ * Copyright Preet Patel, 2018
+ * Handles functionality for the registration screen
+ *
+ * @Author Preet Patel
+ * Date Created: 19 October, 2018
+ */
+
 package app;
 
 import com.jfoenix.controls.JFXPasswordField;

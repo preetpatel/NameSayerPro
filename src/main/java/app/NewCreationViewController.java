@@ -10,7 +10,6 @@
  */
 
 package app;
-
 import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -291,6 +290,9 @@ public class NewCreationViewController extends Controller{
     }
 
     @FXML
+    /**
+     * provides compare functionality for system. plays User recording and database recording on loop
+     */
     private void compareButtonHandler() {
         if (!_playing) {
             NameSayer.currentUser.increaseCompareScore(1);

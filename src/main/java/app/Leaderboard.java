@@ -1,5 +1,14 @@
-package app;
+/**
+ * Leaderboard.java
+ * Copyright Preet Patel, 2018
+ * A class which handles the functionality for the leaderboard on the profile screen
+ *
+ * @Author Preet Patel
+ * @Author Chuyang Chen
+ * Date Created: 22 October, 2018
+ */
 
+package app;
 
 import javax.swing.*;
 import java.io.BufferedReader;

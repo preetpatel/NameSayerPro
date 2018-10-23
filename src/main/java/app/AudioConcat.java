@@ -1,3 +1,14 @@
+/**
+ * AudioConcat.java
+ * Class for normalising and concatenating audio files
+ * <p>
+ * Copyright Preet Patel, 2018
+ *
+ * @Author Preet Patel
+ * @Author Chuyang Chen
+ * Date Created: 5 October, 2018
+ */
+
 package app;
 
 import org.apache.commons.io.FileUtils;

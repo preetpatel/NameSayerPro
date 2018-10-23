@@ -1,3 +1,12 @@
+/**
+ * ProfileViewController.java
+ * Copyright Preet Patel, 2018
+ * Handles functionality for the profile screen
+ *
+ * @Author Preet Patel
+ * Date Created: 21 October, 2018
+ */
+
 package app;
 
 import javafx.fxml.FXML;
@@ -42,6 +51,7 @@ public class ProfileViewController extends Controller{
 
     @FXML
     private void initialize() {
+        //get information on the user
         getScore();
         getPlacement();
         loadLeaderboard();
@@ -63,6 +73,9 @@ public class ProfileViewController extends Controller{
 
     }
 
+    /**
+     * Updates the leaderboard for current score information
+     */
     private void loadLeaderboard(){
         Leaderboard scoresLeaderBoard = new Leaderboard();
         for (Map.Entry<String, Integer> entry : scoresLeaderBoard.getScores().entrySet()) {
@@ -75,6 +88,9 @@ public class ProfileViewController extends Controller{
         _myScoreText.setText("My Score: " + String.valueOf(NameSayer.getCurrentUser().getTotalScore()));
     }
 
+    /**
+     * Updates the badges for the amount of practices a user has done
+     */
     private void updatePracticeAwards(){
         int listenScore = currentSessionUser.getListenToNameScore();
         if(listenScore < 200) {
@@ -91,6 +107,9 @@ public class ProfileViewController extends Controller{
         }
     }
 
+    /**
+     * Updates the badges for the amount of recordings a user has done
+     */
     private void updateRecordAwards() {
         int recordScore = (currentSessionUser.getRecordingNameAndSavingScore() /2) + currentSessionUser.getRecordingNameAndNotSavingScore();
         if (recordScore < 100) {
@@ -104,6 +123,10 @@ public class ProfileViewController extends Controller{
         }
     }
 
+
+    /**
+     * Updates the badges for the amount of compares a user has done
+     */
     private void updateCompareAwards() {
         int compareScore = currentSessionUser.getCompareAudioScore();
         if (compareScore < 100) {
@@ -117,6 +140,9 @@ public class ProfileViewController extends Controller{
         }
     }
 
+    /**
+     * Updates the badges for the amount of rating a user has done
+     */
     private void updateRatingAwards() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath + "/ratings.txt"));
@@ -133,6 +159,9 @@ public class ProfileViewController extends Controller{
         }
     }
 
+    /**
+     * Updates the badges for the amount of score a user has
+     */
     private void updateUserCountAward() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath + "/users.txt"));
@@ -149,6 +178,9 @@ public class ProfileViewController extends Controller{
         }
     }
 
+    /**
+     * Gets the leaderboard placement of the current user in terms of score
+     */
     private void getPlacement(){
         //shows what place the user is in terms of SCORE ONLY
         int rank = NameSayer.getCurrentUser().getRank();
@@ -168,6 +200,9 @@ public class ProfileViewController extends Controller{
         }
     }
 
+    /**
+     * Allows badge information to be presented when hovering over the badge
+     */
     private void addHoverTextToAwards() {
         Tooltip.install(_practiceFirstName, new Tooltip("Practice First Name"));
         Tooltip.install(_recordFirstName, new Tooltip("Record First Name"));
