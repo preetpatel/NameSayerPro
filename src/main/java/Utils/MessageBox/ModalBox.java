@@ -1,4 +1,4 @@
-package messageBoxUtil;
+package Utils.MessageBox;
 
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXDialog;
