@@ -1,3 +1,13 @@
+/**
+ * Controller.java
+ * Copyright Preet Patel, 2018
+ * an abstract class which contains the shared functionality by all the controllers
+ *
+ * @Author Preet Patel
+ * @Author Chuyang Chen
+ * Date Created: 15 October, 2018
+ */
+
 package app;
 
 import com.jfoenix.controls.JFXButton;
@@ -37,7 +47,7 @@ abstract public class Controller {
      */
     @FXML public void helpButtonHandler(){
         Runtime rt = Runtime.getRuntime();
-        String url = "https://docdro.id/wu624B7";
+        String url = "https://docdro.id/VePeHbN";
         String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror",
                 "netscape", "opera", "links", "lynx" };
 
@@ -55,6 +65,11 @@ abstract public class Controller {
 
     }
 
+    /**
+     * Method to switch the controller for a given anchorpane to a given fxml file
+     * @param fxmlFile the fxml file containing the file to be switched to
+     * @param anchorPane anchorpane to be switched
+     */
     public void switchController(String fxmlFile, AnchorPane anchorPane){
         Platform.runLater(new Runnable() {
             @Override

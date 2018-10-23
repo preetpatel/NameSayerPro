@@ -1,3 +1,13 @@
+/**
+ * ModalBox.java
+ * Used whenever a popup is required
+ * <p>
+ * Copyright Preet Patel, 2018
+ *
+ * @Author Preet Patel
+ * Date Created: 19 August, 2018
+ */
+
 package Utils.MessageBox;
 
 import com.jfoenix.controls.JFXButton;
@@ -14,6 +24,12 @@ public class ModalBox {
     private JFXButton _confirmButton = new JFXButton();
     private JFXDialog _dialog;
 
+    /**
+     * Creates a modalbox popup object
+     * @param stackPane the stackpane that the popup shows up on
+     * @param headerText the title text of the popup
+     * @param buttonText the button text of the popup
+     */
     public ModalBox(StackPane stackPane, String headerText, String buttonText) {
 
         stackPane.setVisible(true);
@@ -41,6 +57,10 @@ public class ModalBox {
         _dialog.show();
     }
 
+    /**
+     * Adds a handler for functionality of the button
+     * @param eventHandler
+     */
     public void setHandlers(EventHandler eventHandler) {
         _confirmButton.setOnAction(eventHandler);
         EventHandler<ActionEvent> current = _confirmButton.getOnAction();

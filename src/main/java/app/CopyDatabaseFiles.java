@@ -1,3 +1,12 @@
+/**
+ * CopyDatabaseFiles.java
+ * Copyright Preet Patel, 2018
+ * A class which, on startup, if a database does not exist, copies the database directory in the project file to the
+ * NameSayer file in Home/Documents
+ *
+ * @Author Chuyang Chen
+ * Date Created: 21 October, 2018
+ */
 package app;
 
 import org.apache.commons.io.FileUtils;

@@ -44,6 +44,9 @@ public class NameSayer extends Application {
         userRecordingsPath = userRecordingsPath + "/" + currentUser.getUsername();
     }
 
+    /**
+     * Removes the user from the current user to perform logout
+     */
     public static void performUserLogout() {
         currentUser.updateLoginTime(false);
         currentUser = null;

@@ -1,3 +1,13 @@
+/**
+ * User.java
+ * Class representing individual users for the program
+ * Copyright Preet Patel, 2018
+ *
+ * @Author Preet Patel
+ * @Author Chuyang Chen
+ * Date Created: 19 October, 2018
+ */
+
 package app;
 
 import org.apache.commons.codec.digest.DigestUtils;
@@ -231,6 +241,10 @@ public class User {
         }
     }
 
+    /**
+     * Updates the loging to for the current user
+     * @param valid
+     */
     public void updateLoginTime(boolean valid) {
         try {
             /*
@@ -271,6 +285,10 @@ public class User {
         }
     }
 
+    /**
+     * Gets the current user that is supposed to be logged in.
+     * @return
+     */
     public static User getSessionValidUser() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(new File(NameSayer.directoryPath + "/users.txt")));

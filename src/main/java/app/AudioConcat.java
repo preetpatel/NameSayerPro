@@ -1,3 +1,14 @@
+/**
+ * AudioConcat.java
+ * Class for normalising and concatenating audio files
+ * <p>
+ * Copyright Preet Patel, 2018
+ *
+ * @Author Preet Patel
+ * @Author Chuyang Chen
+ * Date Created: 5 October, 2018
+ */
+
 package app;
 
 import org.apache.commons.io.FileUtils;
@@ -128,7 +139,7 @@ public class AudioConcat {
             for (File fileToNormalise : toBeConcated) {
                 String normalisedFile = "/normalised_" + Integer.toString(i) + ".wav";
                 normalisedList.add(normalisedFile);
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.audioPath + "/" + fileToNormalise.getName() + " -filter:a loudnorm " + NameSayer.concatenationTempPath + normalisedFile);
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i '" + NameSayer.audioPath + "/" + fileToNormalise.getName() + "' -filter:a loudnorm " + NameSayer.concatenationTempPath + normalisedFile);
                 Process processNormal = builder.start();
                 processNormal.waitFor();
                 i++;
