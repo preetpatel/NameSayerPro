@@ -93,13 +93,6 @@ public class PlayViewController extends Controller{
     @FXML
     public void initialize() {
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                setupVolume();
-            }
-        });
-
         stackPane.setDisable(true);
         if(_creationsList.size() > 0 ) {
             currentLoadedCreation = _creationsList.get(currentSelection);

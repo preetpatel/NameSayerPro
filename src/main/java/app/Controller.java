@@ -55,57 +55,6 @@ abstract public class Controller {
 
     }
 
-    protected void setupVolume(){
-
-        try {
-            //get volume information
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c",  "amixer -D pulse | grep 'Front Left: Playback'");
-            Process audioProcess = builder.start();
-
-            InputStream stdout = audioProcess.getInputStream();
-            BufferedReader stdoutBuffered =new BufferedReader((new InputStreamReader(stdout)));
-            String line = null;
-            List<String> volumeArgs = new ArrayList<>();
-
-            //read volume information
-            while ((line = stdoutBuffered.readLine()) != null )
-            {
-                Pattern p = Pattern.compile("\\[(.*?)\\]");
-                Matcher m = p.matcher(line);
-                while(m.find()) {
-                    String volumeInfo =m.group(1);
-                    volumeInfo = volumeInfo.replaceAll("%", "");
-                    volumeArgs.add(volumeInfo );
-                }
-            }
-            //if volume is off, turn it on and set volume to 0
-            if(volumeArgs.get(1).equals("off")){
-                ProcessBuilder builderOn = new ProcessBuilder("/bin/bash", "-c", "amixer -D pulse sset Master on");
-                builderOn.start();
-                ProcessBuilder builderZero = new ProcessBuilder("/bin/bash", "-c", "amixer -D pulse sset Master 0%");
-                builderZero.start();
-                _volumeBar.setValue(0);
-            } else {
-                //if set volume bar to current volume
-                _volumeBar.setValue(Double.parseDouble(volumeArgs.get(0)));
-            }
-
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    @FXML
-    public void changeVolume(){
-        double desiredVolume = _volumeBar.getValue();
-        try {
-            ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "amixer -D pulse sset Master " + Double.toString(desiredVolume) + "%");
-            builder.start();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
     public void switchController(String fxmlFile, AnchorPane anchorPane){
         Platform.runLater(new Runnable() {
             @Override
