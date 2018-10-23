@@ -139,9 +139,12 @@ public class SearchNamesViewController extends Controller{
         File selectedDirectory = chooser.showDialog(anchorPane.getScene().getWindow());
         if (selectedDirectory != null && selectedDirectory.isDirectory()) {
             int filesCount = 0;
-            for (File file : selectedDirectory.listFiles()) {
-                if (FilenameUtils.getExtension(file.getName()).equals("wav")) {
-                    filesCount++;
+            File[] files = selectedDirectory.listFiles();
+            if(files != null) {
+                for (File file : files) {
+                    if (FilenameUtils.getExtension(file.getName()).equals("wav")) {
+                        filesCount++;
+                    }
                 }
             }
             if (filesCount > 0) {

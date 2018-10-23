@@ -4,6 +4,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
+import javafx.scene.control.Tooltip;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
@@ -13,29 +15,30 @@ import java.util.Map;
 
 public class ProfileViewController extends Controller{
 
-    @FXML
-    private AnchorPane anchorPane;
-    @FXML
-    private Button _backButton;
-    @FXML
-    private Text _myScoreText;
-    @FXML
-    private Text _myPracticesText;
-    @FXML
-    private ListView _leaderboardList;
-    @FXML
-    private Text _myPlacementText;
-    @FXML
-    private ProgressIndicator _progressIndicator;
+    @FXML private AnchorPane anchorPane;
+    @FXML private Button _backButton;
+    @FXML private Text _myScoreText;
+    @FXML private Text _myPracticesText;
+    @FXML private ListView _leaderboardList;
+    @FXML private Text _myPlacementText;
+    @FXML private ImageView _practiceFirstName;
+    @FXML private ImageView _recordFirstName;
+    @FXML private ImageView _compareFirstName;
+    @FXML private ImageView _rate10Recordings;
+    @FXML private ImageView _practice20Names;
+    @FXML private ImageView _practice50Names;
+    @FXML private ImageView _practice200Names;
+    @FXML private ImageView _record50Recordings;
+    @FXML private ImageView _record100Recordings;
+    @FXML private ImageView _get5Users;
 
     @FXML
     private void initialize() {
         getScore();
         getPlacement();
         loadLeaderboard();
+        addHoverTextToAwards();
 
-        // Just some feature testing
-        _progressIndicator.setProgress(0.2);
 
     }
 
@@ -72,6 +75,19 @@ public class ProfileViewController extends Controller{
             default:
                 _myPlacementText.setText("My Placement: " + rank + "th");
         }
+    }
+
+    private void addHoverTextToAwards() {
+        Tooltip.install(_practiceFirstName, new Tooltip("Practice First Name"));
+        Tooltip.install(_recordFirstName, new Tooltip("Record First Name"));
+        Tooltip.install(_compareFirstName, new Tooltip("Compare First Name"));
+        Tooltip.install(_rate10Recordings, new Tooltip("Rate 10 Recordings"));
+        Tooltip.install(_practice20Names, new Tooltip("Practice 20 Names"));
+        Tooltip.install(_practice50Names, new Tooltip("Practice 50 Names"));
+        Tooltip.install(_practice200Names, new Tooltip("Practice 200 Names"));
+        Tooltip.install(_record50Recordings, new Tooltip("Record 50 Names"));
+        Tooltip.install(_record100Recordings, new Tooltip("Record 100 Names"));
+        Tooltip.install(_get5Users, new Tooltip("Get 5 users"));
     }
 
 
