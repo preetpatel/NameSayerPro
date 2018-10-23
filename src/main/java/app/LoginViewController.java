@@ -36,6 +36,9 @@ public class LoginViewController extends Controller{
     }
 
     @FXML
+    /**
+     * Functionality for logging in
+     */
     private void loginButtonHandler() {
 
         String username = _username.getText();

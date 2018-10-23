@@ -23,6 +23,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
@@ -53,6 +54,9 @@ public class SearchNamesViewController extends Controller{
 
     @FXML
     private JFXButton addButton;
+
+    @FXML
+    private JFXButton _changeDatabaseButton;
 
     @FXML
     private JFXButton startPracticeButton;
@@ -138,6 +142,22 @@ public class SearchNamesViewController extends Controller{
             }
         });
 
+    }
+
+    @FXML
+    /**
+     * Allows the user to change their database directory
+     */
+    private void changeDatabaseButtonHandler(){
+        DirectoryChooser chooser = new DirectoryChooser();
+        chooser.setTitle("Choose a new Database");
+        File defaultDirectory = new File(NameSayer.audioPath);
+        chooser.setInitialDirectory(defaultDirectory);
+        File selectedDirectory = chooser.showDialog((Stage)anchorPane.getScene().getWindow());
+        if (selectedDirectory.isDirectory()){
+            NameSayer.audioPath = selectedDirectory.getPath();
+            switchController("SearchNamesViewController.fxml", anchorPane);
+        }
     }
 
     /**

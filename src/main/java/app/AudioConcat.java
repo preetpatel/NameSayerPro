@@ -21,6 +21,7 @@ public class AudioConcat {
     private List<String> nonExistantNames;
 
     /**
+     * Creates an object for the names that are to be concatenated
      * @param toBeConcated the list of names to be concatenated
      * @throws FileNotFoundException if an input name is not found within the database
      */
@@ -113,6 +114,7 @@ public class AudioConcat {
     public List<String> concatenate() throws InterruptedException, IOException {
 
         for(List<File> toBeConcated : _listOfConcatenations) {
+
             List<String> normalisedList = new ArrayList<>();
             List<String> desilencedList = new ArrayList<>();
 
@@ -126,7 +128,7 @@ public class AudioConcat {
             for (File fileToNormalise : toBeConcated) {
                 String normalisedFile = "/normalised_" + Integer.toString(i) + ".wav";
                 normalisedList.add(normalisedFile);
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.audioPath + "/" + fileToNormalise.getName() + " -filter:a dynaudnorm " + NameSayer.concatenationTempPath + normalisedFile);
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -y -i " + NameSayer.audioPath + "/" + fileToNormalise.getName() + " -filter:a loudnorm " + NameSayer.concatenationTempPath + normalisedFile);
                 Process processNormal = builder.start();
                 processNormal.waitFor();
                 i++;
@@ -137,11 +139,10 @@ public class AudioConcat {
             for (String normalisedFile : normalisedList) {
                 String desilencedFile = "/desilenced_" + Integer.toString(i) + ".wav";
                 desilencedList.add(desilencedFile);
-                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -hide_banner -y -i " + NameSayer.concatenationTempPath + normalisedFile + " -af silenceremove=1:0:-50dB " + NameSayer.concatenationTempPath + desilencedFile);
+                ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", "ffmpeg -hide_banner -y -i " + NameSayer.concatenationTempPath + normalisedFile + " -af silenceremove=1:0:-35dB:1:5:-35dB:0:peak " + NameSayer.concatenationTempPath + desilencedFile);
                 Process processDesilence = builder.start();
                 processDesilence.waitFor();
                 i++;
-
             }
 
 
