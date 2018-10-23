@@ -9,7 +9,11 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
+import javax.swing.*;
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Map;
 
 
@@ -49,6 +53,8 @@ public class ProfileViewController extends Controller{
         updatePracticeAwards();
         updateRecordAwards();
         updateCompareAwards();
+        updateRatingAwards();
+        updateUserCountAward();
 
         // Set greeting name on profile
         String name = currentSessionUser.getUsername().substring(0, 1).toUpperCase() + currentSessionUser.getUsername().substring(1);
@@ -109,8 +115,38 @@ public class ProfileViewController extends Controller{
         if (compareScore < 1) {
             _compareFirstName.setEffect(blackWhiteFilter);
         }
-        System.out.println("Compare score: " + compareScore);
+    }
 
+    private void updateRatingAwards() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath + "/ratings.txt"));
+            int ratingScore = 0;
+            while ((br.readLine()) != null) {
+                ratingScore++;
+            }
+            if (ratingScore < 10) {
+                _rate10Recordings.setEffect(blackWhiteFilter);
+            }
+            br.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void updateUserCountAward() {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath + "/users.txt"));
+            int userScore = 0;
+            while ((br.readLine()) != null) {
+                userScore++;
+            }
+            if (userScore < 5) {
+                _get5Users.setEffect(blackWhiteFilter);
+            }
+            br.close();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void getPlacement(){
