@@ -44,6 +44,7 @@ import static javafx.scene.layout.StackPane.setAlignment;
 public class SearchNamesViewController extends Controller{
 
     @FXML private AnchorPane anchorPane;
+    @FXML private Text mainText;
     @FXML private StackPane stackPane;
     @FXML private JFXMasonryPane addedCreationsPane;
     @FXML private ScrollPane addedScrollPane;
@@ -101,7 +102,6 @@ public class SearchNamesViewController extends Controller{
 
             if (searchField.getLength() > 0) {
                 compare = searchField.getText().charAt(searchField.getLength() - 1);
-                System.out.println(compare);
             }
             if (compare == ' ' || searchField.getLength() == 0) {
                 concatSafeNames.clear();
@@ -139,9 +139,12 @@ public class SearchNamesViewController extends Controller{
         File selectedDirectory = chooser.showDialog(anchorPane.getScene().getWindow());
         if (selectedDirectory != null && selectedDirectory.isDirectory()) {
             int filesCount = 0;
-            for (File file : selectedDirectory.listFiles()) {
-                if (FilenameUtils.getExtension(file.getName()).equals("wav")) {
-                    filesCount++;
+            File[] files = selectedDirectory.listFiles();
+            if(files != null) {
+                for (File file : files) {
+                    if (FilenameUtils.getExtension(file.getName()).equals("wav")) {
+                        filesCount++;
+                    }
                 }
             }
             if (filesCount > 0) {
@@ -249,7 +252,6 @@ public class SearchNamesViewController extends Controller{
         stackPane.setVisible(false);
         stackPane.getChildren().clear();
         searchField.setDisable(true);
-        searchBinding.dispose();
 
         String searchedItems = searchField.getText().trim();
 
@@ -258,7 +260,9 @@ public class SearchNamesViewController extends Controller{
 
         // Convert every word's first character to uppercase
         char[] array = searchedItems.toCharArray();
-        array[0] = Character.toUpperCase(array[0]);
+        if (array.length > 0) {
+            array[0] = Character.toUpperCase(array[0]);
+        }
 
         for (int i = 1; i < array.length; i++) {
             if (Character.isWhitespace(array[i - 1])) {
@@ -334,11 +338,12 @@ public class SearchNamesViewController extends Controller{
             } else if (errors){
                 // If no name is found
                 showErrorDialog("This name could not be found on the database", "Ok");
+                addedCreationsPane.getChildren().addAll(creationsButtonList);
+                searchField.setText("");
                 return false;
             }
             addedCreationsPane.getChildren().addAll(creationsButtonList);
             searchField.setText("");
-            searchBinding.dispose();
             return true;
         }
         return false;
@@ -403,9 +408,8 @@ public class SearchNamesViewController extends Controller{
             JFXButton confirmRandomise = new JFXButton();
             confirmRandomise.setText("Randomise and play");
             confirmRandomise.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-            confirmRandomise.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
+            confirmRandomise.setOnAction(event -> {
+
                     randomiseDialog.close();
                     stackPane.setVisible(false);
                     if (uploadList != null) {
@@ -419,16 +423,15 @@ public class SearchNamesViewController extends Controller{
                     } else {
                         showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
                     }
-                }
             });
 
             //button for normal play
             JFXButton confirmPlay = new JFXButton();
             confirmPlay.setText("Play");
             confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
-            confirmPlay.setOnAction(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent event) {
+            confirmPlay.setOnAction(event -> {
+
+                    mainText.setText("This wont be long");
                     randomiseDialog.close();
                     stackPane.setVisible(false);
                     if (uploadList != null) {
@@ -441,23 +444,19 @@ public class SearchNamesViewController extends Controller{
                     } else {
                         showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
                     }
-                }
             });
 
             setAlignment(confirmRandomise, Pos.BASELINE_RIGHT);
             setAlignment(confirmPlay, Pos.BASELINE_LEFT);
 
-            randomiseDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
-                @Override
-                public void handle(JFXDialogEvent event) {
-                    stackPane.setVisible(false);
-                }
+            randomiseDialog.setOnDialogClosed(event -> {
+                stackPane.setVisible(false);
             });
 
             dialogContent.setActions(confirmRandomise, confirmPlay);
             randomiseDialog.show();
 
-            //for uploaded lists
+        //for uploaded lists
         } else {
             if (uploadList != null) {
                 PlayViewController.setCreationsListFromFile(uploadList);

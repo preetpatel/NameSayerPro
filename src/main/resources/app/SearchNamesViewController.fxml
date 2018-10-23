@@ -13,7 +13,7 @@
     <children>
         <AnchorPane prefHeight="143.0" prefWidth="1200.0" style="-fx-background-color: #037971;">
             <children>
-                <Text fx:id="text" fill="WHITE" layoutX="17.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="1.0" text="NAMESAYER" textAlignment="CENTER" wrappingWidth="1165.7578125">
+                <Text fx:id="mainText" fill="WHITE" layoutX="17.0" layoutY="108.0" strokeType="OUTSIDE" strokeWidth="1.0" text="NAMESAYER" textAlignment="CENTER" wrappingWidth="1165.7578125">
                     <font>
                         <Font name="Lato Heavy" size="96.0" />
                     </font>

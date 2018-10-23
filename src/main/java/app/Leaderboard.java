@@ -13,14 +13,14 @@ public class Leaderboard {
     private Map<String, Integer> _scores = new HashMap<>();
 
 
-    public Leaderboard(File leaderFile) {
+    public Leaderboard() {
         try {
             BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath + "/score.txt"));
             String line;
             while ((line = br.readLine()) != null) {
                 String[] userInfo = line.split("\\s+");
-                if (userInfo.length >= 2){
-                    _scores.put(userInfo[0], Integer.parseInt(userInfo[1]));
+                if (userInfo.length >= 5){
+                    _scores.put(userInfo[0], Integer.parseInt(userInfo[1]) + Integer.parseInt(userInfo[2]) + Integer.parseInt(userInfo[3]) + Integer.parseInt(userInfo[4]));
                 }
             }
             _scores = sortByValue(_scores);

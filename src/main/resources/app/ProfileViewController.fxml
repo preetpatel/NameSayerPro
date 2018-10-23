@@ -2,12 +2,13 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ProgressIndicator?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.ProfileViewController">
+<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.ProfileViewController">
     <children>
         <AnchorPane prefHeight="143.0" prefWidth="1200.0" style="-fx-background-color: #037971;">
             <children>
@@ -23,22 +24,17 @@
                 </JFXButton>
             </children>
         </AnchorPane>
-        <JFXButton fx:id="_backButton" layoutX="150.0" layoutY="691.0" onAction="#backButtonHandler" prefHeight="57.0" prefWidth="137.0" style="-fx-background-color: #037971;" text="Back" textFill="WHITE">
+        <JFXButton fx:id="_backButton" layoutX="33.0" layoutY="715.0" onAction="#backButtonHandler" prefHeight="57.0" prefWidth="137.0" style="-fx-background-color: #037971;" text="Back" textFill="WHITE">
             <font>
                 <Font size="24.0" />
             </font>
         </JFXButton>
-        <Text fx:id="_myProfileText" fill="WHITE" layoutX="257.0" layoutY="215.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Profile" textAlignment="CENTER" wrappingWidth="686.7294921875">
+        <Text fx:id="_myProfileText" fill="WHITE" layoutX="257.0" layoutY="199.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Profile" textAlignment="CENTER" wrappingWidth="686.7294921875">
             <font>
                 <Font size="47.0" />
             </font>
         </Text>
-      <Text fx:id="_myScoreText" fill="WHITE" layoutX="51.0" layoutY="328.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Score: 0" wrappingWidth="520.7294921875">
-         <font>
-            <Font size="28.0" />
-         </font>
-      </Text>
-      <Text fx:id="_myPracticesText" fill="WHITE" layoutX="51.0" layoutY="443.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My practiced names" wrappingWidth="520.7294921875">
+      <Text fx:id="_myScoreText" fill="WHITE" layoutX="17.0" layoutY="236.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Score: 0" wrappingWidth="520.7294921875">
          <font>
             <Font size="28.0" />
          </font>
@@ -49,11 +45,75 @@
             <Font size="28.0" />
          </font>
       </Text>
-      <Text fx:id="_myPlacementText" fill="WHITE" layoutX="51.0" layoutY="385.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Placement:" wrappingWidth="520.7294921875">
+      <Text fx:id="_myPlacementText" fill="WHITE" layoutX="17.0" layoutY="270.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Placement:" wrappingWidth="520.7294921875">
          <font>
             <Font size="28.0" />
          </font>
       </Text>
-      <ProgressIndicator fx:id="_progressIndicator" layoutX="51.0" layoutY="481.0" prefHeight="143.0" prefWidth="137.0" progress="0.0" />
+      <ImageView fx:id="_practiceFirstName" accessibleText="Practice First Name" fitHeight="94.0" fitWidth="94.0" layoutX="19.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../practiceFirstName.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_recordFirstName" fitHeight="94.0" fitWidth="94.0" layoutX="143.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../recordFirstName.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_compareFirstName" fitHeight="94.0" fitWidth="94.0" layoutX="277.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../compareFirstName.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_rate10Recordings" fitHeight="94.0" fitWidth="94.0" layoutX="408.0" layoutY="346.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../rate10Recordings.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_practice20Names" fitHeight="94.0" fitWidth="94.0" layoutX="19.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../practice20names.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_practice50Names" fitHeight="94.0" fitWidth="94.0" layoutX="143.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../practice50names.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_practice200Names" fitHeight="94.0" fitWidth="94.0" layoutX="277.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../practice200names.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_record50Recordings" fitHeight="94.0" fitWidth="94.0" layoutX="408.0" layoutY="467.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../record50recordings.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_record100Recordings" fitHeight="94.0" fitWidth="94.0" layoutX="19.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../record100recordings.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_get5Users" fitHeight="94.0" fitWidth="94.0" layoutX="143.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../get5users.png" />
+         </image>
+      </ImageView>
+      <Text fill="WHITE" layoutX="19.0" layoutY="329.0" strokeType="OUTSIDE" strokeWidth="0.0" text="My Awards" wrappingWidth="520.7294921875">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Text>
+      <ImageView fx:id="_compare50Names" fitHeight="94.0" fitWidth="94.0" layoutX="277.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../compare50names.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="_compare100Names" fitHeight="94.0" fitWidth="94.0" layoutX="408.0" layoutY="584.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../compare100names.png" />
+         </image>
+      </ImageView>
     </children>
 </AnchorPane>
