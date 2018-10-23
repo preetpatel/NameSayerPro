@@ -109,6 +109,7 @@ public class ProfileViewController extends Controller{
         if (compareScore < 1) {
             _compareFirstName.setEffect(blackWhiteFilter);
         }
+        System.out.println("Compare score: " + compareScore);
 
     }
 
