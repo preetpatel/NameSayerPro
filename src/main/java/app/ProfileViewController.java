@@ -3,8 +3,8 @@ package app;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.Tooltip;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -31,6 +31,7 @@ public class ProfileViewController extends Controller{
     @FXML private ImageView _record50Recordings;
     @FXML private ImageView _record100Recordings;
     @FXML private ImageView _get5Users;
+    private ColorAdjust blackWhiteFilter = new ColorAdjust();
 
     @FXML
     private void initialize() {
@@ -38,6 +39,7 @@ public class ProfileViewController extends Controller{
         getPlacement();
         loadLeaderboard();
         addHoverTextToAwards();
+        blackWhiteFilter.setBrightness(1);
 
 
     }
