@@ -92,11 +92,12 @@ public class NewCreationViewController extends Controller{
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
-                setupVolume();
+               // setupVolume();
             }
         });
 
-        loaderText.setText("Press the button below and pronounce the name: \"" + _nameOfCreation + "\"");
+        String nameToPronounce = _nameOfCreation.replaceAll("_", " ");
+        loaderText.setText("Press the button below and pronounce: \n \"" + nameToPronounce + "\"");
         listenAudio.setVisible(false);
         keepAudio.setVisible(false);
         redoAudio.setVisible(false);

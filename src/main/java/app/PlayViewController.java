@@ -58,7 +58,7 @@ public class PlayViewController extends Controller{
     private JFXButton nextButton;
 
     @FXML
-    private JFXComboBox<Label> versions; // Not sure about what type goes inside
+    private JFXComboBox<Label> versions;
 
     @FXML
     private JFXListView<String> previousAttempts;
@@ -345,7 +345,6 @@ public class PlayViewController extends Controller{
      * @return
      */
     public static List<String> setCreationsList(List<String> creationsList) {
-
         try {
             AudioConcat.deleteAllFiles();
         }catch (IOException e) {
@@ -369,8 +368,6 @@ public class PlayViewController extends Controller{
                 notFoundNames.add(brokenName + " in " + name);
             }
         }
-        File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
-
         addNamesToCreationsList(creationsList);
 
         return notFoundNames;
@@ -389,7 +386,7 @@ public class PlayViewController extends Controller{
             AudioConcat uploadListConcat = new AudioConcat(text);
             uploadListConcat.concatenate();
         } catch (IOException e) {
-            notFoundNames.add("Some files were not found. (Displaying these files coming soon!)");
+            notFoundNames.add("Some files were not found.");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -414,14 +411,16 @@ public class PlayViewController extends Controller{
     private static void addNamesToCreationsList(List<String> creationsList){
         File[] directory = new File(NameSayer.concatenatedNamesPath).listFiles();
 
-        for(String s : creationsList) {
-            for (File file : directory) {
-                if (!file.isDirectory()) {
-                    String currentString = s.replaceAll(" ", "_");
-                    Name currentName = new Name(currentString, new File(NameSayer.concatenatedNamesPath));
-                    //if the name has NOT already been added
-                    if (!_creationsList.contains(currentName)) {
-                        _creationsList.add(currentName);
+        if (directory != null && directory.length > 0) {
+            for (String s : creationsList) {
+                for (File file : directory) {
+                    if (!file.isDirectory()) {
+                        String currentString = s.replaceAll(" ", "_");
+                        Name currentName = new Name(currentString, new File(NameSayer.concatenatedNamesPath));
+                        //if the name has NOT already been added
+                        if (!_creationsList.contains(currentName)) {
+                            _creationsList.add(currentName);
+                        }
                     }
                 }
             }

@@ -13,9 +13,12 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
+import impl.org.controlsfx.autocompletion.SuggestionProvider;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -26,7 +29,10 @@ import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import Utils.MessageBox.ModalBox;
+import org.apache.commons.io.FilenameUtils;
 import org.controlsfx.control.textfield.AutoCompletionBinding;
+import org.controlsfx.control.textfield.CustomTextField;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.io.*;
@@ -37,56 +43,26 @@ import static javafx.scene.layout.StackPane.setAlignment;
 
 public class SearchNamesViewController extends Controller{
 
-    @FXML
-    private AnchorPane anchorPane;
-
-    @FXML
-    private StackPane stackPane;
-
-    @FXML
-    private JFXMasonryPane addedCreationsPane;
-
-    @FXML
-    private ScrollPane addedScrollPane;
-
-    @FXML
-    private JFXTextField searchField;
-
-    @FXML
-    private JFXButton addButton;
-
-    @FXML
-    private JFXButton _changeDatabaseButton;
-
-    @FXML
-    private JFXButton startPracticeButton;
-
-    @FXML
-    private JFXButton removeButton;
-
-    @FXML
-    private JFXButton profileButton;
-
-    @FXML
-    private JFXPopup userPopup = new JFXPopup();
-
-    @FXML
-    private JFXButton removeAllButton;
-
+    @FXML private AnchorPane anchorPane;
+    @FXML private StackPane stackPane;
+    @FXML private JFXMasonryPane addedCreationsPane;
+    @FXML private ScrollPane addedScrollPane;
+    @FXML private CustomTextField searchField;
+    @FXML private JFXButton addButton;
+    @FXML private JFXButton _changeDatabaseButton;
+    @FXML private JFXButton startPracticeButton;
+    @FXML private JFXButton removeButton;
+    @FXML private JFXButton profileButton;
+    @FXML private JFXPopup userPopup = new JFXPopup();
+    @FXML private JFXButton removeAllButton;
     private ObservableList<JFXButton> creationsButtonList = FXCollections.observableArrayList();
-
     private ObservableList<JFXButton> selectedButtonsList = FXCollections.observableArrayList();
-
     private List<Name> creationsList = new ArrayList<>();
-
     private List<String> selectedNames = new ArrayList<>();
-
     private List<String> databaseNames = new ArrayList<>();
-
     private List<String> concatSafeNames = new ArrayList<>();
-
     private AutoCompletionBinding<String> searchBinding;
-
+    private SuggestionProvider<String> _DatabaseConcatProvider = SuggestionProvider.create(concatSafeNames);
     private File uploadList = null;
 
     /**
@@ -95,90 +71,119 @@ public class SearchNamesViewController extends Controller{
      */
     @FXML
     private void initialize() {
-
         DirectoryManager manager = new DirectoryManager();
         manager.runChecks();
 
-        loadCreationsOntoPane();
+        loadCreations();
+        disableHorizontalScrolling();
+        initializeSearchField();
+    }
 
-        searchBinding = TextFields.bindAutoCompletion(searchField, concatSafeNames);
+    /**
+     * Initialise search field with autocomplete
+     */
+    private void initializeSearchField() {
+        searchBinding = TextFields.bindAutoCompletion(searchField, _DatabaseConcatProvider);
+        _DatabaseConcatProvider.clearSuggestions();
+        _DatabaseConcatProvider.addPossibleSuggestions(concatSafeNames);
+        searchBinding.setHideOnEscape(true);
 
         // Add Enter key listener on search field
-        searchField.setOnKeyPressed(new EventHandler<KeyEvent>() {
-
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.ENTER) {
-                    addButtonHandler(new ActionEvent());
-                }
-            }
-        });
-        searchField.setOnKeyReleased(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                char compare = 'a';
-                if (searchField.getLength() > 0) {
-                    compare = searchField.getText().charAt(searchField.getLength() - 1);
-                }
-                    if (compare == ' ' || searchField.getLength() == 0) {
-                        int i = 0;
-                        concatSafeNames.clear();
-                        while (i < databaseNames.size()) {
-                            concatSafeNames.add(searchField.getText() + databaseNames.get(i));
-                            i++;
-                        }
-                        searchBinding.dispose();
-                        searchBinding = TextFields.bindAutoCompletion(searchField,concatSafeNames);
-                    }
+        searchField.setOnKeyPressed(event ->  {
+            if (event.getCode() == KeyCode.ENTER) {
+                addButtonHandler(new ActionEvent());
             }
         });
 
-        addedScrollPane.addEventFilter(ScrollEvent.SCROLL, new EventHandler<ScrollEvent>() {
-            @Override
-            public void handle(ScrollEvent event) {
+        searchField.setOnKeyReleased(event ->  {
+            // arbitrary char assignment
+            char compare = 'a';
+
+            if (searchField.getLength() > 0) {
+                compare = searchField.getText().charAt(searchField.getLength() - 1);
+                System.out.println(compare);
+            }
+            if (compare == ' ' || searchField.getLength() == 0) {
+                concatSafeNames.clear();
+                int i = 0;
+                while (i < databaseNames.size()) {
+                    concatSafeNames.add(searchField.getText() + databaseNames.get(i));
+                    i++;
+                }
+                _DatabaseConcatProvider.clearSuggestions();
+                _DatabaseConcatProvider.addPossibleSuggestions(concatSafeNames);
+            }
+
+        });
+    }
+
+    /**
+     * Disables being able to scroll right on the list of added panes
+     */
+    public void disableHorizontalScrolling() {
+        addedScrollPane.addEventFilter(ScrollEvent.SCROLL, event ->  {
                 if (event.getDeltaX() != 0) {
                     event.consume();
                 }
-            }
         });
-
     }
 
-    @FXML
     /**
      * Allows the user to change their database directory
      */
-    private void changeDatabaseButtonHandler(){
+    @FXML private void changeDatabaseButtonHandler() {
         DirectoryChooser chooser = new DirectoryChooser();
         chooser.setTitle("Choose a new Database");
         File defaultDirectory = new File(NameSayer.audioPath);
         chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog((Stage)anchorPane.getScene().getWindow());
-        if (selectedDirectory.isDirectory()){
-            NameSayer.audioPath = selectedDirectory.getPath();
-            switchController("SearchNamesViewController.fxml", anchorPane);
+        File selectedDirectory = chooser.showDialog(anchorPane.getScene().getWindow());
+        if (selectedDirectory != null && selectedDirectory.isDirectory()) {
+            int filesCount = 0;
+            for (File file : selectedDirectory.listFiles()) {
+                if (FilenameUtils.getExtension(file.getName()).equals("wav")) {
+                    filesCount++;
+                }
+            }
+            if (filesCount > 0) {
+                searchField.setDisable(true);
+                stackPane.setVisible(true);
+                String filesFound = "There were " + filesCount + " valid files found";
+                ModalBox modalBox = new ModalBox(stackPane, filesFound, "Ok");
+                modalBox.setHandlers(event ->  {
+                        NameSayer.audioPath = selectedDirectory.getPath();
+                        Platform.runLater(() -> {
+                                switchController("SearchNamesViewController.fxml", anchorPane);
+                        });
+                });
+                modalBox.showDialog();
+
+            }
         }
     }
 
     /**
-     * Initialises the left pane to show every existing wav file in the directory
+     * Initialises the lists that contain names of valid files
      */
-    private void loadCreationsOntoPane() {
+    private void loadCreations() {
         stackPane.setVisible(false);
 
         File folder = new File(NameSayer.audioPath);
         File[] files = folder.listFiles();
 
-        for (File file : files) {
-            Name tempName = new Name(file);
+        if (files != null) {
+            for (File file : files) {
+                Name tempName = new Name(file);
 
-            // Adds names to the database that suggests names in the search field
-            String dataName = tempName.getName();
-            dataName = dataName.substring(0,1).toUpperCase() + dataName.substring(1);
-            if (!databaseNames.contains(dataName)) {
-                databaseNames.add(dataName);
-                concatSafeNames.add(dataName);
+                // Adds names to the database that suggests names in the search field
+                String dataName = tempName.getName();
+                dataName = dataName.substring(0, 1).toUpperCase() + dataName.substring(1);
+                if (!databaseNames.contains(dataName)) {
+                    databaseNames.add(dataName);
+                    concatSafeNames.add(dataName);
+                }
             }
+        } else {
+            showErrorDialog("There was an error loading the database. The app may behave unexpectedly","Ok");
         }
     }
 
@@ -244,8 +249,24 @@ public class SearchNamesViewController extends Controller{
         stackPane.setVisible(false);
         stackPane.getChildren().clear();
         searchField.setDisable(true);
+        searchBinding.dispose();
 
         String searchedItems = searchField.getText().trim();
+
+        // Replace every redundant space in the name
+        searchedItems = searchedItems.replaceAll("\\w[ ]{2,}\\w", " ");
+
+        // Convert every word's first character to uppercase
+        char[] array = searchedItems.toCharArray();
+        array[0] = Character.toUpperCase(array[0]);
+
+        for (int i = 1; i < array.length; i++) {
+            if (Character.isWhitespace(array[i - 1])) {
+                array[i] = Character.toUpperCase(array[i]);
+            }
+        }
+        searchedItems = new String(array);
+
         addNamesToList(searchedItems, true);
 
     }

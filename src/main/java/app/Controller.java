@@ -28,17 +28,14 @@ import java.util.regex.Pattern;
 
 abstract public class Controller {
 
-    @FXML
-    private Button _helpButton;
-    @FXML
-    private JFXSlider _volumeBar;
+    @FXML private Button _helpButton;
+    @FXML private JFXSlider _volumeBar;
 
-    @FXML
     /**
      * Opens a browser to the wiki
      * The code for this method pulled from 'https://stackoverflow.com/questions/5226212/how-to-open-the-default-webbrowser-using-java'
      */
-    public void helpButtonHandler(){
+    @FXML public void helpButtonHandler(){
         Runtime rt = Runtime.getRuntime();
         String url = "https://docdro.id/VePeHbN";
         String[] browsers = { "epiphany", "firefox", "mozilla", "konqueror",
