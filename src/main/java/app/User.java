@@ -10,7 +10,10 @@ public class User {
     private String _username;
     private String _name;
     private String _password;
-    private int _score = 0;
+    private int _listenToNameScore = 0;
+    private int _recordingNameButNotSaving = 0;
+    private int _recordingNameAndSaving = 0;
+    private int _compareAudio = 0;
     private static int VALIDSESSION = 600000;
     private int _rank;
 
@@ -30,13 +33,44 @@ public class User {
         return _name;
     }
 
-    public int getScore() {
+    public int getTotalScore() {
         readScores();
-        return _score;
+        return _listenToNameScore + _recordingNameButNotSaving + _recordingNameAndSaving + _compareAudio;
     }
 
-    public void increaseScore(int i){
-        _score+=i;
+    public int getListenToNameScore() {
+        return _listenToNameScore;
+    }
+
+    public int getRecordingNameAndSavingScore() {
+        return _recordingNameAndSaving;
+    }
+
+    public int getRecordingNameAndNotSavingScore() {
+        return _recordingNameButNotSaving;
+    }
+
+    public int getCompareAudioScore() {
+        return _compareAudio;
+    }
+
+    public void increaseListenNameScore(int i){
+        _listenToNameScore+=i;
+        saveScore();
+    }
+
+    public void increaseRecordButNotSaveScore(int i) {
+        _recordingNameButNotSaving += i;
+        saveScore();
+    }
+
+    public void increaseRecordAndSaveScore(int i) {
+        _recordingNameAndSaving += i;
+        saveScore();
+    }
+
+    public void increaseCompareScore(int i) {
+         _compareAudio += i;
         saveScore();
     }
 
@@ -55,21 +89,25 @@ public class User {
 
     private void readScores(){
         try {
-        _score = 0;
         BufferedReader br = new BufferedReader(new FileReader(NameSayer.directoryPath +"/score.txt"));
         String line;
         int rank = 1;
             while ((line = br.readLine()) != null) {
                 String[] scoreInfo = line.split("\\s+");
-                if (scoreInfo.length >= 2 && scoreInfo[0].equals(_username)) {
-                    _score = Integer.parseInt(scoreInfo[1]);
+                if (scoreInfo.length >= 5 && scoreInfo[0].equals(_username)) {
+                    _listenToNameScore = Integer.parseInt(scoreInfo[1]);
+                    _recordingNameButNotSaving = Integer.parseInt(scoreInfo[2]);
+                    _recordingNameAndSaving = Integer.parseInt(scoreInfo[3]);
+                    _compareAudio = Integer.parseInt(scoreInfo[4]);
                 }
             }
             br.close();
             BufferedReader rankReader = new BufferedReader(new FileReader(NameSayer.directoryPath +"/score.txt"));
+            int totalScore = _listenToNameScore + _recordingNameButNotSaving +_recordingNameAndSaving + _compareAudio;
             while ((line = rankReader.readLine()) != null) {
                 String[] scoreInfo = line.split("\\s+");
-                if (scoreInfo.length >= 2 && Integer.parseInt(scoreInfo[1]) > _score) {
+                if (scoreInfo.length >= 5 && (Integer.parseInt(scoreInfo[1]) + Integer.parseInt(scoreInfo[2]) +
+                        Integer.parseInt(scoreInfo[3]) + Integer.parseInt(scoreInfo[4]))  > totalScore) {
                     rank++;
                 }
             }
@@ -162,7 +200,7 @@ public class User {
             //if a score does not exist, add a new score
             if (!userExists) {
                 writer = new BufferedWriter(new FileWriter(DirectoryManager.getScore(), true));
-                writer.write(_username + " " + _score + System.getProperty("line.separator"));
+                writer.write(_username + " " + _listenToNameScore + " " + _recordingNameButNotSaving + " " + _recordingNameAndSaving + " " + _compareAudio + System.getProperty("line.separator"));
                 writer.close();
 
                 //if a score does exist, replace the old score
@@ -177,7 +215,9 @@ public class User {
 
 
                 }
-                String newContent = old.replaceAll(_username + " " + "\\d+", _username + " " + Integer.toString(_score));
+                String newContent = old.replaceAll(_username + " " + "\\d+" + " " + "\\d+" + " " + "\\d+" + " " +
+                        "\\d+", _username + " " + Integer.toString(_listenToNameScore) + " " + Integer.toString(_recordingNameButNotSaving)
+                        + " " + Integer.toString(_recordingNameAndSaving) + " " + Integer.toString(_compareAudio));
                 File temp = new File("tempScoreFile.txt");
                 FileWriter writer2 = new FileWriter(temp);
                 writer2.write(newContent);
@@ -227,7 +267,7 @@ public class User {
             reader.close();
             tempFile.renameTo(inputFile);
         } catch (IOException e) {
-            //TODO Add some form of handling here
+            JOptionPane.showMessageDialog(null, "An error occurred during updating login time", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 

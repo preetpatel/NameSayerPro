@@ -232,6 +232,7 @@ public class NewCreationViewController extends Controller{
 
         @Override
         protected Void call() {
+            NameSayer.currentUser.increaseRecordButNotSaveScore(1);
             File file = new File(NameSayer.userRecordingsPath);
             File[] files = file.listFiles();
             for (File check : files) {
@@ -254,6 +255,7 @@ public class NewCreationViewController extends Controller{
             mediaPlayer.stop();
         }
         loaderText.setText("Saving your creation...");
+        NameSayer.currentUser.increaseRecordAndSaveScore(2);
 
         File[] userCreations = new File(NameSayer.userRecordingsPath).listFiles();
         int counter = 1;
@@ -291,6 +293,7 @@ public class NewCreationViewController extends Controller{
     @FXML
     private void compareButtonHandler() {
         if (!_playing) {
+            NameSayer.currentUser.increaseCompareScore(1);
             compareButton.setText("Stop");
             _playing = !_playing;
             String myAudioPath = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
