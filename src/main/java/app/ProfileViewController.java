@@ -184,7 +184,6 @@ public class ProfileViewController extends Controller{
     private void getPlacement(){
         //shows what place the user is in terms of SCORE ONLY
         int rank = NameSayer.getCurrentUser().getRank();
-        System.out.println(rank % 10);
         switch(rank % 10) {
             case 1:
                 _myPlacementText.setText("My Placement: " + rank + "st");
