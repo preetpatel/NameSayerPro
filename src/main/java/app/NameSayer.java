@@ -24,6 +24,8 @@ import java.io.*;
 public class NameSayer extends Application {
 
     public static void main(String[] args) {
+        CopyDatabaseFiles copier = new CopyDatabaseFiles();
+        copier.run();
         launch(args);
     }
 
