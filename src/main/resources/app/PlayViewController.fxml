@@ -3,6 +3,7 @@
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXListView?>
+<?import com.jfoenix.controls.JFXProgressBar?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
@@ -74,6 +75,7 @@
                   <Font size="18.0" />
                </font>
             </Text>
+            <JFXProgressBar fx:id="_playBar" layoutX="54.0" layoutY="501.0" prefHeight="27.0" prefWidth="765.0" progress="0.0" />
          </children>
       </AnchorPane>
       <JFXButton fx:id="nextButton" alignment="CENTER" buttonType="RAISED" layoutX="997.0" layoutY="710.0" onAction="#nextButtonHandler" prefHeight="68.0" prefWidth="173.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Next &gt;" textAlignment="CENTER" textFill="WHITE">
@@ -81,6 +83,6 @@
             <Font name="Lato Medium" size="25.0" />
          </font>
       </JFXButton>
-      <StackPane fx:id="stackPane" prefHeight="800.0" prefWidth="1200.0" />
+      <StackPane fx:id="stackPane" prefHeight="560.0" prefWidth="1200.0" />
     </children>
 </AnchorPane>

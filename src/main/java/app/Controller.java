@@ -10,10 +10,7 @@
 
 package app;
 
-import com.jfoenix.controls.JFXButton;
-import com.jfoenix.controls.JFXDialog;
-import com.jfoenix.controls.JFXDialogLayout;
-import com.jfoenix.controls.JFXSlider;
+import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -26,11 +23,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -39,7 +36,14 @@ import java.util.regex.Pattern;
 abstract public class Controller {
 
     @FXML private Button _helpButton;
-    @FXML private JFXSlider _volumeBar;
+    @FXML protected JFXProgressBar _playBar;
+
+
+    protected void setPlayBar(File playFile){
+        PlayBarProgresser pbg = new PlayBarProgresser(_playBar, playFile);
+        Thread th = new Thread(pbg);
+        th.start();
+    }
 
     /**
      * Opens a browser to the wiki
@@ -60,7 +64,7 @@ abstract public class Controller {
         try {
             rt.exec(new String[]{"sh", "-c", cmd.toString()});
         } catch (Exception e){
-                e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "An error occurred: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
 
     }

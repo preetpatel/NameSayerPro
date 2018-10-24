@@ -93,7 +93,6 @@ public class PlayViewController extends Controller{
      */
     @FXML
     public void initialize() {
-
         stackPane.setDisable(true);
         if(_creationsList.size() > 0 ) {
             currentLoadedCreation = _creationsList.get(currentSelection);
@@ -361,29 +360,6 @@ public class PlayViewController extends Controller{
         return notFoundNames;
     }
 
-
-    /**
-     * Sets the list of names to be practised in the PlayViewController from a text file
-     * @param text the file to be input
-     * @return
-     */
-    public static List<String> setCreationsListFromFile(File text) {
-        List<String> notFoundNames = new ArrayList<>();
-        try {
-            AudioConcat.deleteAllFiles();
-            AudioConcat uploadListConcat = new AudioConcat(text);
-            uploadListConcat.concatenate();
-        } catch (IOException e) {
-            notFoundNames.add("Some files were not found.");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        addNamesToCreationsList();
-
-        return notFoundNames;
-    }
-
     /**
      * A method to check whether the list of creations is empty
      * @return true if the creations list is not empty
@@ -435,6 +411,7 @@ public class PlayViewController extends Controller{
 
     @FXML
     public void demoButtonHandler() {
+        setPlayBar(_fileToPlay);
         playFile(_fileToPlay);
     }
 

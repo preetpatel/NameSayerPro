@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXProgressBar?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -41,7 +42,7 @@
             <Font name="Lato Heavy" size="30.0" />
          </font>
       </Text>
-      <JFXButton fx:id="listenAudio" alignment="CENTER" buttonType="RAISED" layoutX="241.0" layoutY="487.0" onAction="#listenButtonHandler" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Listen" textAlignment="CENTER" textFill="WHITE">
+      <JFXButton fx:id="listenAudio" alignment="CENTER" buttonType="RAISED" layoutX="241.0" layoutY="497.0" onAction="#listenButtonHandler" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Listen" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Lato Medium" size="25.0" />
          </font>
@@ -61,5 +62,6 @@
             <Font name="Lato Medium" size="25.0" />
          </font>
       </JFXButton>
+      <JFXProgressBar fx:id="_playBar" layoutX="224.0" layoutY="734.0" prefHeight="20.0" prefWidth="761.0" progress="0.0" />
     </children>
 </AnchorPane>

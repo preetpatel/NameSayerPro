@@ -39,7 +39,8 @@ public class DirectoryManager {
     public void runChecks() {
 
         CopyDatabaseFiles copier = new CopyDatabaseFiles();
-        copier.run();
+        Thread th = new Thread(copier);
+        th.start();
 
         if (!databaseStorage.exists()) {
             if (!databaseStorage.mkdirs()) {
