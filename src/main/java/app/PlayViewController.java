@@ -411,7 +411,7 @@ public class PlayViewController extends Controller{
 
     @FXML
     public void demoButtonHandler() {
-        setPlayBar(_fileToPlay);
+
         playFile(_fileToPlay);
     }
 
@@ -420,6 +420,7 @@ public class PlayViewController extends Controller{
      * @param fileToPlay the file that is intended to be played
      */
     private void playFile(File fileToPlay) {
+        setPlayBar(fileToPlay);
         previousAttempts.setDisable(true);
         demoButton.setDisable(true);
         recordButton.setDisable(true);
