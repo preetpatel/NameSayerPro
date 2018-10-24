@@ -93,7 +93,6 @@ public class PlayViewController extends Controller{
      */
     @FXML
     public void initialize() {
-
         stackPane.setDisable(true);
         if(_creationsList.size() > 0 ) {
             currentLoadedCreation = _creationsList.get(currentSelection);
@@ -412,6 +411,7 @@ public class PlayViewController extends Controller{
 
     @FXML
     public void demoButtonHandler() {
+        setPlayBar(_fileToPlay);
         playFile(_fileToPlay);
     }
 
