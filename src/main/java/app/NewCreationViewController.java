@@ -103,6 +103,7 @@ public class NewCreationViewController extends Controller{
         compareButton.setVisible(false);
     }
 
+    //This boolean field is used for polling  for recording
     private boolean _recordOn = false;
 
     /**
@@ -186,8 +187,9 @@ public class NewCreationViewController extends Controller{
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", recordProcess);
             Process process = builder.start();
 
+            //poll if the user has stopped recording
             while(_recordOn){
-                Thread.sleep(10);
+                Thread.sleep(30);
             }
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
             writer.write("q");
