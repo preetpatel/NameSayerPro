@@ -311,7 +311,6 @@ public class SearchNamesViewController extends Controller{
 
             if (fileFound) {
                 Name name = new Name(processedSearchedItems);
-
                 boolean buttonExists = false;
 
                 //see if that item has already been added to the list
