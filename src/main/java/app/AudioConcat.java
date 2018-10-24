@@ -29,7 +29,7 @@ public class AudioConcat {
 
     private File _textFile;
     private List<List<File>> _listOfConcatenations;
-    private List<String> nonExistantNames;
+    private List<String> _nonExistantNames;
 
     /**
      * Creates an object for the names that are to be concatenated
@@ -39,7 +39,7 @@ public class AudioConcat {
     public AudioConcat(List<String> toBeConcated)throws IOException {
         _listOfConcatenations = new ArrayList<>();
         List<File> bestFileList = new ArrayList<>();
-        nonExistantNames = new ArrayList<>();
+        _nonExistantNames = new ArrayList<>();
 
         if (toBeConcated.size() == 1){
             Name name = new Name(toBeConcated.get(0));
@@ -73,7 +73,7 @@ public class AudioConcat {
     public AudioConcat(File textFileToBeConcated) throws IOException {
         _textFile = textFileToBeConcated;
         _listOfConcatenations = new ArrayList<>();
-        nonExistantNames = new ArrayList<>();
+        _nonExistantNames = new ArrayList<>();
         processTextFile();
     }
 
@@ -224,7 +224,7 @@ public class AudioConcat {
             FileUtils.cleanDirectory(new File(NameSayer.concatenationTempPath));
         }
 
-        return nonExistantNames;
+        return _nonExistantNames;
 
     }
 
@@ -271,7 +271,7 @@ public class AudioConcat {
             try {
                 bestFileVersion = files[files.length-1];
             }catch (Exception e){
-                nonExistantNames.add(name);
+                _nonExistantNames.add(name);
                 return null;
             }
         }

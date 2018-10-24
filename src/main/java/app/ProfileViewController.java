@@ -20,7 +20,6 @@ import javafx.scene.text.Text;
 
 import javax.swing.*;
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Map;
@@ -46,8 +45,8 @@ public class ProfileViewController extends Controller{
     @FXML private ImageView _record50Recordings;
     @FXML private ImageView _record100Recordings;
     @FXML private ImageView _get5Users;
-    private ColorAdjust blackWhiteFilter = new ColorAdjust();
-    private User currentSessionUser;
+    private ColorAdjust _blackWhiteFilter = new ColorAdjust();
+    private User _currentSessionUser;
 
     @FXML
     private void initialize() {
@@ -56,8 +55,8 @@ public class ProfileViewController extends Controller{
         getPlacement();
         loadLeaderboard();
         addHoverTextToAwards();
-        blackWhiteFilter.setBrightness(1);
-        currentSessionUser = NameSayer.getCurrentUser();
+        _blackWhiteFilter.setBrightness(1);
+        _currentSessionUser = NameSayer.getCurrentUser();
 
         // Update awards
         updatePracticeAwards();
@@ -67,7 +66,7 @@ public class ProfileViewController extends Controller{
         updateUserCountAward();
 
         // Set greeting name on profile
-        String name = currentSessionUser.getUsername().substring(0, 1).toUpperCase() + currentSessionUser.getUsername().substring(1);
+        String name = _currentSessionUser.getUsername().substring(0, 1).toUpperCase() + _currentSessionUser.getUsername().substring(1);
         _myProfileText.setText("Hello " + name);
 
 
@@ -92,18 +91,18 @@ public class ProfileViewController extends Controller{
      * Updates the badges for the amount of practices a user has done
      */
     private void updatePracticeAwards(){
-        int listenScore = currentSessionUser.getListenToNameScore();
+        int listenScore = _currentSessionUser.getListenToNameScore();
         if(listenScore < 200) {
-            _practice200Names.setEffect(blackWhiteFilter);
+            _practice200Names.setEffect(_blackWhiteFilter);
         }
         if (listenScore < 50) {
-            _practice50Names.setEffect(blackWhiteFilter);
+            _practice50Names.setEffect(_blackWhiteFilter);
         }
         if (listenScore < 20) {
-            _practice20Names.setEffect(blackWhiteFilter);
+            _practice20Names.setEffect(_blackWhiteFilter);
         }
         if (listenScore < 1) {
-            _practiceFirstName.setEffect(blackWhiteFilter);
+            _practiceFirstName.setEffect(_blackWhiteFilter);
         }
     }
 
@@ -111,15 +110,15 @@ public class ProfileViewController extends Controller{
      * Updates the badges for the amount of recordings a user has done
      */
     private void updateRecordAwards() {
-        int recordScore = (currentSessionUser.getRecordingNameAndSavingScore() /2) + currentSessionUser.getRecordingNameAndNotSavingScore();
+        int recordScore = (_currentSessionUser.getRecordingNameAndSavingScore() /2) + _currentSessionUser.getRecordingNameAndNotSavingScore();
         if (recordScore < 100) {
-            _record100Recordings.setEffect(blackWhiteFilter);
+            _record100Recordings.setEffect(_blackWhiteFilter);
         }
         if (recordScore < 50) {
-            _record50Recordings.setEffect(blackWhiteFilter);
+            _record50Recordings.setEffect(_blackWhiteFilter);
         }
         if (recordScore < 1) {
-            _recordFirstName.setEffect(blackWhiteFilter);
+            _recordFirstName.setEffect(_blackWhiteFilter);
         }
     }
 
@@ -128,15 +127,15 @@ public class ProfileViewController extends Controller{
      * Updates the badges for the amount of compares a user has done
      */
     private void updateCompareAwards() {
-        int compareScore = currentSessionUser.getCompareAudioScore();
+        int compareScore = _currentSessionUser.getCompareAudioScore();
         if (compareScore < 100) {
-            _compare100Names.setEffect(blackWhiteFilter);
+            _compare100Names.setEffect(_blackWhiteFilter);
         }
         if (compareScore < 50) {
-            _compare50Names.setEffect(blackWhiteFilter);
+            _compare50Names.setEffect(_blackWhiteFilter);
         }
         if (compareScore < 1) {
-            _compareFirstName.setEffect(blackWhiteFilter);
+            _compareFirstName.setEffect(_blackWhiteFilter);
         }
     }
 
@@ -151,7 +150,7 @@ public class ProfileViewController extends Controller{
                 ratingScore++;
             }
             if (ratingScore < 10) {
-                _rate10Recordings.setEffect(blackWhiteFilter);
+                _rate10Recordings.setEffect(_blackWhiteFilter);
             }
             br.close();
         } catch (IOException e) {
@@ -170,7 +169,7 @@ public class ProfileViewController extends Controller{
                 userScore++;
             }
             if (userScore < 5) {
-                _get5Users.setEffect(blackWhiteFilter);
+                _get5Users.setEffect(_blackWhiteFilter);
             }
             br.close();
         } catch (IOException e) {

@@ -19,8 +19,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
-import java.io.*;
-
 public class NameSayer extends Application {
 
     public static void main(String[] args) {
