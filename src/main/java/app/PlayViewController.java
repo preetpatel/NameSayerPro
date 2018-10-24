@@ -361,29 +361,6 @@ public class PlayViewController extends Controller{
         return notFoundNames;
     }
 
-
-    /**
-     * Sets the list of names to be practised in the PlayViewController from a text file
-     * @param text the file to be input
-     * @return
-     */
-    public static List<String> setCreationsListFromFile(File text) {
-        List<String> notFoundNames = new ArrayList<>();
-        try {
-            AudioConcat.deleteAllFiles();
-            AudioConcat uploadListConcat = new AudioConcat(text);
-            uploadListConcat.concatenate();
-        } catch (IOException e) {
-            notFoundNames.add("Some files were not found.");
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        addNamesToCreationsList();
-
-        return notFoundNames;
-    }
-
     /**
      * A method to check whether the list of creations is empty
      * @return true if the creations list is not empty

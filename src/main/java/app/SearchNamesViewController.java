@@ -309,6 +309,7 @@ public class SearchNamesViewController extends Controller{
                 }
             }
 
+            //if the file is found
             if (fileFound) {
                 Name name = new Name(processedSearchedItems);
                 boolean buttonExists = false;
@@ -320,6 +321,7 @@ public class SearchNamesViewController extends Controller{
                     }
                 }
 
+                //add the button to the list of buttons if no button already exists
                 if (!buttonExists) {
                     JFXButton button = name.generateButton(selectedButtonsList);
                     creationsButtonList.add(button);
@@ -327,9 +329,13 @@ public class SearchNamesViewController extends Controller{
                     startPracticeButton.setVisible(true);
                     removeButton.setVisible(true);
                     removeAllButton.setVisible(true);
-
                 } else if (errors){
                     showErrorDialog("This name has already been added", "Ok");
+                    addButtonsToListAndClearSearchfield();
+                    return false;
+                } else {
+                    addButtonsToListAndClearSearchfield();
+                    return false;
                 }
 
                 searchField.setDisable(false);
@@ -337,15 +343,25 @@ public class SearchNamesViewController extends Controller{
             } else if (errors){
                 // If no name is found
                 showErrorDialog("This name could not be found on the database", "Ok");
-                addedCreationsPane.getChildren().addAll(creationsButtonList);
-                searchField.setText("");
+                addButtonsToListAndClearSearchfield();
+                return false;
+            } else {
+                addButtonsToListAndClearSearchfield();
                 return false;
             }
-            addedCreationsPane.getChildren().addAll(creationsButtonList);
-            searchField.setText("");
+
+            addButtonsToListAndClearSearchfield();
             return true;
         }
         return false;
+    }
+
+    /**
+     * Adds all buttons to the masonary pane and clears the search field
+     */
+    private void addButtonsToListAndClearSearchfield(){
+        addedCreationsPane.getChildren().addAll(creationsButtonList);
+        searchField.setText("");
     }
 
     /**
@@ -358,22 +374,25 @@ public class SearchNamesViewController extends Controller{
         File result = fileChooser.showOpenDialog((Stage)anchorPane.getScene().getWindow());
         if (result != null) {
             uploadList = result;
+
             try {
                 BufferedReader br = new BufferedReader(new FileReader(uploadList));
                 String line;
-                boolean success = true;
+;
                 boolean atLeastOneFailure = false;
                 //scan through the entire text file
+                int notFoundNamesNumber = 0;
                 while ((line = br.readLine()) != null) {
-                    success = addNamesToList(line, false);
-                    if (!success){
-                        atLeastOneFailure = true;
+                    boolean success = addNamesToList(line, false);
+                    if(!success){
+                        notFoundNamesNumber++;
                     }
                 }
 
-                if (atLeastOneFailure){
-                    showErrorDialogOnStackpane("Some names in the list could not be added because they were invalid", "OK",stackPane);
+                if (notFoundNamesNumber>0){
+                    showErrorDialog(Integer.toString(notFoundNamesNumber) +" name(s) could not be added because they were invalid", "OK");
                 }
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -381,11 +400,15 @@ public class SearchNamesViewController extends Controller{
         }
     }
 
+    private boolean _loading = false;
+
+
     /**
      * Allows the user to pick between starting their practice with a randomised list or a non randomised list
      */
     @FXML
     private void startPracticeHandler(ActionEvent e) {
+
 
         for (Name name: creationsList) {
             selectedNames.add(name.getName());
@@ -411,9 +434,7 @@ public class SearchNamesViewController extends Controller{
 
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    if (uploadList != null) {
-                        PlayViewController.setCreationsListFromFile(uploadList);
-                    } else if (creationsList.size() != 0) {
+                    if (creationsList.size() != 0) {
                         Collections.shuffle(selectedNames);
                         PlayViewController.setCreationsList(selectedNames);
                     }
@@ -433,9 +454,7 @@ public class SearchNamesViewController extends Controller{
                     mainText.setText("This wont be long");
                     randomiseDialog.close();
                     stackPane.setVisible(false);
-                    if (uploadList != null) {
-                        PlayViewController.setCreationsListFromFile(uploadList);
-                    } else if (creationsList.size() != 0) {
+                    if (creationsList.size() != 0) {
                         PlayViewController.setCreationsList(selectedNames);
                     }
                     if (PlayViewController.creationsExist()) {
@@ -455,11 +474,9 @@ public class SearchNamesViewController extends Controller{
             dialogContent.setActions(confirmRandomise, confirmPlay);
             randomiseDialog.show();
 
-        //for uploaded lists
+        //for list with single name
         } else {
-            if (uploadList != null) {
-                PlayViewController.setCreationsListFromFile(uploadList);
-            } else if (creationsList.size() != 0) {
+            if (creationsList.size() != 0) {
                 PlayViewController.setCreationsList(selectedNames);
             }
             if (PlayViewController.creationsExist()) {
