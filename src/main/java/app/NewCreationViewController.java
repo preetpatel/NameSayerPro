@@ -183,6 +183,8 @@ public class NewCreationViewController extends Controller{
     @FXML
     private void listenButtonHandler() {
         String path = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
+        File playFile = new File(path);
+        setPlayBar(playFile);
         playAudioFile(path);
     }
 
@@ -294,6 +296,7 @@ public class NewCreationViewController extends Controller{
      * provides compare functionality for system. plays User recording and database recording on loop
      */
     private void compareButtonHandler() {
+        //if not playing, button allows playing
         if (!_playing) {
             NameSayer.currentUser.increaseCompareScore(1);
             compareButton.setText("Stop");
@@ -302,7 +305,7 @@ public class NewCreationViewController extends Controller{
             String databaseAudioPath = databaseName.toURI().toString();
             playAudioFileOnLoop(databaseAudioPath, myAudioPath);
             _playThread.start();
-
+            //if playing, button allows stopping
         } else {
             compareButton.setText("Compare");
             _playing = !_playing;
