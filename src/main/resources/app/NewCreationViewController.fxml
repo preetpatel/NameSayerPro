@@ -37,11 +37,6 @@
             <Font name="Lato Medium" size="25.0" />
          </font>
       </JFXButton>
-      <Text fx:id="loaderText1" fill="WHITE" layoutX="26.0" layoutY="430.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You will have exactly 5 seconds to record the name once you press the button" textAlignment="CENTER" wrappingWidth="1148.7294921875">
-         <font>
-            <Font name="Lato Heavy" size="30.0" />
-         </font>
-      </Text>
       <JFXButton fx:id="listenAudio" alignment="CENTER" buttonType="RAISED" layoutX="241.0" layoutY="497.0" onAction="#listenButtonHandler" prefHeight="68.0" prefWidth="148.0" ripplerFill="#023436" style="-fx-background-color: #03b5aa;" text="Listen" textAlignment="CENTER" textFill="WHITE">
          <font>
             <Font name="Lato Medium" size="25.0" />

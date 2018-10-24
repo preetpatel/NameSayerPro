@@ -22,8 +22,8 @@ import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -103,51 +103,26 @@ public class NewCreationViewController extends Controller{
         compareButton.setVisible(false);
     }
 
+    private boolean _recordOn = false;
+
     /**
      * Runs the record and timer threads on a background process and sets buttons to disabled
      */
     @FXML
     private void startRecord() {
 
-        record.setDisable(true);
-        record.setText("Recording...");
-        close.setDisable(true);
-        Thread timerThread = new Thread(new timerShow());
-        timerThread.start();
-        Thread thread = new Thread(new createAudioFile());
-        thread.start();
-        record.setVisible(false);
-        Thread buttonThread = new Thread(new showButtons());
-        buttonThread.start();
 
-    }
+        if (!_recordOn) {
+            _recordOn = true;
+            record.setText("Stop");
+            close.setDisable(true);
 
-    /**
-     * Thread for showing the countdown text
-     */
-    private class timerShow extends Task<Void> {
-
-        @Override
-        protected Void call() throws Exception {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    loaderText.setText("");
-                }
-            });
-            while (currentTimer > -1) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        loaderText.setText(Integer.toString(currentTimer));
-                    }
-                });
-
-                Thread.sleep(1000);
-                currentTimer -= 1;
-            }
-            currentTimer = 5;
-            return null;
+            Thread thread = new Thread(new createAudioFile());
+            thread.start();
+        } else {
+            _recordOn = false;
+            Thread buttonsThread = new Thread(new showButtons());
+            buttonsThread.start();
         }
 
     }
@@ -159,10 +134,12 @@ public class NewCreationViewController extends Controller{
 
         @Override
         protected Void call() throws Exception {
-            Thread.sleep(5000);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
+                    close.setDisable(false);
+                    record.setText("Record");
+                    record.setVisible(false);
                     listenAudio.setVisible(true);
                     keepAudio.setVisible(true);
                     redoAudio.setVisible(true);
@@ -199,15 +176,23 @@ public class NewCreationViewController extends Controller{
 
             String recordProcess = "";
             if(System.getProperty("os.name").toLowerCase().contains("mac")) {
-                recordProcess = "ffmpeg -t 5 -f avfoundation -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+                recordProcess = "ffmpeg -y  -f avfoundation -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
             } else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                recordProcess = "ffmpeg -t 5 -f dshow -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+                recordProcess = "ffmpeg -y  -f dshow -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
             } else {
-                recordProcess = "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+                recordProcess = "ffmpeg -y -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
             }
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", recordProcess);
-            builder.start();
+            Process process = builder.start();
+
+            while(_recordOn){
+                Thread.sleep(10);
+            }
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+            writer.write("q");
+            writer.flush();
+            writer.close();
             return null;
         }
     }
