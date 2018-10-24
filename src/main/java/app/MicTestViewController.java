@@ -14,24 +14,19 @@ package app;
 import com.jfoenix.controls.JFXSlider;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-
 import javax.sound.sampled.*;
-import javax.swing.*;
-import java.io.IOException;
 
 
 public class MicTestViewController extends Controller{
 
     @FXML
-    private JFXSlider soundBar;
+    private JFXSlider _soundBar;
 
     @FXML
-    private AnchorPane anchorPane;
+    private AnchorPane _anchorPane;
 
-    private Thread monitorThread;
+    private Thread _monitorThread;
 
 
     @FXML
@@ -44,9 +39,9 @@ public class MicTestViewController extends Controller{
             TargetDataLine targetLine = (TargetDataLine) AudioSystem.getLine(info);
             targetLine.open();
             targetLine.start();
-            soundBar.setValue(0);
+            _soundBar.setValue(0);
 
-            monitorThread = new Thread() {
+            _monitorThread = new Thread() {
                 @Override
                 public void run() {
 
@@ -57,7 +52,7 @@ public class MicTestViewController extends Controller{
                         Platform.runLater(new Runnable() {
                             @Override
                             public void run() {
-                                soundBar.setValue(calculateRMSLevel(data));
+                                _soundBar.setValue(calculateRMSLevel(data));
                             }
                         });
 
@@ -73,7 +68,7 @@ public class MicTestViewController extends Controller{
                 }
             };
 
-            monitorThread.start();
+            _monitorThread.start();
 
         } catch (LineUnavailableException lue) {
             lue.printStackTrace();
@@ -86,8 +81,8 @@ public class MicTestViewController extends Controller{
      */
     @FXML
     private void backButtonHandler() {
-        monitorThread.interrupt();
-        switchController("PlayViewController.fxml", anchorPane);
+        _monitorThread.interrupt();
+        switchController("PlayViewController.fxml", _anchorPane);
     }
 
     /**

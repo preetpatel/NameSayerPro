@@ -10,8 +10,8 @@ import java.io.File;
 
 public class PlayBarProgresser implements Runnable{
 
-    JFXProgressBar _playBar;
-    File _file;
+    private JFXProgressBar _playBar;
+    private File _file;
 
     public PlayBarProgresser (JFXProgressBar playBar, File file){
         _playBar = playBar;

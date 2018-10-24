@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane fx:id="anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.RegisterViewController">
+<AnchorPane fx:id="_anchorPane" prefHeight="800.0" prefWidth="1200.0" style="-fx-background-color: #023436; -fx-text-inner-color: white; -fx-prompt-text-fill: white;" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.RegisterViewController">
     <children>
         <AnchorPane prefHeight="143.0" prefWidth="1200.0" style="-fx-background-color: #037971;">
             <children>
@@ -54,7 +54,7 @@
             <Font size="29.0" />
          </font>
       </JFXPasswordField>
-        <StackPane fx:id="stackPane" prefHeight="324.0" prefWidth="1200.0" />
+        <StackPane fx:id="_stackPane" prefHeight="324.0" prefWidth="1200.0" />
       <Text fill="WHITE" layoutX="82.0" layoutY="358.0" strokeType="OUTSIDE" strokeWidth="0.0" text="No spaces allowed in any of the following fields" textAlignment="CENTER" wrappingWidth="1037.7294921875">
          <font>
             <Font size="12.0" />

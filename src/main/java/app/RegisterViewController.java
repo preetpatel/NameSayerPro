@@ -20,23 +20,23 @@ import javafx.scene.layout.StackPane;
 public class RegisterViewController extends Controller{
 
     @FXML
-    Button _confirmButton;
+    private Button _confirmButton;
     @FXML
-    Button _cancelButton;
+    private Button _cancelButton;
     @FXML
-    TextField _usernameText;
+    private TextField _usernameText;
     @FXML
-    JFXPasswordField _passwordText;
+    private JFXPasswordField _passwordText;
     @FXML
-    JFXPasswordField _passwordConfirmText;
+    private JFXPasswordField _passwordConfirmText;
     @FXML
-    StackPane stackPane;
+    private StackPane _stackPane;
     @FXML
-    AnchorPane anchorPane;
+    private AnchorPane _anchorPane;
 
     @FXML
     public void initialize(){
-        stackPane.setVisible(false);
+        _stackPane.setVisible(false);
     }
 
     public void confirmButtonHandler() {
@@ -47,28 +47,28 @@ public class RegisterViewController extends Controller{
 
 
         if (username.contains(" ") | password.contains(" ") | confirmPassword.contains(" ")) {
-            showErrorDialogOnStackpane("Neither the Username nor the Password may contain a space!", "OK", stackPane);
+            showErrorDialogOnStackpane("Neither the Username nor the Password may contain a space!", "OK", _stackPane);
         } else if (username.isEmpty() | password.isEmpty() | confirmPassword.isEmpty()) {
-            showErrorDialogOnStackpane("Please fill out all of the fields!", "OK", stackPane);
+            showErrorDialogOnStackpane("Please fill out all of the fields!", "OK", _stackPane);
         } else if (!password.equals(confirmPassword)) {
-            showErrorDialogOnStackpane("The passwords must match!", "OK", stackPane);
+            showErrorDialogOnStackpane("The passwords must match!", "OK", _stackPane);
         } else{
             //check if username is used
             User newUser = new User(username, password);
             if (newUser.exists()){
-                showErrorDialogOnStackpane("A user of that name already exists!", "OK", stackPane);
+                showErrorDialogOnStackpane("A user of that name already exists!", "OK", _stackPane);
             } else {
                 newUser.saveUser();
                 newUser.saveScore();
                 //return user to login
-                switchController("LoginViewController.fxml", anchorPane);
+                switchController("LoginViewController.fxml", _anchorPane);
             }
         }
     }
 
     public void cancelButtonHandler(){
         //return to menu
-        switchController("LoginViewController.fxml", anchorPane);
+        switchController("LoginViewController.fxml", _anchorPane);
     }
 
 

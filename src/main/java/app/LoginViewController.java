@@ -12,18 +12,12 @@ package app;
 
 import com.jfoenix.controls.*;
 import com.jfoenix.controls.events.JFXDialogEvent;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
-
-import javax.swing.*;
-import java.io.IOException;
 
 public class LoginViewController extends Controller{
 
@@ -32,13 +26,13 @@ public class LoginViewController extends Controller{
     @FXML
     private JFXPasswordField _password;
     @FXML
-    private AnchorPane anchorPane;
+    private AnchorPane _anchorPane;
     @FXML
-    private StackPane stackPane;
+    private StackPane _stackPane;
 
     @FXML
     private void initialize() {
-        stackPane.setVisible(false);
+        _stackPane.setVisible(false);
 
         // Checks for all required directories
         DirectoryManager manager = new DirectoryManager();
@@ -60,14 +54,14 @@ public class LoginViewController extends Controller{
             User authorisedUser = new User(_username.getText());
             authorisedUser.setPassword(_password.getText());
             NameSayer.setCurrentUser(authorisedUser);
-            switchController("SearchNamesViewController.fxml", anchorPane);
+            switchController("SearchNamesViewController.fxml", _anchorPane);
         } else {
             //error for inability to login
             _username.setDisable(true);
             _password.setDisable(true);
-            stackPane.setVisible(true);
+            _stackPane.setVisible(true);
             JFXDialogLayout dialogContent = new JFXDialogLayout();
-            JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+            JFXDialog deleteDialog = new JFXDialog(_stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
             Text header = new Text("Please enter the correct username or password");
             header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
@@ -82,7 +76,7 @@ public class LoginViewController extends Controller{
                     deleteDialog.close();
                     _username.setDisable(false);
                     _password.setDisable(false);
-                    stackPane.setVisible(false);
+                    _stackPane.setVisible(false);
 
                 }
             });
@@ -90,7 +84,7 @@ public class LoginViewController extends Controller{
             deleteDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
                 @Override
                 public void handle(JFXDialogEvent event) {
-                    stackPane.setVisible(false);
+                    _stackPane.setVisible(false);
                     _username.setDisable(false);
                     _password.setDisable(false);
                 }
@@ -106,6 +100,6 @@ public class LoginViewController extends Controller{
      * handles login to change pane to the search names view controller
      */
     private void newUserButtonHandler() {
-        switchController("RegisterViewController.fxml",anchorPane);
+        switchController("RegisterViewController.fxml", _anchorPane);
     }
 }

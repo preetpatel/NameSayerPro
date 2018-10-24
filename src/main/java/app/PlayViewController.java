@@ -32,58 +32,58 @@ import java.util.List;
 public class PlayViewController extends Controller{
 
     @FXML
-    private AnchorPane anchorPane;
+    private AnchorPane _anchorPane;
 
     @FXML
-    private Text currentName;
+    private Text _currentName;
 
     @FXML
-    private JFXButton demoButton;
+    private JFXButton _demoButton;
 
     @FXML
-    private JFXButton recordButton;
+    private JFXButton _recordButton;
 
     @FXML
-    private JFXButton micTestButton;
+    private JFXButton _micTestButton;
 
     @FXML
-    private JFXButton previousButton;
+    private JFXButton _previousButton;
 
     @FXML
-    private JFXButton nextButton;
+    private JFXButton _nextButton;
 
     @FXML
-    private JFXComboBox<Label> versions;
+    private JFXComboBox<Label> _versions;
 
     @FXML
-    private JFXListView<String> previousAttempts;
+    private JFXListView<String> _previousAttempts;
 
     @FXML
-    private ImageView star1;
+    private ImageView _star1;
 
     @FXML
-    private ImageView star2;
+    private ImageView _star2;
 
     @FXML
-    private ImageView star3;
+    private ImageView _star3;
 
     @FXML
-    private ImageView star4;
+    private ImageView _star4;
 
     @FXML
-    private ImageView star5;
+    private ImageView _star5;
 
     @FXML
-    private StackPane stackPane;
+    private StackPane _stackPane;
 
     private static List<Name> _creationsList = new ArrayList<>();
-    private Name currentLoadedCreation;
-    private static int currentSelection = 0;
-    private HashMap<String, File> versionPerms;
-    private HashMap<String, File> userFiles;
+    private Name _currentLoadedCreation;
+    private static int _currentSelection = 0;
+    private HashMap<String, File> _versionPerms;
+    private HashMap<String, File> _userFiles;
     private File _fileToPlay;
-    private Image noTouch = new Image("star_notouch.png");
-    private Image touch = new Image("star_touch.png");
+    private Image _noTouch = new Image("star_notouch.png");
+    private Image _touch = new Image("star_touch.png");
 
     /**
      * Initializes the Play Creation scene
@@ -93,21 +93,21 @@ public class PlayViewController extends Controller{
      */
     @FXML
     public void initialize() {
-        stackPane.setDisable(true);
+        _stackPane.setDisable(true);
         if(_creationsList.size() > 0 ) {
-            currentLoadedCreation = _creationsList.get(currentSelection);
-            loadCreation(currentLoadedCreation);
+            _currentLoadedCreation = _creationsList.get(_currentSelection);
+            loadCreation(_currentLoadedCreation);
         }
-        if(currentSelection==0) {
-            previousButton.setText("< Menu");
+        if(_currentSelection ==0) {
+            _previousButton.setText("< Menu");
         }
         if (_creationsList.size() == 1) {
-            nextButton.setText("Finish >");
+            _nextButton.setText("Finish >");
         }
     }
 
     /**
-     * Allows the user to set a rating onto different versions of different names
+     * Allows the user to set a rating onto different _versions of different names
      */
     @FXML
     private void logRating(int rating) {
@@ -116,7 +116,7 @@ public class PlayViewController extends Controller{
 
             String ratingString = _fileToPlay.getName() + " " + Integer.toString(rating);
 
-            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.get_ratings()));
             String line;
 
             //check if file is already given a rating
@@ -130,14 +130,14 @@ public class PlayViewController extends Controller{
 
             //if a rating does not exist, add a new rating
             if (!lineExists) {
-                writer = new BufferedWriter(new FileWriter(DirectoryManager.getRatings(), true));
+                writer = new BufferedWriter(new FileWriter(DirectoryManager.get_ratings(), true));
                 writer.write(ratingString + "\n");
                 writer.close();
 
                 //if a rating does exist, replace the old rating
             } else {
                 String old = "";
-                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.get_ratings()));
                 String line2 = reader.readLine();
 
                 while (line2 != null) {
@@ -145,7 +145,7 @@ public class PlayViewController extends Controller{
                     line2 = reader.readLine();
                 }
                 String newContent = old.replaceAll(_fileToPlay.getName() + " [12345]", ratingString);
-                FileWriter writer2 = new FileWriter(DirectoryManager.getRatings());
+                FileWriter writer2 = new FileWriter(DirectoryManager.get_ratings());
                 writer2.write(newContent);
                 reader.close();
                 writer2.close();
@@ -163,7 +163,7 @@ public class PlayViewController extends Controller{
      */
     private void updateRating() {
         try {
-            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.getRatings()));
+            BufferedReader br = new BufferedReader(new FileReader(DirectoryManager.get_ratings()));
             String line;
             updateStars(0);
             while ((line = br.readLine()) != null) {
@@ -187,18 +187,18 @@ public class PlayViewController extends Controller{
      */
     private void updateStars(int rating) {
         List<ImageView> stars = new ArrayList<>();
-        stars.add(star1);
-        stars.add(star2);
-        stars.add(star3);
-        stars.add(star4);
-        stars.add(star5);
+        stars.add(_star1);
+        stars.add(_star2);
+        stars.add(_star3);
+        stars.add(_star4);
+        stars.add(_star5);
 
         for (ImageView star : stars) {
-            star.setImage(noTouch);
+            star.setImage(_noTouch);
         }
 
         for (int i = 1; i <= rating; i++) {
-            stars.get(i - 1).setImage(touch);
+            stars.get(i - 1).setImage(_touch);
         }
     }
 
@@ -208,7 +208,7 @@ public class PlayViewController extends Controller{
      */
     private void loadCreation(Name creation) {
 
-        currentName.setText(creation.getName().replaceAll("_"," "));
+        _currentName.setText(creation.getName().replaceAll("_"," "));
         loadVersionsOfCreation(creation);
         loadPreviousUserRecordings();
         updateRating();
@@ -216,21 +216,21 @@ public class PlayViewController extends Controller{
     }
 
     /**
-     * Loads all versions of the name that is selected into the combo box
-     * @param creation The Name for which versions need to be loaded
+     * Loads all _versions of the name that is selected into the combo box
+     * @param creation The Name for which _versions need to be loaded
      */
     private void loadVersionsOfCreation(Name creation) {
 
-        versions.getItems().clear();
+        _versions.getItems().clear();
 
-        versionPerms = creation.getVersions();
-        _fileToPlay = versionPerms.get("Version 1");
+        _versionPerms = creation.getVersions();
+        _fileToPlay = _versionPerms.get("Version 1");
 
-        for (int i = 0; i < versionPerms.size(); i++) {
-            versions.getItems().add(new Label("Version " + (i + 1)));
+        for (int i = 0; i < _versionPerms.size(); i++) {
+            _versions.getItems().add(new Label("Version " + (i + 1)));
         }
 
-        versions.setConverter(new StringConverter<Label>() {
+        _versions.setConverter(new StringConverter<Label>() {
             @Override
             public String toString(Label object) {
                 return object == null ? "" : object.getText();
@@ -242,8 +242,8 @@ public class PlayViewController extends Controller{
             }
         });
 
-        versions.setEditable(false);
-        versions.getSelectionModel().selectFirst();
+        _versions.setEditable(false);
+        _versions.getSelectionModel().selectFirst();
 
 
     }
@@ -252,10 +252,10 @@ public class PlayViewController extends Controller{
      * Loads the previous user creations into the "Previous Attempts" list
      */
     private void loadPreviousUserRecordings() {
-        previousAttempts.getItems().clear();
+        _previousAttempts.getItems().clear();
         File folder = new File(NameSayer.userRecordingsPath);
         File[] files = folder.listFiles();
-        userFiles = new HashMap<>();
+        _userFiles = new HashMap<>();
         if (folder.isDirectory()) {
             for (File file : files) {
                 Name tempName = new Name(file);
@@ -266,8 +266,8 @@ public class PlayViewController extends Controller{
                 String currentFileName = tempName.getName().replaceAll("\\d$", "").toLowerCase();
                 if (currentFileName.equals(compareString) && tempName.isValid()) {
                     String fileName = tempName.getName().replace("_", " ");
-                    previousAttempts.getItems().add(fileName);
-                    userFiles.put(fileName, file);
+                    _previousAttempts.getItems().add(fileName);
+                    _userFiles.put(fileName, file);
                 }
             }
         }
@@ -280,16 +280,16 @@ public class PlayViewController extends Controller{
      */
     @FXML
     private void nextButtonHandler() {
-        currentSelection++;
-        if (currentSelection < _creationsList.size()) {
-            currentLoadedCreation = _creationsList.get(currentSelection);
-            loadCreation(_creationsList.get(currentSelection));
-            previousButton.setText("< Previous");
+        _currentSelection++;
+        if (_currentSelection < _creationsList.size()) {
+            _currentLoadedCreation = _creationsList.get(_currentSelection);
+            loadCreation(_creationsList.get(_currentSelection));
+            _previousButton.setText("< Previous");
         }
-        if (currentSelection == _creationsList.size() - 1) {
-            nextButton.setText("Finish >");
+        if (_currentSelection == _creationsList.size() - 1) {
+            _nextButton.setText("Finish >");
         }
-        if (currentSelection == _creationsList.size()) {
+        if (_currentSelection == _creationsList.size()) {
             loadMainMenuView();
         }
     }
@@ -300,17 +300,17 @@ public class PlayViewController extends Controller{
      */
     @FXML
     private void backButtonHandler() {
-        currentSelection--;
+        _currentSelection--;
 
-        if (currentSelection >= 0) {
-            currentLoadedCreation = _creationsList.get(currentSelection);
-            loadCreation(_creationsList.get(currentSelection));
-            nextButton.setText("Next >");
+        if (_currentSelection >= 0) {
+            _currentLoadedCreation = _creationsList.get(_currentSelection);
+            loadCreation(_creationsList.get(_currentSelection));
+            _nextButton.setText("Next >");
         }
-        if (currentSelection == 0) {
-            previousButton.setText("< Menu");
+        if (_currentSelection == 0) {
+            _previousButton.setText("< Menu");
         }
-        if (currentSelection < 0) {
+        if (_currentSelection < 0) {
             loadMainMenuView();
         }
     }
@@ -322,8 +322,8 @@ public class PlayViewController extends Controller{
     @FXML
     private void loadMainMenuView() {
         _creationsList.clear();
-        currentSelection = 0;
-        switchController("SearchNamesViewController.fxml",anchorPane);
+        _currentSelection = 0;
+        switchController("SearchNamesViewController.fxml", _anchorPane);
     }
 
     /**
@@ -411,7 +411,7 @@ public class PlayViewController extends Controller{
 
     @FXML
     public void demoButtonHandler() {
-        setPlayBar(_fileToPlay);
+
         playFile(_fileToPlay);
     }
 
@@ -420,12 +420,13 @@ public class PlayViewController extends Controller{
      * @param fileToPlay the file that is intended to be played
      */
     private void playFile(File fileToPlay) {
-        previousAttempts.setDisable(true);
-        demoButton.setDisable(true);
-        recordButton.setDisable(true);
-        micTestButton.setDisable(true);
-        nextButton.setDisable(true);
-        previousButton.setDisable(true);
+        setPlayBar(fileToPlay);
+        _previousAttempts.setDisable(true);
+        _demoButton.setDisable(true);
+        _recordButton.setDisable(true);
+        _micTestButton.setDisable(true);
+        _nextButton.setDisable(true);
+        _previousButton.setDisable(true);
 
         Thread monitorThread = new Thread() {
             @Override
@@ -440,12 +441,12 @@ public class PlayViewController extends Controller{
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        previousAttempts.setDisable(false);
-                        demoButton.setDisable(false);
-                        recordButton.setDisable(false);
-                        micTestButton.setDisable(false);
-                        nextButton.setDisable(false);
-                        previousButton.setDisable(false);
+                        _previousAttempts.setDisable(false);
+                        _demoButton.setDisable(false);
+                        _recordButton.setDisable(false);
+                        _micTestButton.setDisable(false);
+                        _nextButton.setDisable(false);
+                        _previousButton.setDisable(false);
 
                         // Score is increased by 1 for listening to a database name
                         NameSayer.currentUser.increaseListenNameScore(1);
@@ -464,8 +465,8 @@ public class PlayViewController extends Controller{
      */
     @FXML
     public void versionSelectionHandler(ActionEvent e) {
-        if (versions.getSelectionModel().getSelectedItem() != null) {
-            _fileToPlay = versionPerms.get(versions.getSelectionModel().getSelectedItem().getText());
+        if (_versions.getSelectionModel().getSelectedItem() != null) {
+            _fileToPlay = _versionPerms.get(_versions.getSelectionModel().getSelectedItem().getText());
         }
         updateRating();
     }
@@ -475,7 +476,7 @@ public class PlayViewController extends Controller{
      */
     @FXML
     public void micTestButtonHandler() {
-        switchController("MicTestViewController.fxml", anchorPane);
+        switchController("MicTestViewController.fxml", _anchorPane);
     }
 
     /**
@@ -485,8 +486,8 @@ public class PlayViewController extends Controller{
     public void recordButtonHandler() {
 
         NewCreationViewController.setDatabaseName(_fileToPlay);
-        NewCreationViewController.setNameOfCreation(currentLoadedCreation.getName());
-        switchController("NewCreationViewController.fxml", anchorPane);
+        NewCreationViewController.setNameOfCreation(_currentLoadedCreation.getName());
+        switchController("NewCreationViewController.fxml", _anchorPane);
 
     }
 
@@ -496,11 +497,11 @@ public class PlayViewController extends Controller{
     @FXML
     public void playUserCreatedFile() {
 
-        String file = previousAttempts.getSelectionModel().getSelectedItems().toString();
+        String file = _previousAttempts.getSelectionModel().getSelectedItems().toString();
         file = file.replace("[", "");
         file = file.replace("]", "");
         if (!file.equals("")) {
-            playFile(userFiles.get(file));
+            playFile(_userFiles.get(file));
         }
     }
 

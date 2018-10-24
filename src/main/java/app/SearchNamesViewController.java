@@ -18,7 +18,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -43,28 +42,28 @@ import static javafx.scene.layout.StackPane.setAlignment;
 
 public class SearchNamesViewController extends Controller{
 
-    @FXML private AnchorPane anchorPane;
-    @FXML private Text mainText;
-    @FXML private StackPane stackPane;
-    @FXML private JFXMasonryPane addedCreationsPane;
-    @FXML private ScrollPane addedScrollPane;
-    @FXML private CustomTextField searchField;
-    @FXML private JFXButton addButton;
+    @FXML private AnchorPane _anchorPane;
+    @FXML private Text _mainText;
+    @FXML private StackPane _stackPane;
+    @FXML private JFXMasonryPane _addedCreationsPane;
+    @FXML private ScrollPane _addedScrollPane;
+    @FXML private CustomTextField _searchField;
+    @FXML private JFXButton _addButton;
     @FXML private JFXButton _changeDatabaseButton;
-    @FXML private JFXButton startPracticeButton;
-    @FXML private JFXButton removeButton;
-    @FXML private JFXButton profileButton;
-    @FXML private JFXPopup userPopup = new JFXPopup();
-    @FXML private JFXButton removeAllButton;
-    private ObservableList<JFXButton> creationsButtonList = FXCollections.observableArrayList();
-    private ObservableList<JFXButton> selectedButtonsList = FXCollections.observableArrayList();
-    private List<Name> creationsList = new ArrayList<>();
-    private List<String> selectedNames = new ArrayList<>();
-    private List<String> databaseNames = new ArrayList<>();
-    private List<String> concatSafeNames = new ArrayList<>();
-    private AutoCompletionBinding<String> searchBinding;
-    private SuggestionProvider<String> _DatabaseConcatProvider = SuggestionProvider.create(concatSafeNames);
-    private File uploadList = null;
+    @FXML private JFXButton _startPracticeButton;
+    @FXML private JFXButton _removeButton;
+    @FXML private JFXButton _profileButton;
+    @FXML private JFXPopup _userPopup = new JFXPopup();
+    @FXML private JFXButton _removeAllButton;
+    private ObservableList<JFXButton> _creationsButtonList = FXCollections.observableArrayList();
+    private ObservableList<JFXButton> _selectedButtonsList = FXCollections.observableArrayList();
+    private List<Name> _creationsList = new ArrayList<>();
+    private List<String> _selectedNames = new ArrayList<>();
+    private List<String> _databaseNames = new ArrayList<>();
+    private List<String> _concatSafeNames = new ArrayList<>();
+    private AutoCompletionBinding<String> _searchBinding;
+    private SuggestionProvider<String> _databaseConcatProvider = SuggestionProvider.create(_concatSafeNames);
+    private File _uploadList = null;
 
     /**
      * Method that makes stack pane invisible on startup to prevent conflicting with the GUI.
@@ -84,34 +83,34 @@ public class SearchNamesViewController extends Controller{
      * Initialise search field with autocomplete
      */
     private void initializeSearchField() {
-        searchBinding = TextFields.bindAutoCompletion(searchField, _DatabaseConcatProvider);
-        _DatabaseConcatProvider.clearSuggestions();
-        _DatabaseConcatProvider.addPossibleSuggestions(concatSafeNames);
-        searchBinding.setHideOnEscape(true);
+        _searchBinding = TextFields.bindAutoCompletion(_searchField, _databaseConcatProvider);
+        _databaseConcatProvider.clearSuggestions();
+        _databaseConcatProvider.addPossibleSuggestions(_concatSafeNames);
+        _searchBinding.setHideOnEscape(true);
 
         // Add Enter key listener on search field
-        searchField.setOnKeyPressed(event ->  {
+        _searchField.setOnKeyPressed(event ->  {
             if (event.getCode() == KeyCode.ENTER) {
                 addButtonHandler(new ActionEvent());
             }
         });
 
-        searchField.setOnKeyReleased(event ->  {
+        _searchField.setOnKeyReleased(event ->  {
             // arbitrary char assignment
             char compare = 'a';
 
-            if (searchField.getLength() > 0) {
-                compare = searchField.getText().charAt(searchField.getLength() - 1);
+            if (_searchField.getLength() > 0) {
+                compare = _searchField.getText().charAt(_searchField.getLength() - 1);
             }
-            if (compare == ' ' || searchField.getLength() == 0) {
-                concatSafeNames.clear();
+            if (compare == ' ' || _searchField.getLength() == 0) {
+                _concatSafeNames.clear();
                 int i = 0;
-                while (i < databaseNames.size()) {
-                    concatSafeNames.add(searchField.getText() + databaseNames.get(i));
+                while (i < _databaseNames.size()) {
+                    _concatSafeNames.add(_searchField.getText() + _databaseNames.get(i));
                     i++;
                 }
-                _DatabaseConcatProvider.clearSuggestions();
-                _DatabaseConcatProvider.addPossibleSuggestions(concatSafeNames);
+                _databaseConcatProvider.clearSuggestions();
+                _databaseConcatProvider.addPossibleSuggestions(_concatSafeNames);
             }
 
         });
@@ -121,7 +120,7 @@ public class SearchNamesViewController extends Controller{
      * Disables being able to scroll right on the list of added panes
      */
     public void disableHorizontalScrolling() {
-        addedScrollPane.addEventFilter(ScrollEvent.SCROLL, event ->  {
+        _addedScrollPane.addEventFilter(ScrollEvent.SCROLL, event ->  {
                 if (event.getDeltaX() != 0) {
                     event.consume();
                 }
@@ -136,7 +135,7 @@ public class SearchNamesViewController extends Controller{
         chooser.setTitle("Choose a new Database");
         File defaultDirectory = new File(NameSayer.audioPath);
         chooser.setInitialDirectory(defaultDirectory);
-        File selectedDirectory = chooser.showDialog(anchorPane.getScene().getWindow());
+        File selectedDirectory = chooser.showDialog(_anchorPane.getScene().getWindow());
         if (selectedDirectory != null && selectedDirectory.isDirectory()) {
             int filesCount = 0;
             File[] files = selectedDirectory.listFiles();
@@ -148,14 +147,14 @@ public class SearchNamesViewController extends Controller{
                 }
             }
             if (filesCount > 0) {
-                searchField.setDisable(true);
-                stackPane.setVisible(true);
+                _searchField.setDisable(true);
+                _stackPane.setVisible(true);
                 String filesFound = "There were " + filesCount + " valid files found";
-                ModalBox modalBox = new ModalBox(stackPane, filesFound, "Ok");
+                ModalBox modalBox = new ModalBox(_stackPane, filesFound, "Ok");
                 modalBox.setHandlers(event ->  {
                         NameSayer.audioPath = selectedDirectory.getPath();
                         Platform.runLater(() -> {
-                                switchController("SearchNamesViewController.fxml", anchorPane);
+                                switchController("SearchNamesViewController.fxml", _anchorPane);
                         });
                 });
                 modalBox.showDialog();
@@ -168,7 +167,7 @@ public class SearchNamesViewController extends Controller{
      * Initialises the lists that contain names of valid files
      */
     private void loadCreations() {
-        stackPane.setVisible(false);
+        _stackPane.setVisible(false);
 
         File folder = new File(NameSayer.audioPath);
         File[] files = folder.listFiles();
@@ -180,9 +179,9 @@ public class SearchNamesViewController extends Controller{
                 // Adds names to the database that suggests names in the search field
                 String dataName = tempName.getName();
                 dataName = dataName.substring(0, 1).toUpperCase() + dataName.substring(1);
-                if (!databaseNames.contains(dataName)) {
-                    databaseNames.add(dataName);
-                    concatSafeNames.add(dataName);
+                if (!_databaseNames.contains(dataName)) {
+                    _databaseNames.add(dataName);
+                    _concatSafeNames.add(dataName);
                 }
             }
         } else {
@@ -197,31 +196,31 @@ public class SearchNamesViewController extends Controller{
     private void removeButtonHandler(ActionEvent e) {
 
 
-        for (JFXButton button : selectedButtonsList) {
-            creationsButtonList.remove(button);
+        for (JFXButton button : _selectedButtonsList) {
+            _creationsButtonList.remove(button);
 
-            Iterator<Name> creations = creationsList.iterator();
+            Iterator<Name> creations = _creationsList.iterator();
             while (creations.hasNext()) {
 
                 JFXButton comparedButton = creations.next().getButton();
 
                 if (button.equals(comparedButton)) {
                     creations.remove();
-                    creationsButtonList.remove(comparedButton);
+                    _creationsButtonList.remove(comparedButton);
 
                     break;
                 }
             }
         }
 
-        addedCreationsPane.getChildren().clear();
-        addedCreationsPane.getChildren().addAll(creationsButtonList);
+        _addedCreationsPane.getChildren().clear();
+        _addedCreationsPane.getChildren().addAll(_creationsButtonList);
 
         // Set remove button to invisible if list has no creations left
-        if (creationsList.isEmpty()) {
-            removeButton.setVisible(false);
-            startPracticeButton.setVisible(false);
-            removeAllButton.setVisible(false);
+        if (_creationsList.isEmpty()) {
+            _removeButton.setVisible(false);
+            _startPracticeButton.setVisible(false);
+            _removeAllButton.setVisible(false);
         }
     }
 
@@ -231,15 +230,15 @@ public class SearchNamesViewController extends Controller{
      */
     @FXML
     private void removeAllButtonHandler(ActionEvent e) {
-        creationsList.clear();
-        creationsButtonList.clear();
-        selectedButtonsList.clear();
+        _creationsList.clear();
+        _creationsButtonList.clear();
+        _selectedButtonsList.clear();
 
-        addedCreationsPane.getChildren().clear();
-        addedCreationsPane.getChildren().addAll(creationsButtonList);
-        removeButton.setVisible(false);
-        startPracticeButton.setVisible(false);
-        removeAllButton.setVisible(false);
+        _addedCreationsPane.getChildren().clear();
+        _addedCreationsPane.getChildren().addAll(_creationsButtonList);
+        _removeButton.setVisible(false);
+        _startPracticeButton.setVisible(false);
+        _removeAllButton.setVisible(false);
     }
 
 
@@ -249,11 +248,11 @@ public class SearchNamesViewController extends Controller{
      */
     private void addButtonHandler(ActionEvent e) {
 
-        stackPane.setVisible(false);
-        stackPane.getChildren().clear();
-        searchField.setDisable(true);
+        _stackPane.setVisible(false);
+        _stackPane.getChildren().clear();
+        _searchField.setDisable(true);
 
-        String searchedItems = searchField.getText().trim();
+        String searchedItems = _searchField.getText().trim();
 
         // Replace every redundant space in the name
         searchedItems = searchedItems.replaceAll("\\w[ ]{2,}\\w", " ");
@@ -283,11 +282,11 @@ public class SearchNamesViewController extends Controller{
      * @return true if file is successfully added
      */
     private boolean addNamesToList(String searchedItems, boolean errors){
-        addedCreationsPane.getChildren().clear();
+        _addedCreationsPane.getChildren().clear();
 
         if (searchedItems.equals("")) {
             showErrorDialog("Please enter a valid name", "Ok");
-            addedCreationsPane.getChildren().addAll(creationsButtonList);
+            _addedCreationsPane.getChildren().addAll(_creationsButtonList);
         } else {
 
             File folder = new File(NameSayer.audioPath);
@@ -315,7 +314,7 @@ public class SearchNamesViewController extends Controller{
                 boolean buttonExists = false;
 
                 //see if that item has already been added to the list
-                for (JFXButton currentButton : creationsButtonList) {
+                for (JFXButton currentButton : _creationsButtonList) {
                     if (processedSearchedItems.toLowerCase().equals(currentButton.getId().toLowerCase())) {
                         buttonExists = true;
                     }
@@ -323,12 +322,12 @@ public class SearchNamesViewController extends Controller{
 
                 //add the button to the list of buttons if no button already exists
                 if (!buttonExists) {
-                    JFXButton button = name.generateButton(selectedButtonsList);
-                    creationsButtonList.add(button);
-                    creationsList.add(name);
-                    startPracticeButton.setVisible(true);
-                    removeButton.setVisible(true);
-                    removeAllButton.setVisible(true);
+                    JFXButton button = name.generateButton(_selectedButtonsList);
+                    _creationsButtonList.add(button);
+                    _creationsList.add(name);
+                    _startPracticeButton.setVisible(true);
+                    _removeButton.setVisible(true);
+                    _removeAllButton.setVisible(true);
                 } else if (errors){
                     showErrorDialog("This name has already been added", "Ok");
                     addButtonsToListAndClearSearchfield();
@@ -338,7 +337,7 @@ public class SearchNamesViewController extends Controller{
                     return false;
                 }
 
-                searchField.setDisable(false);
+                _searchField.setDisable(false);
 
             } else if (errors){
                 // If no name is found
@@ -360,8 +359,8 @@ public class SearchNamesViewController extends Controller{
      * Adds all buttons to the masonary pane and clears the search field
      */
     private void addButtonsToListAndClearSearchfield(){
-        addedCreationsPane.getChildren().addAll(creationsButtonList);
-        searchField.setText("");
+        _addedCreationsPane.getChildren().addAll(_creationsButtonList);
+        _searchField.setText("");
     }
 
     /**
@@ -371,12 +370,12 @@ public class SearchNamesViewController extends Controller{
     private void uploadButtonHandler() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text file", "*.txt"));
-        File result = fileChooser.showOpenDialog((Stage)anchorPane.getScene().getWindow());
+        File result = fileChooser.showOpenDialog((Stage) _anchorPane.getScene().getWindow());
         if (result != null) {
-            uploadList = result;
+            _uploadList = result;
 
             try {
-                BufferedReader br = new BufferedReader(new FileReader(uploadList));
+                BufferedReader br = new BufferedReader(new FileReader(_uploadList));
                 String line;
 ;
                 boolean atLeastOneFailure = false;
@@ -410,17 +409,17 @@ public class SearchNamesViewController extends Controller{
     private void startPracticeHandler(ActionEvent e) {
 
 
-        for (Name name: creationsList) {
-            selectedNames.add(name.getName());
+        for (Name name: _creationsList) {
+            _selectedNames.add(name.getName());
         }
 
         //if more than 1 selected creations
-        if (addedCreationsPane.getChildren().size() > 1) {
-            stackPane.setVisible(true);
-            stackPane.getChildren().clear();
+        if (_addedCreationsPane.getChildren().size() > 1) {
+            _stackPane.setVisible(true);
+            _stackPane.getChildren().clear();
             //create popup
             JFXDialogLayout dialogContent = new JFXDialogLayout();
-            JFXDialog randomiseDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+            JFXDialog randomiseDialog = new JFXDialog(_stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
             Text header = new Text("Do you wish to randomise the list order?");
             header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
@@ -433,15 +432,15 @@ public class SearchNamesViewController extends Controller{
             confirmRandomise.setOnAction(event -> {
 
                     randomiseDialog.close();
-                    stackPane.setVisible(false);
-                    if (creationsList.size() != 0) {
-                        Collections.shuffle(selectedNames);
-                        PlayViewController.setCreationsList(selectedNames);
+                    _stackPane.setVisible(false);
+                    if (_creationsList.size() != 0) {
+                        Collections.shuffle(_selectedNames);
+                        PlayViewController.setCreationsList(_selectedNames);
                     }
                     if (PlayViewController.creationsExist()) {
-                        switchController("PlayViewController.fxml", anchorPane);
+                        switchController("PlayViewController.fxml", _anchorPane);
                     } else {
-                        showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
+                        showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", _stackPane);
                     }
             });
 
@@ -451,16 +450,16 @@ public class SearchNamesViewController extends Controller{
             confirmPlay.setStyle("-fx-background-color: #03b5aa; -fx-text-fill: white; -fx-font-family: 'Lato Medium'; -fx-font-size: 25;");
             confirmPlay.setOnAction(event -> {
 
-                    mainText.setText("This wont be long");
+                    _mainText.setText("This wont be long");
                     randomiseDialog.close();
-                    stackPane.setVisible(false);
-                    if (creationsList.size() != 0) {
-                        PlayViewController.setCreationsList(selectedNames);
+                    _stackPane.setVisible(false);
+                    if (_creationsList.size() != 0) {
+                        PlayViewController.setCreationsList(_selectedNames);
                     }
                     if (PlayViewController.creationsExist()) {
-                        switchController("PlayViewController.fxml", anchorPane);
+                        switchController("PlayViewController.fxml", _anchorPane);
                     } else {
-                        showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
+                        showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", _stackPane);
                     }
             });
 
@@ -468,7 +467,7 @@ public class SearchNamesViewController extends Controller{
             setAlignment(confirmPlay, Pos.BASELINE_LEFT);
 
             randomiseDialog.setOnDialogClosed(event -> {
-                stackPane.setVisible(false);
+                _stackPane.setVisible(false);
             });
 
             dialogContent.setActions(confirmRandomise, confirmPlay);
@@ -476,13 +475,13 @@ public class SearchNamesViewController extends Controller{
 
         //for list with single name
         } else {
-            if (creationsList.size() != 0) {
-                PlayViewController.setCreationsList(selectedNames);
+            if (_creationsList.size() != 0) {
+                PlayViewController.setCreationsList(_selectedNames);
             }
             if (PlayViewController.creationsExist()) {
-                switchController("PlayViewController.fxml", anchorPane);
+                switchController("PlayViewController.fxml", _anchorPane);
             } else {
-                showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", stackPane);
+                showErrorDialogOnStackpane("Please enter at least one existing creation in your text file!", "OK", _stackPane);
             }
         }
     }
@@ -493,10 +492,10 @@ public class SearchNamesViewController extends Controller{
      * @param buttonText
      */
     private void showErrorDialog(String headerText, String buttonText) {
-        searchField.setDisable(true);
-        stackPane.setVisible(true);
+        _searchField.setDisable(true);
+        _stackPane.setVisible(true);
         JFXDialogLayout dialogContent = new JFXDialogLayout();
-        JFXDialog deleteDialog = new JFXDialog(stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
+        JFXDialog deleteDialog = new JFXDialog(_stackPane, dialogContent, JFXDialog.DialogTransition.CENTER);
 
         Text header = new Text(headerText);
         header.setStyle("-fx-font-size: 30; -fx-font-family: 'Lato Heavy'");
@@ -509,8 +508,8 @@ public class SearchNamesViewController extends Controller{
             @Override
             public void handle(ActionEvent event) {
                 deleteDialog.close();
-                searchField.setDisable(false);
-                stackPane.setVisible(false);
+                _searchField.setDisable(false);
+                _stackPane.setVisible(false);
 
             }
         });
@@ -518,8 +517,8 @@ public class SearchNamesViewController extends Controller{
         deleteDialog.setOnDialogClosed(new EventHandler<JFXDialogEvent>() {
             @Override
             public void handle(JFXDialogEvent event) {
-                stackPane.setVisible(false);
-                searchField.setDisable(false);
+                _stackPane.setVisible(false);
+                _searchField.setDisable(false);
             }
         });
 
@@ -537,9 +536,9 @@ public class SearchNamesViewController extends Controller{
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                userPopup.hide();
+                _userPopup.hide();
                 NameSayer.performUserLogout();
-                switchController("LoginViewController.fxml", anchorPane);
+                switchController("LoginViewController.fxml", _anchorPane);
             }
         });
 
@@ -547,13 +546,13 @@ public class SearchNamesViewController extends Controller{
         openProfileButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                userPopup.hide();
-                switchController("ProfileViewController.fxml", anchorPane);
+                _userPopup.hide();
+                switchController("ProfileViewController.fxml", _anchorPane);
             }
         });
 
         VBox vbox = new VBox(openProfileButton, logoutButton);
-        userPopup.setPopupContent(vbox);
-        userPopup.show(profileButton, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
+        _userPopup.setPopupContent(vbox);
+        _userPopup.show(_profileButton, JFXPopup.PopupVPosition.BOTTOM, JFXPopup.PopupHPosition.LEFT);
     }
 }

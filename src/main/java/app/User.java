@@ -209,14 +209,14 @@ public class User {
 
             //if a score does not exist, add a new score
             if (!userExists) {
-                writer = new BufferedWriter(new FileWriter(DirectoryManager.getScore(), true));
+                writer = new BufferedWriter(new FileWriter(DirectoryManager.get_score(), true));
                 writer.write(_username + " " + _listenToNameScore + " " + _recordingNameButNotSaving + " " + _recordingNameAndSaving + " " + _compareAudio + System.getProperty("line.separator"));
                 writer.close();
 
                 //if a score does exist, replace the old score
             } else {
                 String old = "";
-                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.getScore()));
+                BufferedReader reader = new BufferedReader(new FileReader(DirectoryManager.get_score()));
                 String line2 = reader.readLine();
 
                 while (line2 != null) {
@@ -231,7 +231,7 @@ public class User {
                 File temp = new File("tempScoreFile.txt");
                 FileWriter writer2 = new FileWriter(temp);
                 writer2.write(newContent);
-                temp.renameTo(DirectoryManager.getScore());
+                temp.renameTo(DirectoryManager.get_score());
                 reader.close();
                 writer2.close();
             }

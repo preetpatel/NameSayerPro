@@ -15,22 +15,22 @@ import javax.swing.*;
 import java.io.File;
 
 public class DirectoryManager {
-    private File databaseStorage;
-    private File userCreationsStorage;
-    private static File ratings;
-    private File concatenatedNamesStorage;
-    private File concatenatedTempStorage;
-    private static File score;
-    private static File users;
+    private File _databaseStorage;
+    private File _userCreationsStorage;
+    private static File _ratings;
+    private File _concatenatedNamesStorage;
+    private File _concatenatedTempStorage;
+    private static File _score;
+    private static File _users;
 
     public DirectoryManager() {
-        databaseStorage = new File(NameSayer.audioPath);
-        userCreationsStorage = new File(NameSayer.userRecordingsPath);
-        concatenatedNamesStorage = new File(NameSayer.concatenatedNamesPath);
-        concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
-        ratings = new File(NameSayer.directoryPath + "/ratings.txt");
-        score = new File(NameSayer.directoryPath + "/score.txt");
-        users = new File(NameSayer.directoryPath + "/users.txt");
+        _databaseStorage = new File(NameSayer.audioPath);
+        _userCreationsStorage = new File(NameSayer.userRecordingsPath);
+        _concatenatedNamesStorage = new File(NameSayer.concatenatedNamesPath);
+        _concatenatedTempStorage = new File(NameSayer.concatenationTempPath);
+        _ratings = new File(NameSayer.directoryPath + "/_ratings.txt");
+        _score = new File(NameSayer.directoryPath + "/_score.txt");
+        _users = new File(NameSayer.directoryPath + "/_users.txt");
     }
 
     /**
@@ -38,38 +38,34 @@ public class DirectoryManager {
      */
     public void runChecks() {
 
-        CopyDatabaseFiles copier = new CopyDatabaseFiles();
-        Thread th = new Thread(copier);
-        th.start();
-
-        if (!databaseStorage.exists()) {
-            if (!databaseStorage.mkdirs()) {
+        if (!_databaseStorage.exists()) {
+            if (!_databaseStorage.mkdirs()) {
                 JOptionPane.showMessageDialog(null, "An Error occurred while trying to load creations ", "Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                if (databaseStorage.listFiles().length == 0) {
+                if (_databaseStorage.listFiles().length == 0) {
                     JOptionPane.showMessageDialog(null, "The database contains no files. Please add files as instructed via the README. NameSayer will not work correctly unless this is done.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
         }
 
-        checkForDirectory(userCreationsStorage);
+        checkForDirectory(_userCreationsStorage);
 
         //these concatenated names storage must be in this order
-        checkForDirectory(concatenatedNamesStorage);
-        checkForDirectory(concatenatedTempStorage);
+        checkForDirectory(_concatenatedNamesStorage);
+        checkForDirectory(_concatenatedTempStorage);
 
-        checkForTextFile(ratings);
-        checkForTextFile(score);
-        checkForTextFile(users);
+        checkForTextFile(_ratings);
+        checkForTextFile(_score);
+        checkForTextFile(_users);
 
     }
 
-    public static File getRatings() {
-        return ratings;
+    public static File get_ratings() {
+        return _ratings;
     }
 
-    public static File getScore() {
-        return score;
+    public static File get_score() {
+        return _score;
     }
 
     /**
@@ -81,7 +77,7 @@ public class DirectoryManager {
             try {
                 file.createNewFile();
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load score file", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "An Error occurred while trying to load _score file", "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }

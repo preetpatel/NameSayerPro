@@ -14,16 +14,11 @@ import com.jfoenix.controls.JFXButton;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Text;
 
-import javax.swing.*;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,43 +26,41 @@ import java.util.Date;
 public class NewCreationViewController extends Controller{
 
     @FXML
-    private JFXButton close;
+    private JFXButton _closeButton;
 
     @FXML
-    private JFXButton record;
+    private JFXButton _recordButton;
 
     @FXML
-    private Text loaderText;
+    private Text _loaderText;
 
     @FXML
-    private AnchorPane anchorPane;
+    private AnchorPane _anchorPane;
 
     @FXML
-    private JFXButton listenAudio;
+    private JFXButton _listenAudioButton;
 
     @FXML
-    private JFXButton keepAudio;
+    private JFXButton _keepAudioButton;
 
     @FXML
-    private JFXButton redoAudio;
+    private JFXButton _redoAudioButton;
 
     @FXML
-    private JFXButton compareButton;
+    private JFXButton _compareButton;
 
     private Thread _playThread;
     private boolean _playing;
     private static String _nameOfCreation;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayer _mediaPlayer;
     private static File databaseName;
-
-    private int currentTimer = 5;
 
     public static void setNameOfCreation(String nameOfCreation) {
         _nameOfCreation = nameOfCreation;
     }
 
     /**
-     * Handler for the close button to go back to the Home View.
+     * Handler for the _closeButton button to go back to the Home View.
      * Opens an error dialog if there is an error
      */
     @FXML
@@ -75,7 +68,7 @@ public class NewCreationViewController extends Controller{
         _playing = false;
         Thread deleteAudio = new Thread(new deleteAudioFile());
         deleteAudio.start();
-        switchController("PlayViewController.fxml", anchorPane);
+        switchController("PlayViewController.fxml", _anchorPane);
     }
 
     public static void setDatabaseName(File file) {
@@ -96,58 +89,34 @@ public class NewCreationViewController extends Controller{
         });
 
         String nameToPronounce = _nameOfCreation.replaceAll("_", " ");
-        loaderText.setText("Press the button below and pronounce: \n \"" + nameToPronounce + "\"");
-        listenAudio.setVisible(false);
-        keepAudio.setVisible(false);
-        redoAudio.setVisible(false);
-        compareButton.setVisible(false);
+        _loaderText.setText("Press the button below and pronounce: \n \"" + nameToPronounce + "\"");
+        _listenAudioButton.setVisible(false);
+        _keepAudioButton.setVisible(false);
+        _redoAudioButton.setVisible(false);
+        _compareButton.setVisible(false);
     }
 
+    //This boolean field is used for polling  for recording
+    private boolean _recordOn = false;
+
     /**
-     * Runs the record and timer threads on a background process and sets buttons to disabled
+     * Runs the _recordButton and timer threads on a background process and sets buttons to disabled
      */
     @FXML
     private void startRecord() {
 
-        record.setDisable(true);
-        record.setText("Recording...");
-        close.setDisable(true);
-        Thread timerThread = new Thread(new timerShow());
-        timerThread.start();
-        Thread thread = new Thread(new createAudioFile());
-        thread.start();
-        record.setVisible(false);
-        Thread buttonThread = new Thread(new showButtons());
-        buttonThread.start();
 
-    }
+        if (!_recordOn) {
+            _recordOn = true;
+            _recordButton.setText("Stop");
+            _closeButton.setDisable(true);
 
-    /**
-     * Thread for showing the countdown text
-     */
-    private class timerShow extends Task<Void> {
-
-        @Override
-        protected Void call() throws Exception {
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    loaderText.setText("");
-                }
-            });
-            while (currentTimer > -1) {
-                Platform.runLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        loaderText.setText(Integer.toString(currentTimer));
-                    }
-                });
-
-                Thread.sleep(1000);
-                currentTimer -= 1;
-            }
-            currentTimer = 5;
-            return null;
+            Thread thread = new Thread(new createAudioFile());
+            thread.start();
+        } else {
+            _recordOn = false;
+            Thread buttonsThread = new Thread(new showButtons());
+            buttonsThread.start();
         }
 
     }
@@ -159,16 +128,18 @@ public class NewCreationViewController extends Controller{
 
         @Override
         protected Void call() throws Exception {
-            Thread.sleep(5000);
             Platform.runLater(new Runnable() {
                 @Override
                 public void run() {
-                    listenAudio.setVisible(true);
-                    keepAudio.setVisible(true);
-                    redoAudio.setVisible(true);
-                    close.setDisable(false);
+                    _closeButton.setDisable(false);
+                    _recordButton.setText("Record");
+                    _recordButton.setVisible(false);
+                    _listenAudioButton.setVisible(true);
+                    _keepAudioButton.setVisible(true);
+                    _redoAudioButton.setVisible(true);
+                    _closeButton.setDisable(false);
                     if (databaseName != null) {
-                        compareButton.setVisible(true);
+                        _compareButton.setVisible(true);
 
                     }
                 }
@@ -199,15 +170,24 @@ public class NewCreationViewController extends Controller{
 
             String recordProcess = "";
             if(System.getProperty("os.name").toLowerCase().contains("mac")) {
-                recordProcess = "ffmpeg -t 5 -f avfoundation -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+                recordProcess = "ffmpeg -y  -f avfoundation -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
             } else if (System.getProperty("os.name").toLowerCase().contains("windows")) {
-                recordProcess = "ffmpeg -t 5 -f dshow -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+                recordProcess = "ffmpeg -y  -f dshow -ac 2 -i \":0\" " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
             } else {
-                recordProcess = "ffmpeg -t 5 -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
+                recordProcess = "ffmpeg -y -f alsa -ac 2 -i default " + NameSayer.userRecordingsPath + "/'" + _nameOfCreation + "_audio.wav'";
             }
 
             ProcessBuilder builder = new ProcessBuilder("/bin/bash", "-c", recordProcess);
-            builder.start();
+            Process process = builder.start();
+
+            //poll if the user has stopped recording
+            while(_recordOn){
+                Thread.sleep(30);
+            }
+            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
+            writer.write("q");
+            writer.flush();
+            writer.close();
             return null;
         }
     }
@@ -218,12 +198,12 @@ public class NewCreationViewController extends Controller{
      */
     @FXML
     private void redoButtonHandler() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
+        if (_mediaPlayer != null) {
+            _mediaPlayer.stop();
         }
         Thread deleteAudio = new Thread(new deleteAudioFile());
         deleteAudio.start();
-        switchController("NewCreationViewController.fxml",anchorPane);
+        switchController("NewCreationViewController.fxml", _anchorPane);
     }
 
     /**
@@ -252,10 +232,10 @@ public class NewCreationViewController extends Controller{
      */
     @FXML
     private void keepButtonHandler() {
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
+        if (_mediaPlayer != null) {
+            _mediaPlayer.stop();
         }
-        loaderText.setText("Saving your creation...");
+        _loaderText.setText("Saving your creation...");
         NameSayer.currentUser.increaseRecordAndSaveScore(2);
 
         File[] userCreations = new File(NameSayer.userRecordingsPath).listFiles();
@@ -288,7 +268,7 @@ public class NewCreationViewController extends Controller{
 
         // Set database name to null to prevent unauthorised playback
         databaseName = null;
-        switchController("PlayViewController.fxml", anchorPane);
+        switchController("PlayViewController.fxml", _anchorPane);
     }
 
     @FXML
@@ -299,7 +279,7 @@ public class NewCreationViewController extends Controller{
         //if not playing, button allows playing
         if (!_playing) {
             NameSayer.currentUser.increaseCompareScore(1);
-            compareButton.setText("Stop");
+            _compareButton.setText("Stop");
             _playing = !_playing;
             String myAudioPath = NameSayer.userRecordingsPath + "/" + _nameOfCreation + "_audio.wav";
             String databaseAudioPath = databaseName.toURI().toString();
@@ -307,12 +287,12 @@ public class NewCreationViewController extends Controller{
             _playThread.start();
             //if playing, button allows stopping
         } else {
-            compareButton.setText("Compare");
+            _compareButton.setText("Compare");
             _playing = !_playing;
             _playThread.stop();
-            listenAudio.setDisable(false);
-            keepAudio.setDisable(false);
-            redoAudio.setDisable(false);
+            _listenAudioButton.setDisable(false);
+            _keepAudioButton.setDisable(false);
+            _redoAudioButton.setDisable(false);
         }
     }
 
@@ -321,10 +301,10 @@ public class NewCreationViewController extends Controller{
      * @param filePath A string specifying the absolute path to the file that is intended to be played
      */
     private void playAudioFile(String filePath) {
-        listenAudio.setDisable(true);
-        keepAudio.setDisable(true);
-        redoAudio.setDisable(true);
-        compareButton.setDisable(true);
+        _listenAudioButton.setDisable(true);
+        _keepAudioButton.setDisable(true);
+        _redoAudioButton.setDisable(true);
+        _compareButton.setDisable(true);
         Thread monitorThread = new Thread() {
             @Override
             public void run() {
@@ -339,10 +319,10 @@ public class NewCreationViewController extends Controller{
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-                        listenAudio.setDisable(false);
-                        keepAudio.setDisable(false);
-                        redoAudio.setDisable(false);
-                        compareButton.setDisable(false);
+                        _listenAudioButton.setDisable(false);
+                        _keepAudioButton.setDisable(false);
+                        _redoAudioButton.setDisable(false);
+                        _compareButton.setDisable(false);
                     }
                 });
             }
@@ -357,9 +337,9 @@ public class NewCreationViewController extends Controller{
      * @param filePath2 path to second file
      */
     private void playAudioFileOnLoop(String filePath1, String filePath2){
-        listenAudio.setDisable(true);
-        keepAudio.setDisable(true);
-        redoAudio.setDisable(true);
+        _listenAudioButton.setDisable(true);
+        _keepAudioButton.setDisable(true);
+        _redoAudioButton.setDisable(true);
         _playThread = new Thread() {
             @Override
             public void run() {
@@ -377,9 +357,9 @@ public class NewCreationViewController extends Controller{
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
-                            listenAudio.setDisable(false);
-                            keepAudio.setDisable(false);
-                            redoAudio.setDisable(false);
+                            _listenAudioButton.setDisable(false);
+                            _keepAudioButton.setDisable(false);
+                            _redoAudioButton.setDisable(false);
                         }
                     });
                 } catch (Exception ex) {
